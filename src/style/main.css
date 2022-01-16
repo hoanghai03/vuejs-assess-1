@@ -1,0 +1,60 @@
+/* file css common */
+
+@import url(../style/common/common.css);
+
+/* file css component */
+
+
+/* @import url(../style/component/button.css);
+@import url(../style/component/input.css);
+@import url(../style/component/table.css);
+@import url(../style/component/paging-bar.css);
+@import url(../style/component/checkbox.css);
+@import url(../style/component/loading.css);
+@import url(../style/component/dialog.css);
+@import url(../style/component/radio.css);
+@import url(../style/component/combobox.css);
+@import url(../style/component/popup.css);
+@import url(../style/component/select.css); */
+
+@import url(../style/component/icon.css);
+
+/* file css của layout */
+
+
+/* 
+@import url(../style/layout/navigation.css);
+@import url(../style/layout/header.css);
+@import url(../style/layout/content.css); */
+
+body {
+    font-family: notosans;
+    font-size: 13px;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f5f8;
+}
+
+a {
+    text-decoration: none;
+}
+
+@font-face {
+    font-family: notosans bold;
+    src: url(../assets/font/notosans-bold.3ede5aff.woff2);
+}
+
+@font-face {
+    font-family: notosans italic;
+    src: url(../assets/font/notosans-italic.1c1aaac9.woff2);
+}
+
+@font-face {
+    font-family: notosans;
+    src: url(../assets/font/notosans-regular.2cb88a13.woff2);
+}
+
+@font-face {
+    font-family: notosans semibold;
+    src: url(../assets/font/notosans-semibold.df3e6dc4.woff2);
+}
