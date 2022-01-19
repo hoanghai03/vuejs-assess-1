@@ -129,10 +129,13 @@
 }
 
 .v-input {
-    font-family: notosan !important;
     font-size: 13px !important;
 }
 
 .v-input__control {
     height: 28px !important;
+}
+
+.theme--light.v-input input {
+    color: #111111 !important;
 }

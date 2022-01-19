@@ -45,9 +45,19 @@
     margin-right: 42px;
 }
 
+.p-right::marker {
+    color: #ffffff !important;
+}
+
+.p-left::marker {
+    color: #ffffff !important;
+}
+
 .paging .paging-number {
     display: flex;
     cursor: pointer;
+    padding: 0 6.5px;
+    outline: none;
 }
 
 .paging .page-index {
@@ -112,4 +122,17 @@
     border-radius: 1px !important;
     border: 1px solid #bbbbbb !important;
     box-shadow: none !important;
+}
+
+
+/* active  */
+
+.active {
+    color: #111111 !important;
+    border: 1px solid #bbbbbb !important;
+    font-weight: bold;
+}
+
+.disabled {
+    opacity: .5;
 }

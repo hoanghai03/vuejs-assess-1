@@ -54,7 +54,7 @@
                   type="text"
                   :title="messageEmptyEmployeeCode"
                   :class="{ 'input-warning': $v.empl.employeeCode.$error }"
-                  v-model="$v.empl.employeeCode.$model"
+                  v-model.trim="$v.empl.employeeCode.$model"
                   @blur="blurEmployeeCode"
                   required
                 />
@@ -69,7 +69,7 @@
                   :title="messageEmptyFullName"
                   :class="{ 'input-warning': $v.empl.fullName.$error }"
                   @blur="blurFullName"
-                  v-model="empl.fullName"
+                  v-model.trim="empl.fullName"
                   required
                 />
               </div>
@@ -88,7 +88,7 @@
                 class="m-input"
                 type="text"
                 fieldName="EmployeePosition"
-                v-model="empl.positionName"
+                v-model.trim="empl.positionName"
               />
             </div>
           </div>
@@ -98,10 +98,11 @@
                 <div class="text-input">Ngày sinh</div>
                 <input
                   class="m-input"
+                  :class="{'input-warning' : isWarningDateOfBirth}"
                   fieldName="DateOfBirth"
                   type="date"
                   :value="dateToYYYYMMDD(empl.dateOfBirth)"
-                  @input="setDateOfBirth($event)"
+                  @blur="setDateOfBirth($event)"
                 />
               </div>
               <div class="input-gender">
@@ -156,17 +157,18 @@
                   class="m-input"
                   fieldName="IdentityNumber"
                   type="text"
-                  v-model="empl.identifyNumber"
+                  v-model.trim="empl.identifyNumber"
                 />
               </div>
               <div class="input-date-range">
                 <div class="text-input">Ngày cấp</div>
                 <input
                   class="m-input"
+                  :class="{'input-warning' : isWarningIdentifyDate}"
                   fieldName="IdentityDate"
                   type="date"
                   :value="dateToYYYYMMDD(empl.identifyDate)"
-                  @input="setIdentityDate($event)"
+                  @blur="setIdentityDate($event)"
                 />
               </div>
             </div>
@@ -176,7 +178,7 @@
                 class="m-input"
                 fieldName="IdentityPlace"
                 type="text"
-                v-model="empl.identifyPlace"
+                v-model.trim="empl.identifyPlace"
               />
             </div>
           </div>
@@ -188,7 +190,7 @@
               class="m-input"
               fieldName="Address"
               type="text"
-              v-model="empl.address"
+              v-model.trim="empl.address"
             />
           </div>
           <div class="within-content-bot">
@@ -198,7 +200,7 @@
                 class="m-input"
                 fieldName="PhoneNumber"
                 type="text"
-                v-model="empl.phoneNumber"
+                v-model.trim="empl.phoneNumber"
               />
             </div>
             <div>
@@ -207,7 +209,7 @@
                 fieldName="TelephoneNumber"
                 class="m-input"
                 type="text"
-                v-model="empl.telephoneNumber"
+                v-model.trim="empl.telephoneNumber"
               />
             </div>
             <div>
@@ -217,7 +219,7 @@
                 class="m-input"
                 ref="email"
                 type="email"
-                v-model="empl.email"
+                v-model.trim="empl.email"
                 :class="{ 'input-warning': $v.empl.email.$error }"
               />
             </div>
@@ -229,7 +231,7 @@
                 fieldName="BankAccountNumber"
                 class="m-input"
                 type="text"
-                v-model="empl.bankAccountNumber"
+                v-model.trim="empl.bankAccountNumber"
               />
             </div>
             <div>
@@ -238,7 +240,7 @@
                 fieldName="BankName"
                 class="m-input"
                 type="text"
-                v-model="empl.bankName"
+                v-model.trim="empl.bankName"
               />
             </div>
             <div>
@@ -247,7 +249,7 @@
                 fieldName="BankBranchName"
                 class="m-input"
                 type="text"
-                v-model="empl.bankBranchName"
+                v-model.trim="empl.bankBranchName"
               />
             </div>
           </div>
@@ -334,11 +336,15 @@ export default {
       textLeft: "",
       isDelete: "",
       isAsk: false,
-      oldValue: Employee,
-      emptyFullName: 'Tên không được phép để trống',
-      messageEmptyFullName: '',
-      emptyEmployeeCode: 'Mã nhân viên được phép để trống',
-      messageEmptyEmployeeCode: '',
+      oldValue: new Employee(),
+      emptyFullName: "Tên không được phép để trống",
+      messageEmptyFullName: "",
+      emptyEmployeeCode: "Mã nhân viên được phép để trống",
+      messageEmptyEmployeeCode: "",
+      isValidateCBX :false,
+      isWarningDateOfBirth : false,
+      isWarningIdentifyDate : false,
+      
     };
   },
   watch: {
@@ -347,24 +353,36 @@ export default {
      * createdBy NHHai 4/1/2022
      */
     empl: function () {
-      // gán giá trị empl cho oldValue
-      this.oldValue = {
-        ...Employee,
-        ...this.empl,
-      };
+      // xóa cảnh báo ngày tháng
+      this.isWarningIdentifyDate = false;
+      this.isWarningDateOfBirth = false;
       // kiểm tra giá trị department
-      if (this.empl.departmentId != undefined || this.empl.departmentId != "") {
+      if (this.empl.departmentId != "") {
         this.select = {};
         this.select.text = this.empl.departmentName;
         this.select.value = this.empl.departmentId;
       }
+      else {
+      // trường hợp khởi đầu thì gán giá trị true cho isVAlidateCBX
+      this.isValidateCBX = true;
+      // xóa dữ liệu combobox và xóa cảnh báo
+      this.select = {};
+      this.select.text = "";
+      this.select.value = "";
+      
+      }
+
+      // gán giá trị empl cho oldValue
+      this.oldValue = {
+        ...this.empl,
+      };
     },
     /**
      * chọn department
      * CreatedBy NHHai 28/12/2021
      */
     select: function (value) {
-      if (value.value === undefined) {
+      if (value.value === undefined && !this.isValidateCBX) {
         document
           .querySelector(
             ".v-autocomplete.v-input>.v-input__control>.v-input__slot"
@@ -377,6 +395,8 @@ export default {
           )
           .classList.remove("input-warning");
       }
+      // gán giá trị false
+      this.isValidateCBX = false;
       this.$emit("departmentId", value.value);
     },
   },
@@ -393,33 +413,31 @@ export default {
       },
     },
   },
-
   methods: {
+
     /**
-     * Hàm cảnh báo dữ liệu khi fullName trống 
+     * Hàm cảnh báo dữ liệu khi fullName trống
      * createdBy NHHAi 11/1/2021
      */
-    blurFullName(){
+    blurFullName() {
       //
       this.$v.empl.fullName.$touch();
       //xét trường hợp nếu lỗi thì add title
-      if(this.$v.empl.fullName.$error){
+      if (this.$v.empl.fullName.$error) {
         this.messageEmptyFullName = this.emptyFullName;
-      }
-      else this.messageEmptyFullName = "";
+      } else this.messageEmptyFullName = "";
     },
     /**
-     * Hàm cảnh báo dữ liệu khi fullName trống 
+     * Hàm cảnh báo dữ liệu khi fullName trống
      * createdBy NHHAi 11/1/2021
      */
-    blurEmployeeCode(){
+    blurEmployeeCode() {
       //
       this.$v.empl.employeeCode.$touch();
       //xét trường hợp nếu lỗi thì add title
-      if(this.$v.empl.employeeCode.$error){
+      if (this.$v.empl.employeeCode.$error) {
         this.messageEmptyEmployeeCode = this.emptyEmployeeCode;
-      }
-      else this.messageEmptyEmployeeCode = "";
+      } else this.messageEmptyEmployeeCode = "";
     },
     /**
      * Hàm lưu dữ liệu
@@ -472,6 +490,7 @@ export default {
      * createdBy NHHAi 15/12/2021
      */
     btnCloseOnClick() {
+      // xóa hết dữ liệu trong select
       this.select = [];
       document
         .querySelector(
@@ -527,6 +546,12 @@ export default {
         me.textPopup = this.FormMode.FullName_Not_Empty;
         return;
       }
+      // trường hợp nhập quá ngày hiện tại
+      if(me.isWarningDateOfBirth || me.isWarningIdentifyDate){
+        me.showPopupParent(true);
+        me.textPopup = this.FormMode.Invalid_Date;
+        return;
+      }
       // trường hợp lỗi tên email
       if (me.$v.empl.email.$error) {
         me.showPopupParent(true);
@@ -537,8 +562,7 @@ export default {
         return;
       }
       // lấy dữ liệu
-      me.$emit("saveEmployee", {employee: this.empl, value:value});
-
+      me.$emit("saveEmployee", { employee: this.empl, value: value });
       me.$v.$reset();
     },
 
@@ -569,7 +593,18 @@ export default {
      * @param date kiểu giá trị date
      */
     setDateOfBirth(date) {
+      // kiểm tra giá trị chọn với ngày hiện tại
+      if(new Date(date.target.value) <= new Date()){
+        // nếu bé hơn thì không cảnh báo
+        this.isWarningDateOfBirth = false
+      }
+      else {
+        // nếu lớn hơn thì cảnh báo
+        this.isWarningDateOfBirth = true;
+      }
+      // emit giá trị
       this.$emit("changeDateOfBirth", date);
+
     },
 
     /**
@@ -578,6 +613,15 @@ export default {
      * @param date kiểu giá trị date
      */
     setIdentityDate(date) {
+      // kiểm tra giá trị chọn với ngày hiện tại
+      if(new Date(date.target.value) <= new Date()){
+        // nếu bé hơn thì không cảnh báo
+        this.isWarningIdentifyDate = false
+      }
+      else {
+        // nếu lớn hơn thì cảnh báo
+        this.isWarningIdentifyDate = true;
+      }
       this.$emit("changeIdentityDate", date);
     },
   },

@@ -32,7 +32,7 @@
         <div
           id="refresh"
           class="icon-load m-icon m-icon-load"
-          @click="loadData"
+          @click="loadData(FormMode.Page_Number_1)"
         ></div>
         <div class="icon-excel m-icon mi-excel__nav" @click="exportData"></div>
       </div>
@@ -45,7 +45,7 @@
             <col style="min-width: 200px" />
             <col style="min-width: 120px" />
             <col style="min-width: 150px" />
-            <col style="min-width: 200px" />
+            <col style="min-width: 150px" />
             <col style="min-width: 150px" />
             <col style="min-width: 150px" />
             <col style="min-width: 150px" />
@@ -215,13 +215,21 @@
           </div>
         </div>
         <div class="paging">
-          <!-- <div class="p-left">Trước</div> -->
-
-          <v-pagination
+          <paginate
+            :page-count="totalPage"
+            :page-range="3"
+            :margin-pages="1"
+            :prev-text="'Trước'"
+            :next-text="'Sau'"
+            :container-class="'paging'"
+            :active-class="'active'"
+            :disabled-class="'disabled'"
+            :page-class="'paging-number'"
+            :prev-class="'p-left'"
+            :next-class="'p-right'"
             v-model="pageNumber"
-            :total-visible="5"
-            :length="totalPage"
-          ></v-pagination>
+          >
+          </paginate>
           <!-- <div class="p-right">Sau</div> -->
         </div>
       </div>
@@ -250,7 +258,7 @@
       :isAgree="isAgree"
       :isDelAll="isDelAll"
       :checkedId="checkedId"
-      @loadData="loadData"
+      @loadData="loadData($event)"
       @showPopup="showPopupParent"
     />
   </div>
@@ -261,12 +269,14 @@ import EmployeeDetail from "./EmployeeDetail.vue";
 import EmployeePopup from "./EmployeePopup.vue";
 import FormMode from "../../script/Enum.js";
 import Employee from "../../models/Employee.js";
+import Paginate from "vuejs-paginate";
 
 export default {
   name: "employeeList",
   components: {
     EmployeeDetail,
     EmployeePopup,
+    Paginate,
   },
   created() {
     // khởi tạo dữ liệu trong bảng
@@ -292,7 +302,7 @@ export default {
             // gọi đến hàm trả về lỗi
             this.responseWithError(res);
           });
-      } 
+      }
     },
     /**
      * lọc dữ liệu theo search text
@@ -302,7 +312,7 @@ export default {
       if (value != null) {
         clearTimeout(this.timer);
         this.timer = setTimeout(() => {
-          this.loadData();
+          this.loadData(FormMode.Page_Number_1);
         }, 500);
       }
     },
@@ -313,10 +323,8 @@ export default {
     pageSize: function (value) {
       // validate value
       if (value != null && value >= 1) {
-        // gán lại trang thứ 1
-        this.pageNumber = FormMode.Page_Number_1;
         // load dữ liệu
-        this.loadData();
+        this.loadData(FormMode.Page_Number_1);
       }
     },
 
@@ -382,6 +390,15 @@ export default {
   },
   methods: {
     /**
+     * chuyển trang
+     * @param pageNum số trang
+     * createdBy NHHAi 18/1/2021
+     */
+    clickCallback(pageNum) {
+      this.pageNumber = pageNum;
+    },
+
+    /**
      * Hàm để search emplouyee theo searchText
      * createdBy NHHAi 30/12/2021
      */
@@ -395,6 +412,7 @@ export default {
      * CreatedBy NHHai 28/12/2021
      */
     setDepartmentId(value) {
+      if (value == undefined) value = "";
       this.employeeProps.departmentId = value;
     },
 
@@ -473,10 +491,8 @@ export default {
             this.deleteEmplFirst +
             `${this.employee.employeeCode}` +
             this.deleteEmplLast;
-        }, 200);
+        }, 600);
       } else {
-        // ẩn button xóa
-        this.isShowEntityDel = false;
         // TH xóa tất cả
         this.isDelAll = true;
         // gán text popup
@@ -585,27 +601,34 @@ export default {
      * Hàm load dữ liệu từ api
      * createdBy NHHAI 15/12/2021
      */
-    loadData() {
+    loadData(value) {
       var me = this;
+      // gán giá trị 1 cho page number
+      if(value == FormMode.Page_Number_1) me.pageNumber = FormMode.Page_Number_1;
       // hiển thị loading
       me.overlay = true;
       axios
         .get(
           this.host +
-            `filter?pageSize=${this.pageSize}&pageNumber=${this.pageNumber}&employeeFilter=${this.searchText}`
+            `filter?pageSize=${me.pageSize}&pageNumber=${me.pageNumber}&employeeFilter=${me.searchText}`
         )
         .then((response) => {
           // gán dữ liệu vào employees
           me.employees = response.data.data;
           // tổng số bản ghi
-          this.totalRecord = response.data.totalRecord;
-          this.totalPage = response.data.totalPage;
+          me.totalRecord = response.data.totalRecord;
+          me.totalPage = response.data.totalPage;
+          // ẩn button xóa
+          me.isShowEntityDel = false;
+          // ẩn checkall
+          me.isCheckAll = false;
+          me.checkedId = [];
           // ẩn loading
           me.overlay = false;
         })
         .catch((res) => {
           // gọi đến hàm trả về lỗi
-          this.responseWithError(res);
+          me.responseWithError(res);
           // ẩn loading
           me.overlay = false;
         });
@@ -616,22 +639,30 @@ export default {
      * createdBy NHHAI 15/12/2021
      * @param employeeId là giá trị EmployeeId của mỗi tr trong bảng
      */
-    dbOnClickTr(employeeId, value) {
+    async dbOnClickTr(employeeId, value) {
       // kiểm tra là nhân bản hay ko
       // Gán employeeId
       this.employeeId = employeeId;
 
       this.isReplication = value;
       if (this.isReplication) {
-        this.loadNewEmployeeCode();
+        const me = this;
+        var data = await this.loadNewEmployeeCodeReplication();
+          // gán dữ liệu vào EmployeeCode
+        setTimeout(()=>{
+           me.employeeProps.employeeCode = data.data;
+        },300)
       }
+      // hiển thị danh sách phòng ban
+      this.loadDepartment();
       //ẩn button vừa nhấn
       this.isShowEntityDelRight = false;
       // Hiển thị dialog thông tin chi tiết nhân viên
-      this.showDialogParent(true);
+        this.showDialogParent(true);
       // focus vào ô employee code
       this.forcusOnInput();
     },
+
     /**
      * Hàm Lấy mã nhân viên mới
      * createdBy NHHAi 3/1/2022
@@ -644,9 +675,9 @@ export default {
           // xóa hết dữ liệu trong employeeProps
           if (!me.isReplication) {
             // hiiển thị giá trị mặc định cho employeeProps
-            me.employeeProps = Employee;
+            me.employeeProps = new Employee();
             // gán giá trị cho gender
-            me.employeeProps.gender = 1;
+            me.employeeProps.gender = this.FormMode.Male;
           }
           // gán dữ liệu vào EmployeeCode
           me.employeeProps.employeeCode = response.data;
@@ -656,44 +687,69 @@ export default {
           this.responseWithError(res);
         });
     },
+
+    /**
+     * Hàm Lấy mã nhân viên mới khi nhân bản
+     * createdBy NHHAi 3/1/2022
+     */
+    loadNewEmployeeCodeReplication() {
+
+      return axios
+        .get(this.host + this.NewEmployeeCode);
+
+    },
     /**
      * Hàm lưu nhân viên
      * createdBy NHHAi 4/1/2022
      */
     saveEmployee(value) {
       var me = this;
+      // hiển thị loading
+      me.overlay = true;
       // nếu như là nhân bản thì xóa id
       if (me.isReplication) value.employee.employeeId = null;
       // gán employee cho this.employee
-      this.employee = value.employee;
+      me.employee = value.employee;
+      // convert string to int
+      me.employee.gender = parseInt(me.employee.gender);
+      // kiểm tra giá trị date của ngày sinh và ngày cấp
+      if(me.employee.dateOfBirth == ""){
+        me.employee.dateOfBirth = null;
+      }
+      if(me.employee.identifyDate == ""){
+        me.employee.identifyDate = null;
+      }
       // xoá createdDate
-      delete this.employee["createdDate"];
+      delete me.employee["createdDate"];
       var api;
       if (value.employee.employeeId == undefined) {
-        delete this.employee["employeeId"];
+        delete me.employee["employeeId"];
         //gọi api thực hiện cất dữ liệu
-        api = axios.post(this.host, this.employee);
+        api = axios.post(me.host, me.employee);
       } else {
         //gọi api thực hiện cất dữ liệu
-        api = axios.put(this.host + `${this.employeeId}`, this.employee);
+        api = axios.put(me.host + `${me.employeeId}`, me.employee);
       }
       api
         .then(() => {
-          this.employee["employeeId"] = null;
-          this.employee["createdDate"] = null;
+          me.employee["employeeId"] = null;
+          me.employee["createdDate"] = null;
           // xét trường hợp nếu bấm Cất thì sẽ ẩn form
           if (value.value == FormMode.Save) {
             me.showDialogParent(false);
           } else {
+            me.showDialogParent(false);
             // TH nếu bấm Cất và Thêm thì sẽ hiện form thêm mới
             me.btnAddOnClick();
           }
           // Load lại dữ liệu
-          me.loadData();
+          me.loadData(FormMode.Page_Number_1);
         })
         .catch((res) => {
           // gọi đến hàm trả về lỗi
           me.responseWithError(res);
+          // ẩn loading
+          me.overlay = false;
         });
     },
 
@@ -787,7 +843,7 @@ export default {
     return {
       employeeId: null,
       // gán class cho employeeProps
-      employeeProps: Employee,
+      employeeProps: new Employee(),
       host: "http://localhost:5000/api/v1/Employees/",
       hostDepartment: "http://localhost:5000/api/v1/Departments/",
       deleteEmplFirst: `Bạn có thực sự muốn xóa nhân viên <`,
@@ -811,7 +867,7 @@ export default {
       pageSize: 10,
       pageNumber: 1,
       searchText: "",
-      totalPage: null,
+      totalPage: 0,
       totalRecord: null,
       department: {},
       obj: [],
@@ -832,7 +888,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="css">
 @import url("../../style/layout/content.css");
 @import url("../../style/component/button.css");
 @import url("../../style/component/checkbox.css");

@@ -1,4 +1,6 @@
 const FormMode = Object.freeze({
+    // giới tính nam
+    Male: "1",
     // Cất
     Save: 1,
     //Cất và thêm
@@ -22,6 +24,7 @@ const FormMode = Object.freeze({
     Email_Error: "Email lỗi ! hãy nhập lại",
     Delete_Employee_Checked: "Bạn có thực sự muốn xóa những nhân viên đã chọn không?",
     EmployeeCode_Duplicate: "Mã nhân viên đã bị trùng",
+    Invalid_Date: "Ngày tháng không hợp lệ",
     //text button popup
     Text_Left: "Không",
     Text_Left_Exit: "Hủy",

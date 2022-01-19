@@ -117,7 +117,8 @@ export default {
       api.then(function () {
         // nếu thành công thì sẽ ẩn popup và load lại data
           me.btnCloseOnClick();
-          me.$emit("loadData");
+          // ẩn nút xóa
+          me.$emit("loadData",FormMode.Page_Number_1);
         })
         .catch(function (res) {
           const statusCode = res.response.status;
