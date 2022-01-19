@@ -26,7 +26,6 @@ class Employee {
     bankName = "";
     bankBranchName = "";
     positionName = "";
-    errorMsgs = [];
     createdDate = null;
     createdBy = null;
     modifiedDate = null;
