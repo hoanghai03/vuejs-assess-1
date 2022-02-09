@@ -24,13 +24,21 @@ const FormMode = Object.freeze({
     Email_Error: "Email lỗi ! hãy nhập lại",
     Delete_Employee_Checked: "Bạn có thực sự muốn xóa những nhân viên đã chọn không?",
     EmployeeCode_Duplicate: "Mã nhân viên đã bị trùng",
+    EmployeeCode_Not_Regex: "Mã nhân viên không đúng định dạng",
     Invalid_Date: "Ngày tháng không hợp lệ",
+    No_Data: "Dữ liệu không còn tồn tại trong hệ thống",
     //text button popup
     Text_Left: "Không",
     Text_Left_Exit: "Hủy",
     //is delete : 
     Is_Delete_Y: "delete",
-    Is_Delete_N: "noDelete"
+    Is_Delete_N: "noDelete",
+    //z-index
+    Zindex: 2000,
+    // time toast messenge
+    Time: 3000,
+    // lỗi chưa kết nối với server
+    Status_500: "Lỗi kết nối đến server"
 });
 
 export default FormMode;

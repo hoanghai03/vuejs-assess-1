@@ -1,5 +1,4 @@
 class Employee {
-    employeeId = null;
     employeeCode = null;
     firstName = null;
     lastName = null;
@@ -26,10 +25,6 @@ class Employee {
     bankName = "";
     bankBranchName = "";
     positionName = "";
-    createdDate = null;
-    createdBy = null;
-    modifiedDate = null;
-    modifiedBy = null;
 }
 
 export default Employee;

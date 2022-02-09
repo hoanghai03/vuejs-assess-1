@@ -29,7 +29,8 @@
             </button>
           </div>
         </div>
-        <div class="popup-bot-right" v-else-if="isDelete == FormMode.Is_Delete_N">
+        <div  class="popup-bot-right" v-else-if="isDelete == FormMode.Is_Delete_N"
+        >
           <div>
             <div>
               <button class="m-second-btn" @click="saveData(false)">
@@ -55,7 +56,8 @@
 </template>
 <script>
 import axios from "axios";
-import FormMode from "../../script/Enum.js";
+import FormMode from "../../script/enum.js";
+import ToastMessenge from "../../script/toast.js";
 export default {
   name: "employeePopup",
   props: [
@@ -72,25 +74,63 @@ export default {
     "isAsk",
     "isAgree",
     "isDelAll",
-    "checkedId"
+    "checkedId",
   ],
+  mounted() {
+    // Bắt sự kiện shortcuts
+    const keysPressed = {};
+    const me = this;
+    document.addEventListener("keydown", (event) => {
+      // thoát khỏi popup
+      if (event.key == "Escape" && me.isShow) {
+        console.log("test");
+        me.btnCloseOnClick();
+        keysPressed[event.key] = true;
+      }
+      // đồng ý
+      if (event.key == "Enter" && me.isShow) {
+        if(me.isDelete == FormMode.Is_Delete_Y) me.btnDelEntity();
+        else if(me.isDelete == FormMode.Is_Delete_N) me.saveData(true);
+        else me.btnCloseOnClick();
+        keysPressed[event.key] = true;
+      }
+    });
+    // xóa sự kiện keydown
+    document.addEventListener("keyup", (event) => {
+      delete keysPressed[event.key];
+    });
+  },
   data() {
     return {
-      host : "http://localhost:5000/api/v1/Employees/",
+      host: "http://localhost:5000/api/v1/Employees/",
       //Enum
-      FormMode
-    }
+      FormMode,
+      ToastMessenge,
+    };
   },
   methods: {
-
+    /**
+     * Hàm hiển thị toast messenge
+     * createdBy NHHAi 20/1/2022
+     */
+    toastMessenge(text, type) {
+      this.$toast.open({
+        message: text,
+        type: type,
+        duration: FormMode.Time,
+        dismissible: true,
+      });
+    },
     /**
      * Hàm lưu dữ liệu
      * @param value là giá trị cần lưu
      * createdBy NHHai 11/1/2021
      */
-    saveData(value){
+    saveData(value) {
+      //đóng popup
       this.btnCloseOnClick();
-        this.$emit('saveData', value)
+      // truyền dữ liệu
+      this.$emit("saveData", value);
     },
 
     /**
@@ -109,16 +149,22 @@ export default {
       var me = this;
       var api = "";
       // xét trường hợp nếu như muốn xóa nhiều bản ghi
-      if(this.isDelAll){
-        api =  axios.delete(this.host +`all`,{data: this.checkedId});
+      if (this.isDelAll) {
+        api = axios.delete(this.host + `all`, { data: this.checkedId });
       }
       // Trường hợp xóa 1 bản ghi
       else api = axios.delete(this.host + `${this.employeeId}`);
-      api.then(function () {
-        // nếu thành công thì sẽ ẩn popup và load lại data
+      api
+        .then(function () {
+          // nếu thành công thì sẽ ẩn popup và load lại data
           me.btnCloseOnClick();
           // ẩn nút xóa
-          me.$emit("loadData",FormMode.Page_Number_1);
+          me.$emit("loadData", FormMode.Page_Number_1);
+          // hiện toast mesenge khi xóa
+          me.toastMessenge(
+            ToastMessenge.Messenge_Delete_Success,
+            ToastMessenge.Success
+          );
         })
         .catch(function (res) {
           const statusCode = res.response.status;
@@ -129,7 +175,7 @@ export default {
               console.log(data);
               break;
             case 500:
-              data = res.response.data.data;
+              data = res.response.data.userMsg;
               console.log(data);
               break;
             default:

@@ -16,7 +16,9 @@
       </div>
       <div class="filter">
         <div class="button-left">
-          <button class="btn-left">Thực hiện hàng loạt</button>
+          <button class="btn-left" @click="showDelete()">
+            Thực hiện hàng loạt
+          </button>
           <div class="mi-16 m-icon mi-arrow-up--black"></div>
         </div>
         <div class="block-input">
@@ -156,7 +158,7 @@
         id="delEntity"
         class="delete-entity"
         @click="showPopupDel(FormMode.DeleteAll)"
-        :class="{ show: isShowEntityDel, left: isShowLeftDel }"
+        :class="{ show: showD, left: isShowLeftDel }"
       >
         Xóa
       </div>
@@ -234,9 +236,9 @@
         </div>
       </div>
     </div>
-    <v-overlay :value="overlay">
-      <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay>
+    <!-- ==============================loading ======================================-->
+    <base-overlay :overlay="overlay"></base-overlay>
+    <!-- ==============================dialog ======================================-->
     <employee-detail
       :isShow="isShowDialogDetail"
       :empl="employeeProps"
@@ -248,6 +250,7 @@
       @changeIdentityDate="changeIdentityDate($event)"
       @show="btnAddOnClick"
     />
+    <!-- ==============================popup ======================================-->
     <employee-popup
       :isShow="isShowPopupDetail"
       :textPopup="textPopup"
@@ -266,9 +269,11 @@
 <script>
 import axios from "axios";
 import EmployeeDetail from "./EmployeeDetail.vue";
-import EmployeePopup from "./EmployeePopup.vue";
-import FormMode from "../../script/Enum.js";
-import Employee from "../../models/Employee.js";
+import EmployeePopup from "../../components/base/BasePopup.vue";
+import BaseOverlay from "../../components/base/BaseOverlay.vue";
+import FormMode from "../../script/enum.js";
+import ToastMessenge from "../../script/toast.js";
+import Employee from "../../models/employee.js";
 import Paginate from "vuejs-paginate";
 
 export default {
@@ -277,33 +282,50 @@ export default {
     EmployeeDetail,
     EmployeePopup,
     Paginate,
+    BaseOverlay,
   },
   created() {
     // khởi tạo dữ liệu trong bảng
     this.loadData();
   },
-  watch: {
-    /**
-     * Hàm kiểm tra sự thay đổi employeeId và load dữ liệu nhân viên theo employeeId
-     * createdBy NHHAi 15/12/2021
-     */
-    employeeId: function (value) {
-      var me = this;
-
-      if (value != null) {
-        axios
-          .get(this.host + `${value}`)
-          .then(function (response) {
-            // xét trường hợp nhân bản
-            me.employeeProps = response.data;
-            me.employee = response.data;
-          })
-          .catch(function (res) {
-            // gọi đến hàm trả về lỗi
-            this.responseWithError(res);
-          });
+  mounted() {
+    // Bắt sự kiện shortcuts
+    const keysPressed = {};
+    const me = this;
+    document.addEventListener("keydown", (event) => {
+      if (
+        keysPressed["Control"] &&
+        (event.key == "d" ||
+          event.key == "D" ||
+          event.key == "o" ||
+          event.key == "O")
+      ) {
+        event.preventDefault(); // hủy sự kiện mặc định
       }
-    },
+      keysPressed[event.key] = true;
+      // Xóa nhiều bản ghi
+      if (
+        keysPressed["Control"] &&
+        (event.key == "d" || event.key == "D") &&
+        me.checkedId.length != 0
+      ) {
+        //TODO
+        me.showPopupDel(FormMode.DeleteAll);
+      }
+
+      // Show dialog
+      if (keysPressed["Control"] && (event.key == "o" || event.key == "O")) {
+        //TODO
+        me.btnAddOnClick();
+      }
+    });
+
+    // xóa sự kiện keydown
+    document.addEventListener("keyup", (event) => {
+      delete keysPressed[event.key];
+    });
+  },
+  watch: {
     /**
      * lọc dữ liệu theo search text
      * CreatedBy NHHai 28/12/2021
@@ -341,16 +363,6 @@ export default {
     },
 
     /**
-     * hiển thị loading
-     * CreatedBy NHHai 28/12/2021
-     */
-    overlay(val) {
-      val &&
-        setTimeout(() => {
-          this.overlay = false;
-        }, 3000);
-    },
-    /**
      * Hàm hiển thị button xóa
      * createdBy NHHai 9/1/2022
      */
@@ -363,6 +375,7 @@ export default {
         // TH không chọn button nào thì ẩn nút xóa
         this.isShowEntityDel = false;
         this.isShowLeftDel = false;
+        this.showD = false;
       }
     },
   },
@@ -389,7 +402,6 @@ export default {
     },
   },
   methods: {
-
     /**
      * chuyển trang
      * @param pageNum số trang
@@ -397,16 +409,6 @@ export default {
      */
     clickCallback(pageNum) {
       this.pageNumber = pageNum;
-    },
-
-    /**
-     * Hàm để search emplouyee theo searchText
-     * createdBy NHHAi 30/12/2021
-     */
-    searchTextEmployee(value) {
-      setTimeout(() => {
-        this.searchText = value;
-      }, 1000);
     },
     /**
      * gán giá trị department
@@ -440,16 +442,6 @@ export default {
           this.responseWithError(res);
         });
     },
-    /**
-     * chuyển trang
-     * CreatedBy NHHai 28/12/2021
-     */
-    turnToPage(value) {
-      // gán giá trị cho pageNumber nếu value phù hợp
-      if (value != null && value > 0 && value <= this.totalPage) {
-        this.pageNumber = value;
-      }
-    },
 
     /**
      *  hiển thị số bản ghi trên trang
@@ -479,30 +471,47 @@ export default {
      * Hiên thị popup xóa
      * CreatedBy NHHai 28/12/2021
      */
-    showPopupDel(value) {
+    async showPopupDel(value) {
+      // hiển thị loading
+      this.overlay = true;
       if (value == this.FormMode.Delete) {
         this.employeeId = this.checkID;
         // ẩn button xóa
         this.isShowEntityDelRight = false;
         // TH không phải chọn xóa tất cả
         this.isDelAll = false;
+        // lấy mã code
+        var response = await this.loadEmployeeWithId(this.employeeId);
+        // xét trường hợp data rỗng
+        if (response.data == "") {
+          this.checkDataEmpty();
+          return;
+        }
+        var employeeCode = response.data.employeeCode;
         // gán text popup
-        setTimeout(() => {
-          this.textPopup =
-            this.deleteEmplFirst +
-            `${this.employee.employeeCode}` +
-            this.deleteEmplLast;
-        }, 600);
+        this.textPopup =
+          this.deleteEmplFirst + `${employeeCode}` + this.deleteEmplLast;
       } else {
         // TH xóa tất cả
         this.isDelAll = true;
         // gán text popup
         this.textPopup = this.FormMode.Delete_Employee_Checked;
       }
+      // hiển thị
+      this.display();
+    },
+
+    /**
+     * Hàm chung trong hiển thị popup del
+     * createdBy NHHAi 20/1/2021
+     */
+    display() {
       this.isDelete = this.FormMode.Is_Delete_Y;
       this.textLeft = this.FormMode.Text_Left;
       this.showButtonLeft(true);
       this.showPopupParent(true);
+      // ẩn loading
+      this.overlay = false;
     },
 
     /**
@@ -544,18 +553,30 @@ export default {
      * Hàm hiển thị dialog khi click vào nút thêm nhân viên
      * createdBy NHHAI 15/12/2021
      */
-    btnAddOnClick() {
-      // gán giá trị null cho employeeId
-      this.employeeId = null;
+    async btnAddOnClick() {
+      // load dữ liệu
+      this.overlay = true;
       this.isReplication = false;
       // lấy mã nhân viên mới
-      this.loadNewEmployeeCode();
+      var response = await this.loadNewEmployeeCode();
+      // khai báo lại giá trị employeeProps
+      this.employeeProps = new Employee();
+      if (response.data != "") {
+        // gán dữ liệu vào EmployeeCode
+        this.employeeProps.employeeCode = response.data;
+      }
+      // gán gender
+      this.employeeProps.gender = this.FormMode.Male;
       // hiển thị danh sách phòng ban
       this.loadDepartment();
-      // hiển thị dialog
-      this.showDialogParent(true);
-      // focus vào ô employee code
-      this.forcusOnInput();
+      setTimeout(() => {
+        // hiển thị dialog
+        this.showDialogParent(true);
+        // ẩn load dữ liệu
+        this.overlay = false;
+        // focus vào ô employee code
+        this.forcusOnInput();
+      }, 400);
     },
     /**
      * Hàm forcus vào ô input
@@ -574,7 +595,6 @@ export default {
      */
     showDialogParent(value) {
       this.isShowDialogDetail = value;
-      if (!value) this.employeeId = null;
     },
 
     /**
@@ -585,6 +605,7 @@ export default {
     showPopupParent(value) {
       this.isShowPopupDetail = value;
       if (value == false) {
+        // hiển thị nút đóng đồng ý ở giữa popup
         this.isAgree = false;
       }
     },
@@ -605,7 +626,8 @@ export default {
     loadData(value) {
       var me = this;
       // gán giá trị 1 cho page number
-      if(value == FormMode.Page_Number_1) me.pageNumber = FormMode.Page_Number_1;
+      if (value == FormMode.Page_Number_1)
+        me.pageNumber = FormMode.Page_Number_1;
       // hiển thị loading
       me.overlay = true;
       axios
@@ -620,7 +642,7 @@ export default {
           me.totalRecord = response.data.totalRecord;
           me.totalPage = response.data.totalPage;
           // ẩn button xóa
-          me.isShowEntityDel = false;
+          me.showD = false;
           // ẩn checkall
           me.isCheckAll = false;
           me.checkedId = [];
@@ -630,8 +652,6 @@ export default {
         .catch((res) => {
           // gọi đến hàm trả về lỗi
           me.responseWithError(res);
-          // ẩn loading
-          me.overlay = false;
         });
     },
 
@@ -641,27 +661,54 @@ export default {
      * @param employeeId là giá trị EmployeeId của mỗi tr trong bảng
      */
     async dbOnClickTr(employeeId, value) {
-      // kiểm tra là nhân bản hay ko
-      // Gán employeeId
-      this.employeeId = employeeId;
-
-      this.isReplication = value;
-      if (this.isReplication) {
-        const me = this;
-        var data = await this.loadNewEmployeeCodeReplication();
-          // gán dữ liệu vào EmployeeCode
-        setTimeout(()=>{
-           me.employeeProps.employeeCode = data.data;
-        },300)
-      }
-      // hiển thị danh sách phòng ban
-      this.loadDepartment();
-      //ẩn button vừa nhấn
-      this.isShowEntityDelRight = false;
-      // Hiển thị dialog thông tin chi tiết nhân viên
+      if (employeeId != null) {
+        // load dữ liệu
+        this.overlay = true;
+        // lấy dữ liệu theo id
+        var response = await this.loadEmployeeWithId(employeeId);
+        // xét trường hợp data rỗng
+        if (response.data == "") {
+          this.checkDataEmpty();
+          return;
+        }
+        // gán dữ liệu cho employeeProps
+        this.employeeProps = response.data;
+        // gán giá trị cho cờ nhân bản
+        this.isReplication = value;
+        // kiểm tra là nhân bản hay ko
+        if (this.isReplication) {
+          // thực hiện lấy mã code
+          var data = await this.loadNewEmployeeCode();
+          if (data.data != "") {
+            // gán dữ liệu vào EmployeeCode
+            this.employeeProps.employeeCode = data.data;
+          }
+        }
+        // hiển thị danh sách phòng ban
+        this.loadDepartment();
+        //ẩn button vừa nhấn
+        this.isShowEntityDelRight = false;
+        // Hiển thị dialog thông tin chi tiết nhân viên
         this.showDialogParent(true);
-      // focus vào ô employee code
-      this.forcusOnInput();
+        // focus vào ô employee code
+        this.forcusOnInput();
+        // ẩn load dữ liệu
+        this.overlay = false;
+      }
+    },
+
+    /**
+     * Hàm lấy nhân viên theo id
+     * @param value mã id
+     * createdBy NHHAi 24/1/2022
+     */
+    loadEmployeeWithId(value) {
+      try {
+        return axios.get(this.host + `${value}`);
+      } catch (error) {
+        // sơ popup ===========================================================================================
+        this.responseWithError(error);
+      }
     },
 
     /**
@@ -669,35 +716,11 @@ export default {
      * createdBy NHHAi 3/1/2022
      */
     loadNewEmployeeCode() {
-      var me = this;
-      axios
-        .get(this.host + this.NewEmployeeCode)
-        .then((response) => {
-          // xóa hết dữ liệu trong employeeProps
-          if (!me.isReplication) {
-            // hiiển thị giá trị mặc định cho employeeProps
-            me.employeeProps = new Employee();
-            // gán giá trị cho gender
-            me.employeeProps.gender = this.FormMode.Male;
-          }
-          // gán dữ liệu vào EmployeeCode
-          me.employeeProps.employeeCode = response.data;
-        })
-        .catch((res) => {
-          // gọi đến hàm trả về lỗi
-          this.responseWithError(res);
-        });
-    },
-
-    /**
-     * Hàm Lấy mã nhân viên mới khi nhân bản
-     * createdBy NHHAi 3/1/2022
-     */
-    loadNewEmployeeCodeReplication() {
-
-      return axios
-        .get(this.host + this.NewEmployeeCode);
-
+      try {
+        return axios.get(this.host + this.NewEmployeeCode);
+      } catch (error) {
+        this.responseWithError(error);
+      }
     },
     /**
      * Hàm lưu nhân viên
@@ -708,43 +731,51 @@ export default {
       // hiển thị loading
       me.overlay = true;
       // nếu như là nhân bản thì xóa id
-      if (me.isReplication) value.employee.employeeId = null;
+      if (me.isReplication) delete value.employee["employeeId"];
       // gán employee cho this.employee
       me.employee = value.employee;
       // convert string to int
       me.employee.gender = parseInt(me.employee.gender);
       // kiểm tra giá trị date của ngày sinh và ngày cấp
-      if(me.employee.dateOfBirth == ""){
+      if (me.employee.dateOfBirth == "") {
         me.employee.dateOfBirth = null;
       }
-      if(me.employee.identifyDate == ""){
+      if (me.employee.identifyDate == "") {
         me.employee.identifyDate = null;
       }
-      // xoá createdDate
-      delete me.employee["createdDate"];
       var api;
-      if (value.employee.employeeId == undefined) {
-        delete me.employee["employeeId"];
+      if (!value.employee.employeeId) {
         //gọi api thực hiện cất dữ liệu
         api = axios.post(me.host, me.employee);
       } else {
         //gọi api thực hiện cất dữ liệu
-        api = axios.put(me.host + `${me.employeeId}`, me.employee);
+        api = axios.put(me.host + `${value.employee.employeeId}`, me.employee);
       }
       api
         .then(() => {
-          me.employee["employeeId"] = null;
-          me.employee["createdDate"] = null;
-          // xét trường hợp nếu bấm Cất thì sẽ ẩn form
-          if (value.value == FormMode.Save) {
-            me.showDialogParent(false);
-          } else {
-            me.showDialogParent(false);
+          if (value.value == FormMode.SaveAndAdd) {
             // TH nếu bấm Cất và Thêm thì sẽ hiện form thêm mới
             me.btnAddOnClick();
+          } else {
+            // ẩn form
+            me.showDialogParent(false);
           }
           // Load lại dữ liệu
           me.loadData(FormMode.Page_Number_1);
+          // toast messenge
+          if (!value.employee.employeeId) {
+            // hiện toast mesenge khi thêm mới thành công
+            me.toastMessenge(
+              ToastMessenge.Messenge_Success,
+              ToastMessenge.Success
+            );
+          } else {
+            // hiện toast mesenge khi cập nhật thành công
+            me.toastMessenge(
+              ToastMessenge.Messenge_Update_Success,
+              ToastMessenge.Success
+            );
+          }
         })
         .catch((res) => {
           // gọi đến hàm trả về lỗi
@@ -791,38 +822,47 @@ export default {
      */
     responseWithError(res) {
       var me = this;
-      const statusCode = res.response.status;
-      switch (statusCode) {
-        // nếu mã lỗi 400 thì hiển thị cảnh thông báo lỗi
-        case 400:
-          var data = res.response.data.data;
-          if (data) {
-            me.showButtonLeft(false);
-            me.isAgree = true;
-            me.isDelete = null;
-            if (res.response.data.data[0] != undefined) {
-              me.textPopup = res.response.data.data[0];
-            } else {
-              me.textPopup = res.response.data.userMsg;
-            }
+      // ẩn loading
+      me.overlay = false;
+      if (res.response) {
+        const statusCode = res.response.status;
+        switch (statusCode) {
+          // nếu mã lỗi 400 thì hiển thị cảnh thông báo lỗi
+          case 400:
+            var data = res.response.data.data;
+            if (data) {
+              me.showButtonLeft(false);
+              me.isAgree = true;
+              me.isDelete = null;
+              if (res.response.data.data[0] != undefined) {
+                me.textPopup = res.response.data.data[0];
+              } else {
+                me.textPopup = res.response.data.userMsg;
+              }
 
-            if (me.textPopup == this.FormMode.EmployeeCode_Duplicate) {
-              me.textPopup =
-                this.duplicateCodeFirst +
-                `${me.employee.employeeCode}` +
-                this.duplicateCodeLast;
+              if (me.textPopup == this.FormMode.EmployeeCode_Duplicate) {
+                me.textPopup =
+                  this.duplicateCodeFirst +
+                  `${me.employee.employeeCode}` +
+                  this.duplicateCodeLast;
+              }
+              me.showPopupParent(true);
             }
+            break;
+          case 500:
+            me.showButtonLeft(false);
+            me.isDelete = null;
+            me.textPopup = res.response.data.userMsg;
             me.showPopupParent(true);
-          }
-          break;
-        case 500:
-          me.showButtonLeft(false);
-          me.isDelete = null;
-          me.textPopup = res.response.data.userMsg;
-          me.showPopupParent(true);
-          break;
-        default:
-          break;
+            break;
+          default:
+            break;
+        }
+      } else {
+        me.showButtonLeft(false);
+        me.isDelete = null;
+        me.textPopup = FormMode.Status_500;
+        me.showPopupParent(true);
       }
     },
 
@@ -832,12 +872,47 @@ export default {
      */
     exportData() {
       try {
-        window.location.href =
-          this.host +
-          `export?pageSize=${this.pageSize}&pageNumber=${this.pageNumber}&employeeFilter=${this.searchText}`;
+        window.location.href = this.host + this.export;
       } catch (error) {
         this.responseWithError(error);
       }
+    },
+
+    /**
+     * Hàm hiển thị toast messenge
+     * createdBy NHHAi 20/1/2022
+     */
+    toastMessenge(text, type) {
+      this.$toast.open({
+        message: text,
+        type: type,
+        duration: FormMode.Time,
+        dismissible: true,
+      });
+    },
+
+    /**
+     * Hàm show btn xóa khi click vào Thực hiện hàng loạt
+     * createdBy NHHAi 21/1/2022
+     */
+    showDelete() {
+      if (this.isShowEntityDel) {
+        this.showD = !this.showD;
+      }
+    },
+    /**
+     * Hàm kiểm tra dữ liệu trống
+     * createdBy NHHAi 14/1/2022
+     */
+    checkDataEmpty() {
+      this.textPopup = FormMode.No_Data;
+      this.isInfo = true;
+      this.showButtonLeft(false);
+      this.showPopupParent(true);
+      // ẩn dữ liệu
+      this.overlay = false;
+      // load lại dữ liệu
+      this.loadData();
     },
   },
   data() {
@@ -852,6 +927,7 @@ export default {
       duplicateCodeFirst: "Mã nhân viên <",
       duplicateCodeLast: "> đã tồn tại trong hệ thống,vui lòng kiểm tra lại.",
       NewEmployeeCode: "NewEmployeeCode",
+      export: "export",
       employees: [],
       employee: {},
       textPopup: null,
@@ -879,11 +955,13 @@ export default {
       isCheckAll: false,
       checkedId: [],
       isDelAll: false,
+      showD: false,
       isReplication: false,
       newCode: null,
       checkID: null,
       // enum
       FormMode,
+      ToastMessenge,
     };
   },
 };

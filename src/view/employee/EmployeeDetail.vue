@@ -49,11 +49,11 @@
               <div class="input-id">
                 <div class="text-input">Mã <span>*</span></div>
                 <input
-                  ref="code"
+                  ref="employeeCode"
                   id="txtEntityCode"
                   class="m-input check"
                   type="text"
-                  maxlength="20"
+                  maxlength="12"
                   :title="messageEmptyEmployeeCode"
                   :class="{ 'input-warning': $v.empl.employeeCode.$error }"
                   v-model.trim="$v.empl.employeeCode.$model"
@@ -65,7 +65,7 @@
                 <div class="text-input">Tên <span>*</span></div>
                 <input
                   maxlength="100"
-                  ref="EmployeeName"
+                  ref="fullName"
                   id="txtEmployeeName"
                   class="m-input check"
                   type="text"
@@ -79,11 +79,16 @@
             </div>
             <div>
               <div class="text-input">Đơn vị <span>*</span></div>
-              <v-combobox
+              <base-combobox
+                :selectVal="select"
+                :department="department"
+                @selectValue="selectValue($event)"
+              ></base-combobox>
+              <!-- <v-combobox
                 v-model="select"
                 :items="department"
                 :dense="true"
-              ></v-combobox>
+              ></v-combobox> -->
             </div>
             <div>
               <div class="text-input">Chức danh</div>
@@ -101,6 +106,7 @@
               <div class="input-date">
                 <div class="text-input">Ngày sinh</div>
                 <input
+                ref="dateOfBirth"
                   class="m-input"
                   :class="{ 'input-warning': isWarningDateOfBirth }"
                   fieldName="DateOfBirth"
@@ -168,6 +174,7 @@
               <div class="input-date-range">
                 <div class="text-input">Ngày cấp</div>
                 <input
+                ref="identityDate"
                   class="m-input"
                   :class="{ 'input-warning': isWarningIdentifyDate }"
                   fieldName="IdentityDate"
@@ -319,14 +326,17 @@
 </template>
 
 <script>
-import EmployeePopup from "./EmployeePopup.vue";
+import EmployeePopup from "../../components/base/BasePopup.vue";
 import { required, email } from "vuelidate/lib/validators";
-import FormMode from "../../script/Enum.js";
-import Employee from "../../models/Employee.js";
+import FormMode from "../../script/enum.js";
+import Employee from "../../models/employee.js";
+import BaseCombobox from "../../components/base/BaseCombobox.vue";
+
 export default {
   name: "employeeDetail",
   components: {
     EmployeePopup,
+    BaseCombobox,
   },
   props: [
     "isShow",
@@ -335,6 +345,49 @@ export default {
     "changeIdentityDate",
     "department",
   ],
+  mounted() {
+    // Bắt sự kiện shortcuts
+    const keysPressed = {};
+    const me = this;
+    document.addEventListener("keydown", (event) => {
+      // đóng dialog khi click ESC
+      if (event.key == "Escape" && me.checkCloseDialog && me.isShow) {
+        me.btnCloseOnClickHeader();
+      }
+      me.checkCloseDialog = true;
+
+      if (keysPressed["Control"] && (event.key == "s" || event.key == "S")) {
+        event.preventDefault(); // hủy sự kiện mặc định
+      }
+      keysPressed[event.key] = true;
+      // Lưu
+      if (
+        keysPressed["Control"] &&
+        !keysPressed["Shift"] &&
+        (event.key == "s" || event.key == "S") &&
+        me.isShow
+      ) {
+        console.log("1");
+        //TODO
+        me.btnSaveOnClick(FormMode.Save);
+      }
+      // Lưu và thêm mới
+      if (
+        keysPressed["Control"] &&
+        keysPressed["Shift"] &&
+        (event.key == "s" || event.key == "S") &&
+        me.isShow
+      ) {
+        console.log("2");
+        //TODO
+        me.btnSaveOnClick(FormMode.SaveAndAdd);
+      }
+    });
+    // xóa sự kiện keydown
+    document.addEventListener("keyup", (event) => {
+      delete keysPressed[event.key];
+    });
+  },
   data() {
     return {
       // Enum
@@ -358,6 +411,8 @@ export default {
       isValidateCBX: false,
       isWarningDateOfBirth: false,
       isWarningIdentifyDate: false,
+      // cờ khi bấm ESC tắt popup
+      checkCloseDialog: true,
     };
   },
   watch: {
@@ -425,6 +480,11 @@ export default {
     },
   },
   methods: {
+    // hàm gán giá trị cho select
+    // cretedBy NHHAi 21/1/2022
+    selectValue(value) {
+      this.select = value;
+    },
     /**
      * Hàm xử lý focus trong dialog
      * createdBy NHHAi 19/1/2022
@@ -445,6 +505,18 @@ export default {
       if (this.$v.empl.fullName.$error) {
         this.messageEmptyFullName = this.emptyFullName;
       } else this.messageEmptyFullName = "";
+    },
+    /**
+     * Hàm cảnh báo dữ liệu khi identifyNumber trống
+     * createdBy NHHAi 11/1/2021
+     */
+    blurIdentifyNumber() {
+      //
+      this.$v.empl.identifyNumber.$touch();
+      //xét trường hợp nếu lỗi thì add title
+      if (this.$v.empl.identifyNumber.$error) {
+        this.messageIdentifyNumber = this.identifyNumber;
+      } else this.messageIdentifyNumber = "";
     },
     /**
      * Hàm cảnh báo dữ liệu khi fullName trống
@@ -486,7 +558,7 @@ export default {
         this.textPopup = this.FormMode.Data_Changed;
         // Hiển thị popup
         this.showPopupParent(true);
-        this.$emit("compareObj", this.empl);
+        // this.$emit("compareObj", this.empl);
       } else {
         // TH 2 obj giống nhau
         // đóng dialog
@@ -502,6 +574,8 @@ export default {
       if (!value) {
         this.isInfo = false;
         this.isAsk = false;
+        // cờ đóng khi bấm nut ESC
+        this.checkCloseDialog = false;
       }
     },
     /**
@@ -527,12 +601,43 @@ export default {
      * @param value giá trị chọn nút
      */
     btnSaveOnClick(value) {
-      this.isDelete = null;
-      this.isShowleft = false;
       var me = this;
-      var checkCBX = false;
+      me.isDelete = null;
+      me.isShowleft = false;
       // kiểm tra dữ liệu trống
       me.$v.$touch();
+      // Trường hợp mã nhân viên trống
+      if (!me.empl.employeeCode) {
+        //focus vào ô mã nhân viên
+        me.$refs.employeeCode.focus();
+        //hiển thị popup
+        this.isInfo = true;
+        me.showPopupParent(true);
+        me.textPopup = this.FormMode.EmployeeCode_Not_Empty;
+        return;
+      }
+      // Trường hợp mã nhân viên không đúng định dạng
+      const regex = /^NV-[0-9]+$/;
+      if (!regex.test(me.empl.employeeCode)) {
+        //focus vào ô mã nhân viên
+        me.$refs.employeeCode.focus();
+        //hiển thị popup
+        me.showPopupParent(true);
+        me.textPopup = this.FormMode.EmployeeCode_Not_Regex;
+        return;
+      }
+
+      // Trường hợp tên nhân viên trống
+      if (!me.empl.fullName) {
+        //focus vào ô mã nhân viên
+        me.$refs.fullName.focus();
+        //hiển thị popup
+        this.isInfo = true;
+        me.showPopupParent(true);
+        me.textPopup = this.FormMode.FullName_Not_Empty;
+        return;
+      }
+
       // Trường hợp lựa chọn phòng ban trống hoặc sai phòng ban trống
       if (me.select.value == undefined || me.select.value == "") {
         this.isInfo = true;
@@ -543,7 +648,7 @@ export default {
             ".v-autocomplete.v-input>.v-input__control>.v-input__slot"
           )
           .classList.add("input-warning");
-        checkCBX = true;
+        return;
       } else {
         document
           .querySelector(
@@ -551,33 +656,23 @@ export default {
           )
           .classList.remove("input-warning");
       }
-      // Trường hợp mã nhân viên trống
-      if (!me.empl.employeeCode) {
-        this.isInfo = true;
-        me.showPopupParent(true);
-        me.textPopup = this.FormMode.EmployeeCode_Not_Empty;
-        return;
-      }
-      // Trường hợp tên nhân viên trống
-      if (!me.empl.fullName) {
-        this.isInfo = true;
-        me.showPopupParent(true);
-        me.textPopup = this.FormMode.FullName_Not_Empty;
-        return;
-      }
       // trường hợp nhập quá ngày hiện tại
       if (me.isWarningDateOfBirth || me.isWarningIdentifyDate) {
+        // focus 
+        if(me.isWarningDateOfBirth) me.$refs.dateOfBirth.focus();
+        else me.$refs.identifyDate.focus();
+        // show popup
         me.showPopupParent(true);
         me.textPopup = this.FormMode.Invalid_Date;
         return;
       }
       // trường hợp lỗi tên email
       if (me.$v.empl.email.$error) {
+                //focus vào ô mã nhân viên
+        me.$refs.email.focus();
+        //hiển thị popup
         me.showPopupParent(true);
         me.textPopup = this.FormMode.Email_Error;
-        return;
-      }
-      if (checkCBX) {
         return;
       }
       // lấy dữ liệu
@@ -615,7 +710,7 @@ export default {
       // kiểm tra giá trị chọn với ngày hiện tại
       if (
         date.target.value == "" ||
-        new Date(date.target.value) <= new Date() 
+        new Date(date.target.value) <= new Date()
       ) {
         // nếu bé hơn thì không cảnh báo
         this.isWarningDateOfBirth = false;
@@ -636,7 +731,7 @@ export default {
       // kiểm tra giá trị chọn với ngày hiện tại
       if (
         date.target.value == "" ||
-        new Date(date.target.value) <= new Date()        
+        new Date(date.target.value) <= new Date()
       ) {
         // nếu bé hơn thì không cảnh báo
         this.isWarningIdentifyDate = false;
