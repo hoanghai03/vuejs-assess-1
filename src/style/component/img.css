@@ -1,0 +1,10 @@
+/* ảnh nghiệp vụ tiền mặt */
+
+.mi-process-cash {
+    background-image: url(../../assets/img//qt_TienMat.1f64b87b.svg);
+    position: relative;
+}
+
+.mi-h-340 {
+    height: 340px;
+}

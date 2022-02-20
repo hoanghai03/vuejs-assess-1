@@ -75,6 +75,7 @@ export default {
     "isAgree",
     "isDelAll",
     "checkedId",
+    "host"
   ],
   mounted() {
     // Bắt sự kiện shortcuts
@@ -102,7 +103,6 @@ export default {
   },
   data() {
     return {
-      host: "http://localhost:5000/api/v1/Employees/",
       //Enum
       FormMode,
       ToastMessenge,

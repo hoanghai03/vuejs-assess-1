@@ -17,11 +17,11 @@
     border-radius: 2px;
 }
 
-.dialog .dialog-header {
+.dialog-header {
     display: flex;
 }
 
-.dialog .dialog-header .dialog-title {
+.dialog-header .dialog-title {
     display: flex;
     padding: 20px 12px 20px 32px;
     align-items: center;
@@ -33,18 +33,18 @@
     font-family: notosans bold;
 }
 
-.dialog-title span {
+.dialog-title .list-checkbox {
     display: flex;
     align-items: center;
     padding: 0 19.5px;
 }
 
-.dialog-title span .checkbox-content {
+.dialog-title .list-checkbox .checkbox-content {
     padding-left: 10px;
     cursor: pointer;
 }
 
-.dialog .dialog-header .dialog-close {
+.dialog-header .dialog-close {
     display: flex;
     width: 77px;
     height: 49px;
@@ -98,13 +98,13 @@
     display: flex;
 }
 
-.input-id-name .input-id {
+.input-id {
     width: 150.8px;
     padding-right: 6px;
     flex: 1;
 }
 
-.input-id-name .input-name {
+.input-name {
     width: calc(100% - 156.8px);
 }
 
@@ -134,6 +134,9 @@
     padding: 5px 0 6px 10px;
     /* align-items: center; */
 }
+
+
+/* ======================***========================== */
 
 .list-gender .label-gender {
     margin-right: 16px;
@@ -212,4 +215,159 @@
 
 .m-dialog-show {
     display: block !important;
+}
+
+
+/* custom radio in dialog supplier detail */
+
+.display-flex {
+    display: flex;
+}
+
+
+/* right */
+
+.list-radio {
+    display: flex;
+    padding: 5px 0 4px 15px;
+    /* align-items: center; */
+}
+
+.list-radio .label-radio {
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+
+/* left */
+
+
+/* content bot */
+
+.con-slot-tabs {
+    width: 100%;
+    border: 1px solid #babec5;
+    padding: 10px 8px;
+    padding-bottom: 60px !important;
+}
+
+.content-overflow {
+    overflow: hidden;
+    overflow-y: auto;
+    height: 438px;
+}
+
+div.content-overflow::-webkit-scrollbar {
+    width: 10px;
+    background-color: #f1f1f1;
+}
+
+div.content-overflow::-webkit-scrollbar-thumb {
+    background-color: #a8afb6;
+}
+
+div.content-overflow::-webkit-scrollbar-thumb:hover {
+    background-color: #7b7d80;
+}
+
+
+/* dialog account */
+
+.dialog-account {
+    position: absolute;
+    background-color: #ffffff;
+    z-index: 1003;
+    width: 800px;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 2px;
+}
+
+.dialog-title .text-title-account {
+    font-size: 24px;
+    font-family: notosans;
+    color: #212121;
+    font-weight: 600;
+}
+
+.h-content-account {
+    height: calc(100vh - (52px + 65px));
+}
+
+.follow-detail {
+    font-size: 18px;
+    display: block;
+    padding: 20px 0px 10px 0px;
+    position: relative;
+    transition: all .2s ease-out;
+    color: inherit;
+    display: flex;
+    align-items: center;
+}
+
+.follow-detail .text-follow-detail {
+    font-size: 16px;
+}
+
+.text-follow-detail:hover {
+    color: #2ea11e;
+    cursor: pointer;
+}
+
+.content-account-overflow {
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+div.content-account-overflow::-webkit-scrollbar {
+    width: 10px;
+    background-color: #f1f1f1;
+}
+
+div.content-account-overflow::-webkit-scrollbar-thumb {
+    background-color: #a8afb6;
+}
+
+div.content-account-overflow::-webkit-scrollbar-thumb:hover {
+    background-color: #7b7d80;
+}
+
+.text-input span {
+    color: red;
+}
+
+
+/* resize */
+
+.resize {
+    width: 12px;
+    height: 50px;
+    background: #fff;
+    border: 1px solid #d4d7dc;
+    border-radius: 8px;
+    position: absolute;
+    align-items: center;
+    left: -6px;
+    top: 43%;
+    z-index: 99;
+    display: flex;
+}
+
+.resize:hover {
+    cursor: pointer;
+}
+
+.resize-click {
+    width: 99%;
+    transition: width .7s;
+}
+
+.rotate-180 {
+    transform: rotate(180deg);
+}
+
+.rotate-90 {
+    transform: rotate(90deg);
+    transition: transform .5s;
 }

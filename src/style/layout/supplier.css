@@ -1,0 +1,96 @@
+/* Header */
+
+.header-content .footer-header {
+    display: flex;
+}
+
+.header-content .text-footer-header {
+    color: #0075c0;
+    cursor: pointer;
+}
+
+.pos-icon-header-content {
+    margin-top: 6px;
+}
+
+.header-content .tour-label {
+    white-space: nowrap;
+    color: #0075c0;
+    font-size: 13px;
+    margin-top: 6px;
+    margin-right: 10px;
+}
+
+.header-content .tour-label:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.header-content .button-header {
+    display: flex;
+    position: relative;
+}
+
+
+/* inner-overview */
+
+.inner-overview {
+    height: 94px;
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    padding-top: 30px;
+    left: 0;
+    position: sticky;
+}
+
+.inner-overview .common-overview {
+    height: 64px;
+    width: calc((100% - 13px)/3);
+    padding: 4px 10px;
+    position: relative;
+    cursor: pointer;
+}
+
+.inner-overview .common-overview .total-money {
+    font-size: 24px;
+    color: #ffffff;
+}
+
+.inner-overview .common-overview .label-overview {
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.dued-debit-overview {
+    background-color: #ff7f2c;
+}
+
+.dued-debit-overview:hover {
+    top: -5px;
+    height: 69px;
+}
+
+.total-debit-overview {
+    background-color: #b8bcc3;
+}
+
+.total-debit-overview:hover {
+    top: -5px;
+    height: 69px;
+}
+
+.payment-overview {
+    background-color: #74cb2f;
+}
+
+.bottom-cm-overview {
+    position: absolute;
+    height: 6px;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    background-color: #111111;
+    opacity: .2;
+    z-index: 1;
+}

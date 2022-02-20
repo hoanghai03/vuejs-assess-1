@@ -1,0 +1,86 @@
+.ms-tabs-ul {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    padding-left: 0;
+    position: relative;
+    display: flex;
+    list-style-type: none;
+    align-items: end;
+}
+
+.ms-tabs-btn {
+    position: relative;
+    cursor: pointer;
+    transition: all .2s ease;
+    font-size: 13px;
+    border-radius: 2px 2px 0 0;
+    height: 25px;
+    padding: 0 8px;
+    margin-right: 2px;
+    display: flex;
+    place-items: center;
+    border: 1px solid #babec5;
+    border-bottom: none !important;
+}
+
+.ms-label {
+    text-align: center;
+    white-space: nowrap;
+    font-size: 13px;
+}
+
+.ms-label:hover {
+    color: #2ca01c;
+}
+
+.tab-checked {
+    height: 31px !important;
+    background-color: #cce4f9;
+}
+
+
+/* tab trang thu chi tiền */
+
+.con-ms-ul-tabs {
+    position: relative;
+    margin-top: 25px;
+}
+
+.ms-tabs-ul-payment {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    padding-left: 0;
+    position: relative;
+    display: flex;
+}
+
+.ms-tabs-btn-pm {
+    position: relative;
+    background: 0 0;
+    border: 0;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all .2s ease;
+    z-index: 0;
+    font-size: 13px;
+    color: #111;
+    margin: 0;
+    padding: 7.5px 16px;
+    line-height: 16px;
+    list-style: none;
+}
+
+.ms-tabs-btn-payment {
+    color: #2ca01c;
+    background: #ebedf0;
+    border-radius: 30px;
+    font-weight: 700;
+}
+
+.ms-tabs-btn-pm:hover {
+    color: #2ca01c;
+    background: #ebedf0;
+    border-radius: 30px;
+}

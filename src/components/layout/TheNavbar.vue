@@ -5,19 +5,19 @@
             <div class="nav-header-logo"></div>
         </div>
         <div class="navigation-content">
-            <router-link class="navigation-item" to="/customer">
+            <router-link class="navigation-item" to="/employee">
                 <div></div>
                 <div class="nav-item-icon">
                     <div class="within-nav-icon m-icon m-icon-item-1"></div>
                 </div>
-                <div class="nav-item-text">Khách hàng</div>
+                <div class="nav-item-text">Nhân viên</div>
             </router-link>
-            <router-link class="navigation-item" to="/employee">
+            <router-link class="navigation-item" to="/money/process">
                 <div></div>
                 <div class="nav-item-icon">
                     <div class="within-nav-icon m-icon m-icon-item-2"></div>
                 </div>
-                <div class="nav-item-text">Nhân viên</div>
+                <div class="nav-item-text">Tiền mặt</div>
             </router-link>
             <router-link class="navigation-item" to="/student">
                 <div></div>

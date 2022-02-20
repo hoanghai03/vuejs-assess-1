@@ -15,6 +15,26 @@
 }
 
 
+/* trang payment */
+
+.content-payment {
+    height: calc(100vh - 48px);
+    width: 100%;
+    padding-top: 24px;
+    box-sizing: border-box;
+    float: left;
+}
+
+.filter-item--default {
+    display: inline-block;
+    margin-right: 10px;
+    color: #111;
+    white-space: nowrap;
+    padding-left: 12px;
+    line-height: 36px;
+}
+
+
 /* header content */
 
 .header-content {
@@ -23,16 +43,23 @@
     display: flex;
 }
 
-.header-content .title-content {
-    flex: 1;
+.header-content .title-content span {
     font-size: 24px;
     font-family: notosans bold;
+}
+
+.header-content .title-content {
+    flex: 1;
+}
+
+.header-content .button-content {
+    display: flex;
 }
 
 
 /* filter */
 
-.content .filter {
+.filter {
     position: sticky;
     left: 0;
     display: flex;
@@ -44,60 +71,34 @@
     background-color: #ffffff;
 }
 
-.content .button-left {
+.button-left {
     position: absolute;
     display: flex;
     left: 20px;
 }
 
-.content .button-left .btn-left {
-    border-radius: 30px;
-    color: #111;
-    height: 36px;
-    width: 183px;
-    border: 2px solid #3b3c3f;
-    font-family: notosans semibold;
-    padding-right: 22px;
-    z-index: 1;
-    /* background-color: #ffffff; */
-}
-
-.content .button-left .btn-left:hover {
-    background-color: #d2d3d6;
-}
-
-.mi-16 {
-    width: 16px;
-    height: 16px;
-    min-width: 16px;
-    min-height: 16px;
-    position: absolute;
-    right: 10px;
-    top: 10px;
-}
-
-.content .icon-load {
+.icon-load {
     width: 32px;
     height: 24px;
     padding: 0 6px;
     align-self: center;
-    margin-left: 15px;
+    margin: 0 8px;
     cursor: pointer;
 }
 
-.content .icon-excel {
+.icon-excel {
     width: 32px;
     height: 24px;
     padding: 0 6px;
     align-self: center;
-    margin-left: 15px;
+    margin: 0 2px;
     cursor: pointer;
 }
 
 
 /* table */
 
-.content .m-table {
+.m-table {
     /* display: flex; */
     top: 100px;
     background-color: #ffffff;
@@ -133,4 +134,31 @@ div.content::-webkit-scrollbar-thumb {
 
 div.content::-webkit-scrollbar-thumb:hover {
     background-color: #7b7d80;
+}
+
+
+/******************************** content tab monney  ******************************************/
+
+.p-top-14 {
+    padding-top: 14px !important;
+}
+
+.ul-tabs {
+    height: 50px;
+    width: 100%;
+    display: flex;
+    background-color: #f4f5f8;
+    border-bottom: 1px solid #d4d7dc;
+    background-color: #f8f8f8;
+}
+
+.ms-labels {
+    padding: 15px 20px 12px 20px;
+    text-align: center;
+    color: #111111;
+    background-color: #f8f8f8;
+}
+
+.ms-labels:hover {
+    color: #2ca01c;
 }

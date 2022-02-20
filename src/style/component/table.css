@@ -1,6 +1,4 @@
-    /* table */
-    
-    table thead th {
+    .common-table thead th {
         position: sticky;
         top: -24px;
         z-index: 2;
@@ -12,12 +10,12 @@
         text-align: left;
     }
     
-    table thead th:not(:nth-last-child(-n+2)) {
+    .common-table thead th:not(:nth-last-child(-n+2)) {
         border-bottom: 1px solid #c7c7c7;
     }
     /* TH */
     
-    table thead th:first-child {
+    .common-table thead th:first-child {
         border: none;
         background-color: #ffffff;
         position: sticky;
@@ -26,32 +24,32 @@
         z-index: 4 !important;
     }
     
-    table thead tr :nth-child(2) {
+    .common-table thead tr :nth-child(2) {
         position: sticky;
         left: 20px;
         z-index: 4 !important;
     }
     
-    table thead th:not(:nth-last-child(-n+3), :first-child) {
+    .common-table thead th:not(:nth-last-child(-n+3), :first-child) {
         border-right: 1px solid #c7c7c7;
         border-bottom: 1px solid #c7c7c7;
     }
     
-    table thead th:nth-last-child(1) {
+    .common-table thead th:nth-last-child(1) {
         position: sticky;
         z-index: 3 !important;
         right: -20px;
         background-color: #f4f5f8;
     }
     
-    table thead th:nth-last-child(2) {
+    .common-table thead th:nth-last-child(2) {
         position: sticky;
         z-index: 3 !important;
         right: 0;
         background-color: #ffffff;
     }
     
-    table thead th:nth-last-child(3) {
+    .common-table thead th:nth-last-child(3) {
         /* border-bottom: 1px solid #c7c7c7; */
         position: sticky;
         z-index: 4 !important;
@@ -60,7 +58,7 @@
     }
     /* TD */
     
-    table th,
+    .common-table th,
     td {
         overflow: hidden;
         text-overflow: ellipsis;
@@ -68,37 +66,37 @@
         /* background-color: #ffffff; */
     }
     
-    table tbody td {
+    .common-table tbody td {
         height: 44px;
         padding: 0 10px;
         text-align: left;
         background-color: #ffffff;
     }
     
-    table tbody td:first-child {
+    .common-table tbody td:first-child {
         position: sticky;
         z-index: 4;
         left: 0;
     }
     
-    table tbody tr :nth-child(2) {
+    .common-table tbody tr :nth-child(2) {
         position: sticky;
         z-index: 3;
         left: 20px;
     }
     
-    table tbody td:nth-last-child(1) {
+    .common-table tbody td:nth-last-child(1) {
         background-color: #f4f5f8;
         position: sticky;
         right: -20px;
     }
     
-    table tbody td:nth-last-child(2) {
+    .common-table tbody td:nth-last-child(2) {
         position: sticky;
         right: 0;
     }
     
-    table tbody td:nth-last-child(3) {
+    .common-table tbody td:nth-last-child(3) {
         position: sticky;
         z-index: 3 !important;
         right: 30px;
@@ -109,7 +107,7 @@
         align-items: center;
     }
     
-    table tbody td:nth-last-child(3) button:first-child {
+    .common-table tbody td:nth-last-child(3) button:first-child {
         color: #0075C0;
         padding: 0;
         border: none;
@@ -118,19 +116,19 @@
         cursor: pointer;
     }
     
-    table tbody td:nth-last-child(3) button:focus {
+    .common-table tbody td:nth-last-child(3) button:focus {
         border: 1px solid #0075C0;
     }
     
-    table tbody td:not(:nth-last-child(-n+3), :first-child) {
+    .common-table tbody td:not(:nth-last-child(-n+3), :first-child) {
         border-bottom: 1px solid #c7c7c7;
         border-right: 1px dotted #c7c7c7;
     }
     
-    table tbody tr:hover td:not(:first-child, :nth-last-child(2)),
-    table tbody tr:hover td:nth-last-child(3),
-    table tbody tr:hover td:nth-last-child(3) button:first-child,
-    table tbody tr:hover td:nth-child(2) {
+    .common-table tbody tr:hover td:not(:first-child, :nth-last-child(2)),
+    .common-table tbody tr:hover td:nth-last-child(3),
+    .common-table tbody tr:hover td:nth-last-child(3) button:first-child,
+    .common-table tbody tr:hover td:nth-child(2) {
         background: #f8f8f8 !important;
     }
     /* class thêm vào khi click càu checkbox trong taable  */
@@ -141,7 +139,7 @@
     /* căn chỉnh chữ với cột */
     
     .text-center-col,
-    table thead th[fieldName="DateOfBirth"] {
+    .common-table thead th[fieldName="DateOfBirth"] {
         text-align: center !important;
     }
     
@@ -149,7 +147,7 @@
         text-align: right !important;
     }
     
-    table thead .text-function {
+    .common-table thead .text-function {
         text-align: right;
         padding-right: 16px;
     }
@@ -169,16 +167,16 @@
         cursor: pointer;
     }
     
-    table tbody tr:hover td:nth-last-child(3) .m-icon {
+    .common-table tbody tr:hover td:nth-last-child(3) .m-icon {
         background-color: #f8f8f8;
     }
     
     .icon-down-delete:focus {
         border: 1px solid #0075C0;
     }
-    /* below table */
+    /* below .common-table */
     
-    .below-table {
+    .below-.common-table {
         /* display: none; */
         position: relative;
         width: 100%;
@@ -235,8 +233,8 @@
     }
     
     .left {
-        left: 310px !important;
-        top: 170px !important
+        left: 310px;
+        top: 170px;
     }
     
     .delete-entity:hover {
@@ -260,6 +258,6 @@
         color: rgb(6, 247, 6);
     }
     
-    .none {
-        display: none;
+    .ps-absolute {
+        position: absolute !important;
     }

@@ -1,0 +1,185 @@
+ul {
+    margin: 0;
+    padding: 0 16px;
+}
+
+.process {
+    display: flex;
+    justify-content: center;
+    margin-top: calc((100vh - 576px)/2);
+}
+
+
+/* ******************************Left************************************* */
+
+.process .left-process {
+    width: 688px;
+}
+
+.process .left-process .header-left-process {
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    border: 1px solid #e5e5e5;
+    text-transform: uppercase;
+    background-color: #ffffff;
+    border-radius: 2px 2px 0px 0px;
+}
+
+.process .left-process .content-left-process {
+    height: 340px;
+    border-bottom: 1px solid #e5e5e5;
+    background-color: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-top: none;
+    border-radius: 0px 0px 2px 2px;
+}
+
+
+/* custom css vuetify v-btn */
+
+.process .left-process .content-left-process .face-button {
+    width: 90px;
+    padding-top: 60px;
+    position: absolute;
+    transition: all .2s ease;
+    text-align: center;
+}
+
+.process .left-process .content-left-process .face-button:hover {
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgb(0 0 0 / 16%);
+}
+
+.process .left-process .content-left-process .face-btn-pos-1 {
+    top: 40px;
+    left: 90px;
+}
+
+.process .left-process .content-left-process .face-btn-pos-2 {
+    top: 215px;
+    left: 90px;
+}
+
+.process .left-process .content-left-process .face-btn-pos-3 {
+    top: 125px;
+    left: 335px;
+    width: 125px!important;
+}
+
+.process .left-process .footer-left-process {
+    margin-top: 10px;
+    border: 1px solid #e5e5e5;
+    background-color: #ffffff;
+    border-radius: 2px;
+}
+
+.left-process .dictionary-item {
+    display: flex;
+}
+
+.left-process .dictionary-text {
+    color: #111;
+}
+
+.left-process .dictionary-content {
+    width: 172px;
+    height: 68px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid #e5e5e5;
+}
+
+.left-process .dictionary-content:hover {
+    cursor: pointer;
+    box-shadow: 4px 4px #babec5;
+    box-shadow: 0 3px 6px rgb(0 0 0 / 16%);
+}
+
+
+/* ******************************Right************************************* */
+
+.process .right-process {
+    width: 298px;
+    margin-left: 10px;
+    background-color: #ffffff;
+    border: 1px solid #e5e5e5;
+}
+
+.process .right-process .header-right-process {
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+ul .li-process::before {
+    content: "\2022";
+    color: #646464;
+    font-size: 24px;
+    margin-right: 12px;
+}
+
+ul .li-process {
+    display: flex;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid #e5e5e5;
+    height: 74px;
+    white-space: nowrap;
+}
+
+ul .li-process:last-child {
+    border-bottom: none;
+}
+
+ul .li-process:hover {
+    cursor: pointer;
+    color: #0075c0;
+}
+
+.process .right-process .footer-right-process {
+    border-top: 1px solid #e5e5e5;
+    cursor: pointer;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 13px;
+    color: #0075c0;
+}
+
+
+/* ******************************************************** */
+
+#entityTooltipReceive {
+    position: absolute;
+}
+
+#entityTooltipPayment {
+    position: absolute;
+}
+
+#entityTooltipAudit {
+    position: absolute;
+}
+
+.multiple-process {
+    position: fixed;
+    white-space: nowrap;
+    text-align: left;
+    line-height: 18px;
+    cursor: pointer;
+    background-color: #ffffff;
+    z-index: 1001;
+    height: auto;
+    width: auto;
+    border: 1px solid #c7c7c7;
+}

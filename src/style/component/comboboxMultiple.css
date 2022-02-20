@@ -1,0 +1,43 @@
+/* màu chữ của selected */
+
+.v-chip:not(.v-chip--outlined).info {
+    color: #6b6c72 !important;
+    font-size: 12px !important;
+}
+
+
+/* margin */
+
+.v-select.v-input--dense .v-chip {
+    height: 23px !important;
+    display: flex !important;
+    align-items: center !important;
+    border-radius: 3px !important;
+    padding: 2px 3px 2px 5px !important;
+    margin: 3px;
+    margin-right: 2px !important;
+    max-width: calc(100% - 50px) !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    background-color: #f0f0f0 !important;
+    border: 1px solid #ccc !important;
+}
+
+
+/* background */
+
+
+/* hình dạng */
+
+.v-chip.v-size--default {
+    border-radius: 16px;
+    font-size: 14px;
+    height: 32px;
+}
+
+
+/* icon */
+
+.v-input__append-inner {
+    margin-top: 4px !important;
+}

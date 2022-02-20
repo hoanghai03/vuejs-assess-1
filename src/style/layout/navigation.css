@@ -115,4 +115,7 @@ div.navigation-content::-webkit-scrollbar-thumb:hover {
 
 .router-link-active {
     background-color: #2ca01c;
+    font-weight: 700;
+    color: #111;
+    font-size: 13px;
 }

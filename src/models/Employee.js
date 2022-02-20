@@ -1,4 +1,5 @@
 class Employee {
+    employeeId = null;
     employeeCode = null;
     firstName = null;
     lastName = null;

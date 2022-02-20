@@ -10,7 +10,7 @@
       <div class="dialog-header">
         <div class="dialog-title">
           <div class="text-title">Thông tin nhân viên</div>
-          <span>
+          <span class="list-checkbox">
             <input
               type="checkbox"
               class="m-icon-checkbox"
@@ -21,7 +21,7 @@
               >Là khách hàng</label
             >
           </span>
-          <span>
+          <span class="list-checkbox">
             <input
               type="checkbox"
               class="m-icon-checkbox"
@@ -81,9 +81,10 @@
               <div class="text-input">Đơn vị <span>*</span></div>
               <base-combobox
                 :selectVal="select"
-                :department="department"
+                :value="department"
                 @selectValue="selectValue($event)"
               ></base-combobox>
+
               <!-- <v-combobox
                 v-model="select"
                 :items="department"
@@ -118,7 +119,7 @@
               <div class="input-gender">
                 <div class="text-input">Giới tính</div>
                 <div class="list-gender">
-                  <label class="container">
+                  <label class="container-radio">
                     <input
                       id="rdMale"
                       type="radio"
@@ -131,7 +132,7 @@
                     </div>
                   </label>
                   <label class="label-gender" for="rdMale">Nam</label>
-                  <label class="container">
+                  <label class="container-radio">
                     <input
                       id="rdFemale"
                       type="radio"
@@ -144,7 +145,7 @@
                     </div>
                   </label>
                   <label class="label-gender" for="rdFemale">Nữ</label>
-                  <label class="container">
+                  <label class="container-radio">
                     <input
                       id="rdOther"
                       type="radio"
@@ -393,11 +394,11 @@ export default {
       // Enum
       FormMode,
       //****** */
-      isShowPopupDetail: false,
-      textPopup: null,
       isEmployeeCode: false,
       isEmployeeName: false,
+      isShowPopupDetail: false,
       select: [],
+      textPopup: null,
       isInfo: false,
       isShowleft: false,
       textLeft: "",

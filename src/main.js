@@ -12,7 +12,15 @@ import 'vue-toast-notification/dist/theme-sugar.css';
 import CustomerList from './view/customer/CustomerList.vue'
 import EmployeeList from './view/employee/EmployeeList.vue'
 import StudentList from './view/student/StudentList.vue'
+import Money from './view/money/Money.vue'
+import Process from './view/money/process/Process.vue'
+import Payment from './view/money/payment/Payment.vue'
+import Supplier from './view/money/process/supplier/Supplier.vue'
+import Account from './view/money/process/account/Account.vue'
 
+import ZkTable from 'vue-table-with-tree-grid'
+
+Vue.use(ZkTable)
 Vue.use(VueToast);
 Vue.use(VueRouter)
 Vue.use(Vuelidate)
@@ -30,6 +38,27 @@ const routers = [{
     {
         path: '/student',
         component: StudentList
+    },
+    {
+        path: '/money',
+        component: Money,
+        children: [{
+                path: 'process',
+                component: Process,
+            },
+            {
+                path: 'payment',
+                component: Payment
+            }
+        ]
+    },
+    {
+        path: '/supplier',
+        component: Supplier,
+    },
+    {
+        path: '/account',
+        component: Account,
     }
 ]
 

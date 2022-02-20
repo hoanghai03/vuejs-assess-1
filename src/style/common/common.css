@@ -8,3 +8,219 @@
     opacity: .5;
     z-index: 1002;
 }
+
+.none {
+    display: none;
+}
+
+.w-1\/2 {
+    width: 50%;
+}
+
+.w-1\2 {
+    width: 50%;
+}
+
+.w-256 {
+    width: 256px;
+}
+
+.w-418 {
+    width: 418px !important;
+}
+
+.w-100per {
+    width: 100%;
+}
+
+.m-r-10 {
+    margin-right: 10px;
+}
+
+.m-r-20per {
+    margin-right: 20%;
+}
+
+.w-188 {
+    width: 188px !important;
+}
+
+.w-1\/3 {
+    width: 33.33333%!important;
+}
+
+.w-2\/3 {
+    width: 66.66666%!important;
+}
+
+.w-10 {
+    width: 10px;
+}
+
+.w-225 {
+    width: 225px;
+}
+
+.w-250 {
+    width: 250px;
+}
+
+.w-100 {
+    width: 100px;
+}
+
+.w-120 {
+    width: 120px;
+}
+
+.w-110 {
+    width: 110px;
+}
+
+.w-20 {
+    width: 20px;
+}
+
+.w-30 {
+    width: 20px;
+}
+
+.m-w-10 {
+    min-width: 10px;
+}
+
+.m-w-225 {
+    min-width: 225px;
+}
+
+.m-w-250 {
+    min-width: 250px;
+}
+
+.m-w-100 {
+    min-width: 100px;
+}
+
+.m-w-120 {
+    min-width: 120px;
+}
+
+.m-w-110 {
+    min-width: 110px;
+}
+
+.m-w-30 {
+    min-width: 30px;
+}
+
+.m-w-20 {
+    min-width: 20px;
+}
+
+.pr-2 {
+    padding-right: 0.5rem!important;
+}
+
+.m-r-12 {
+    margin-right: 12px;
+}
+
+.m-l-100 {
+    margin-left: 100px !important;
+}
+
+.p-r-12 {
+    padding-right: 12px !important;
+}
+
+.p-l-10 {
+    padding-left: 10px;
+}
+
+.p-l-30 {
+    padding-left: 30px !important;
+}
+
+.p-r-20 {
+    padding-right: 20px !important;
+}
+
+.p-r-26 {
+    padding-right: 26px !important;
+}
+
+.p-l-5 {
+    padding-left: 5px;
+}
+
+.p-t-0 {
+    padding-top: 0px !important;
+}
+
+.p-t-12 {
+    padding-top: 12px !important;
+}
+
+.p-t-16 {
+    padding-top: 16px !important;
+}
+
+.p-r-16 {
+    padding-right: 16px !important;
+}
+
+.p-l-16 {
+    padding-left: 16px !important;
+}
+
+.p-b-16 {
+    padding-bottom: 16px !important;
+}
+
+.p-b-12 {
+    padding-bottom: 12px !important;
+}
+
+.p-none {
+    padding: 0 !important;
+}
+
+.p-0-10-10 {
+    padding: 0 10px 10px;
+}
+
+.pb-2 {
+    padding-bottom: 0.5rem!important;
+}
+
+.t-0 {
+    top: 0 !important;
+}
+
+.display-flex {
+    display: flex;
+}
+
+.h-100vh {
+    height: 100vh !important;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.w-50per {
+    width: 50%;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.d-grid {
+    display: grid;
+}
+
+label {
+    cursor: pointer;
+}

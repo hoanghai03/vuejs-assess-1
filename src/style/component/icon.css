@@ -1,6 +1,21 @@
 .m-icon {
     background-image: url(../../assets/img/Sprites.64af8f61.svg);
     background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.mi-24 {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+}
+
+.mi-icon-16 {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    min-height: 16px;
 }
 
 
@@ -253,5 +268,63 @@ input[type=checkbox]:checked.m-icon-checkbox {
 
 .mi-arrow-up--black {
     background-position: -560px -359px;
-    opacity: .5;
+}
+
+.mi-process-customer {
+    background-position: -872px -200px;
+}
+
+.mi-calculate {
+    background-position: -1376px -256px;
+}
+
+.mi-chevron-left--primary {
+    background-position: -224px -360px;
+}
+
+.mi-tour {
+    background-position: -984px -144px;
+}
+
+.mi-arrow-up--white {
+    background-position: -848px -359px;
+    background-color: transparent;
+}
+
+.funnel-icon {
+    height: 22px;
+    position: absolute;
+    width: 18px;
+    right: 8px;
+    top: 4px;
+    background-position: -1814px -202px;
+    cursor: pointer;
+}
+
+.mi-arrow-check-all {
+    background-position: -256px -143px;
+    align-self: end;
+    margin: 0 12px;
+}
+
+.mi-setting__list {
+    background-position: -88px -200px;
+}
+
+.mi-icon-right {
+    background-position: -320px -360px;
+}
+
+.mi-chevron-left {
+    background-position: -35px -360px;
+}
+
+.mi-tree-collapse--small {
+    background-position: -559px -312px;
+    margin-right: 6.5px;
+}
+
+.mi-tree-expand--small {
+    background-position: -607px -311px;
+    margin-right: 6.5px;
 }

@@ -1,0 +1,124 @@
+.zk-table {
+    /* width: 95% !important; */
+    margin-left: 23px!important;
+    border: none !important;
+    overflow: initial !important;
+    /* position: relative !important; */
+}
+
+
+/* các cells trong header đầu */
+
+.zk-table__cell-inner {
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+}
+
+
+/* header đầu tiên */
+
+.zk-table--firstProp-header-inner {
+    padding-left: 15px !important;
+}
+
+
+/* header */
+
+.zk-table__header thead .zk-table__header-row {
+    position: sticky;
+    top: -24px;
+    z-index: 2;
+    padding: 0 10px;
+    height: 30px !important;
+    background-color: #eceef1;
+    white-space: nowrap;
+    font-size: 12px;
+    text-align: left;
+}
+
+
+/* các cell trong header */
+
+.zk-table__header-row .zk-table__header-cell {
+    height: 30px!important;
+    font-size: 12px;
+    text-transform: uppercase;
+    align-items: center;
+    cursor: pointer;
+    padding-right: 12px;
+    color: black;
+}
+
+.zk-table__header-row .zk-table__header-cell:not(:nth-last-child(-n+3)) {
+    border-right: 1px solid #c7c7c7;
+    border-bottom: 1px solid #c7c7c7;
+}
+
+.zk-table__header-row .zk-table__header-cell:nth-last-child(3) {
+    position: -webkit-sticky;
+    border-bottom: 1px solid #c7c7c7;
+    position: sticky;
+    z-index: 4 !important;
+    right: -20px;
+}
+
+.zk-table__header-row .zk-table__header-cell:nth-last-child(2) {
+    position: sticky;
+    z-index: 3 !important;
+    right: -38px;
+    background-color: #ffffff;
+}
+
+.zk-table__header-row .zk-table__header-cell:nth-last-child(1) {
+    position: -webkit-sticky;
+    position: sticky;
+    z-index: 3 !important;
+    right: -68px;
+    background-color: #f4f5f8;
+}
+
+.zk-table__header-row .zk-table__header-cell:last-child() {
+    background-color: blue !important;
+}
+
+
+/* body */
+
+.zk-table__body-row {
+    height: 44px !important;
+}
+
+
+/* icon */
+
+.zk-table--tree-icon {
+    margin-right: 6px;
+    cursor: pointer;
+}
+
+.zk-icon {
+    font-size: 20px !important;
+}
+
+.zk-table__body-cell {
+    padding: 0 10px !important;
+    white-space: nowrap !important;
+    font-size: 13px !important;
+    content: none !important;
+}
+
+.zk-table__body-cell:not(:nth-last-child(-n+3)) {
+    border-bottom: 1px solid #c7c7c7 !important;
+    border-right: 1px dotted #c7c7c7 !important;
+}
+
+.zk-table__body-cell:nth-last-child(3) {
+    border-bottom: 1px solid #c7c7c7 !important;
+}
+
+
+/* overflow */
+
+.zk-table__body-wrapper {
+    overflow: initial !important;
+}

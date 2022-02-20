@@ -2,7 +2,7 @@
   <div>
     <div class="content">
       <div class="header-content">
-        <div class="title-content">Nhân viên</div>
+        <div class="title-content"><span>Nhân viên</span></div>
         <div class="button-content">
           <button
             id="addEntity"
@@ -261,6 +261,7 @@
       :isAgree="isAgree"
       :isDelAll="isDelAll"
       :checkedId="checkedId"
+      :host="host"
       @loadData="loadData($event)"
       @showPopup="showPopupParent"
     />
@@ -977,4 +978,5 @@ export default {
 @import url("../../style/component/paging-bar.css");
 @import url("../../style/component/select.css");
 @import url("../../style/component/table.css");
+@import url("../../style/common/common.css");
 </style>
