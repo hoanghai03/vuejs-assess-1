@@ -311,7 +311,6 @@
       :itemsEmployee="employees"
       @showDialog="showDialogParent"
       @saveSupplier="saveSupplier($event)"
-      @employeeId="setEmployeeId($event)"
       @prefix="setPrefix($event)"
     />
   </div>
@@ -401,17 +400,27 @@ export default {
       if (
         keysPressed["Control"] &&
         (event.key == "d" || event.key == "D") &&
-        me.checkedId.length != 0
+        me.checkedId.length != 0 &&
+        !me.isShowDialogDetail
       ) {
         //TODO
         me.showPopupDel(FormMode.DeleteAll);
       }
 
       // Show dialog
-      if (keysPressed["Control"] && (event.key == "o" || event.key == "O")) {
+      if (
+        keysPressed["Control"] &&
+        (event.key == "o" || event.key == "O") &&
+        !me.isShowDialogDetail
+      ) {
         //TODO
         me.btnAddOnClick();
+        event.preventDefault();
       }
+    });
+    // xóa sự kiện keydown
+    document.addEventListener("keyup", (event) => {
+      delete keysPressed[event.key];
     });
   },
   created() {
@@ -677,28 +686,17 @@ export default {
             me.showButtonLeft(false);
             me.isAgree = true;
             me.isDelete = null;
-            // if (res.response.data.data[0] != undefined) {
-            //   me.textPopup = res.response.data.data[0];
-            // } else {
-            //   me.textPopup = res.response.data.userMsg;
-            // }
-
-            // if (me.textPopup == this.FormMode.SupplierCode_Duplicate) {
-            //   me.textPopup =
-            //     this.duplicateCodeFirst +
-            //     `${me.supplier.supplierCode}` +
-            //     this.duplicateCodeLast;
-            // }
-            me.textPopup =
-              this.duplicateCodeFirst +
-              `${me.supplierProps.supplierCode}` +
-              this.duplicateCodeLast;
+            // me.textPopup =
+            //   this.duplicateCodeFirst +
+            //   `${me.supplierProps.supplierCode}` +
+            //   this.duplicateCodeLast;
+            me.textPopup = res.data.validateInfo?.errorMessage;
             me.showPopupParent(true);
             break;
           case 500:
             me.showButtonLeft(false);
             me.isDelete = null;
-            me.textPopup = res.data.validateInfo.errorMessage;
+            me.textPopup = res.data.validateInfo?.errorMessage;
             me.showPopupParent(true);
             break;
           default:
@@ -811,6 +809,16 @@ export default {
         }
         // gán dữ liệu cho supplierProps
         me.supplierProps = response.data.data;
+        if (me.supplierProps.identifyDate) {
+          me.supplierProps.identifyDate = new Date(
+            me.supplierProps.identifyDate
+          );
+        }
+        // biến đổi chuỗi thành mảng
+        if (me.supplierProps.supplierGroupIds != "") {
+          me.supplierProps.supplierGroupIds =
+            me.supplierProps.supplierGroupIds.split(",");
+        }
         // gán giá trị cho cờ nhân bản
         this.isReplication = value;
         //kiểm tra là nhân bản hay ko
@@ -844,17 +852,18 @@ export default {
       var me = this;
       me.supplierGroups = [];
       var listSupplierGroups = await me.getListSupplierGroups();
-      listSupplierGroups.data.data.forEach((res) => {
-        // lấy text và value
-        var supplierGroup = {};
-        supplierGroup.text = res.supplierGroupName;
-        supplierGroup.value = res.supplierGroupId;
-        // gán giá trị cho supplierGroups
-        me.supplierGroups.push(supplierGroup);
-      });
+      // listSupplierGroups.data.data.forEach((res) => {
+      //   // lấy text và value
+      //   var supplierGroup = {};
+      //   supplierGroup.text = res.supplierGroupName;
+      //   supplierGroup.value = res.supplierGroupId;
+      //   // gán giá trị cho supplierGroups
+      //   me.supplierGroups.push(supplierGroup);
+      // });
+      me.supplierGroups = listSupplierGroups.data.data;
     },
 
-        /**
+    /**
      * Hàm gán giá trị cho combobox danh sách nhân viên
      * createdBy NHHai 14/2/2022
      */
@@ -862,14 +871,16 @@ export default {
       var me = this;
       me.employees = [];
       var listEmployees = await me.getListEmployees();
-      listEmployees.data.data.forEach((res) => {
-        // lấy text và value
-        var employee = {};
-        employee.text = res.fullName;
-        employee.value = res.employeeId;
-        // gán giá trị cho supplierGroups
-        me.employees.push(employee);
-      });
+      // listEmployees.data.data.forEach((res) => {
+      //   // lấy text và value
+      //   var employee = {};
+      //   employee.text = res.fullName;
+      //   employee.value = res.employeeId;
+      //   // gán giá trị cho supplierGroups
+      //   me.employees.push(employee);
+      // });
+      // gán danh sách nhân viên cho employees
+      me.employees = listEmployees.data.data;
     },
 
     /**
@@ -880,7 +891,7 @@ export default {
       return axios.get(this.SupplierGroups);
     },
 
-        /**
+    /**
      * Hàm lấy dữ liệu danh sách nhân viên
      * createdBy NHHAi 16/2/2022
      */
@@ -897,30 +908,35 @@ export default {
       // hiển thị loading
       me.overlay = true;
       // nếu như là nhân bản thì xóa id
-      if (me.isReplication) delete value.supplierValue["supplierId"];
+      if (me.isReplication) delete me.supplierProps["supplierId"];
       // xét trường hợp không chọn nhân viên trong combobox
-      if (value.supplierValue.employeeId == "") {
-        delete value.supplierValue["employeeId"];
+      if (me.supplierProps.employeeId == "") {
+        delete me.supplierProps["employeeId"];
       }
       // xét trường hợp không chọn danh xưng trong combobox
-      if (value.supplierValue.prefix == "") {
-        delete value.supplierValue["prefix"];
+      if (me.supplierProps.prefix == "") {
+        delete me.supplierProps["prefix"];
+      }
+      // biến đỏi mảng thành chuỗi
+      if (me.supplierProps.supplierGroupIds != "") {
+        me.supplierProps.supplierGroupIds =
+          me.supplierProps.supplierGroupIds.join();
       }
       var api;
-      if (!value.supplierValue.supplierId) {
-        delete value.supplierValue["supplierId"];
+      if (!me.supplierProps.supplierId) {
+        delete me.supplierProps["supplierId"];
         //gọi api thực hiện cất dữ liệu
-        api = axios.post(me.host, value.supplierValue);
+        api = axios.post(me.host, me.supplierProps);
       } else {
         //gọi api thực hiện cất dữ liệu
         api = axios.put(
-          me.host + `${value.supplierValue.supplierId}`,
-          value.supplierValue
+          me.host + `${me.supplierProps.supplierId}`,
+          me.supplierProps
         );
       }
       api.then((response) => {
         if (response.data.success && response.data.data) {
-          if (value.value == FormMode.SaveAndAdd) {
+          if (value == FormMode.SaveAndAdd) {
             // TH nếu bấm Cất và Thêm thì sẽ hiện form thêm mới
             me.btnAddOnClick();
           } else {
@@ -930,7 +946,7 @@ export default {
           // Load lại dữ liệu
           me.loadData(FormMode.Page_Number_1);
           // toast messenge
-          if (!value.supplierValue.supplierId) {
+          if (!me.supplierProps.supplierId) {
             // hiện toast mesenge khi thêm mới thành công
             me.toastMessenge(
               ToastMessenge.Messenge_Success,
@@ -971,14 +987,6 @@ export default {
       });
     },
 
-    /**
-     * gán giá trị nhân viên
-     * CreatedBy NHHai 28/12/2021
-     */
-    setEmployeeId(value) {
-      if (value == undefined) value = "";
-      this.supplierProps.employeeId = value;
-    },
     /**
      * gán giá trị danh xưng
      * CreatedBy NHHai 28/12/2021

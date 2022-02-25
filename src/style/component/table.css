@@ -44,7 +44,7 @@
     
     .common-table thead th:nth-last-child(2) {
         position: sticky;
-        z-index: 3 !important;
+        z-index: 4 !important;
         right: 0;
         background-color: #ffffff;
     }
@@ -98,7 +98,7 @@
     
     .common-table tbody td:nth-last-child(3) {
         position: sticky;
-        z-index: 3 !important;
+        z-index: 0 !important;
         right: 30px;
         border-left: 1px dotted #c7c7c7;
         border-bottom: 1px solid #c7c7c7;

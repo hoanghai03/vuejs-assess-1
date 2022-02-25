@@ -7,7 +7,6 @@ import VueToast from 'vue-toast-notification';
 // Import one of the available themes
 //import 'vue-toast-notification/dist/theme-default.css';
 import 'vue-toast-notification/dist/theme-sugar.css';
-
 // import view 
 import CustomerList from './view/customer/CustomerList.vue'
 import EmployeeList from './view/employee/EmployeeList.vue'
@@ -18,9 +17,7 @@ import Payment from './view/money/payment/Payment.vue'
 import Supplier from './view/money/process/supplier/Supplier.vue'
 import Account from './view/money/process/account/Account.vue'
 
-import ZkTable from 'vue-table-with-tree-grid'
 
-Vue.use(ZkTable)
 Vue.use(VueToast);
 Vue.use(VueRouter)
 Vue.use(Vuelidate)

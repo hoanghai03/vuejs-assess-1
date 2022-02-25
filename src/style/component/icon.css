@@ -18,6 +18,13 @@
     min-height: 16px;
 }
 
+.mi-18 {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    min-height: 18px;
+}
+
 
 /* icon menu */
 
@@ -327,4 +334,24 @@ input[type=checkbox]:checked.m-icon-checkbox {
 .mi-tree-expand--small {
     background-position: -607px -311px;
     margin-right: 6.5px;
+}
+
+.mi-recent-log {
+    background-position: -648px -144px;
+}
+
+.mi-setting__detail {
+    background-position: -32px -144px;
+}
+
+.mi-delete {
+    background-position: -464px -312px;
+}
+
+.mi-attach {
+    background-position: -539px -203px;
+}
+
+.mi-plus--success {
+    background-position: -32px -312px;
 }

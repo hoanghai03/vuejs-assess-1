@@ -18,6 +18,10 @@ class Supplier {
     fullName = "";
     description = "";
     prefixName = "";
+    category = 0;
+    identifyNumber = "";
+    place = "";
+    identifyDate
 }
 
 export default Supplier

@@ -1,0 +1,86 @@
+:root {
+    --vs-dropdown-option--active-bg: #2ca01c !important;
+    --vs-dropdown-option--active-color: #fff;
+    --vs-font-size: 13px !important;
+    --vs-dropdown-z-index: 20000 !important;
+    --vs-dropdown-max-height: 250px;
+    --vs-dropdown-option-padding: 0px 0px;
+}
+
+.vs__dropdown-toggle {
+    border: 1px solid #babec5 !important;
+    border-radius: 2px !important;
+    min-height: 32px;
+    /* position: -webkit-sticky; */
+}
+
+.cbx__header {
+    height: 32px;
+    background-color: #f4f5f8;
+    line-height: 32px;
+    position: sticky;
+    top: -5px;
+}
+
+.cbx__body {
+    height: 32px;
+    line-height: 32px;
+    font-weight: 100 !important;
+}
+
+.vs__option {
+    padding: 0 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.object .vs__dropdown-menu {
+    min-width: 883px;
+    overflow: auto;
+}
+
+.employee .vs__dropdown-menu {
+    min-width: 580px;
+    overflow: auto;
+}
+
+
+/* scroll content */
+
+.vs__dropdown-menu::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    background-color: #f1f1f1;
+}
+
+.vs__dropdown-menu::-webkit-scrollbar-thumb {
+    background-color: #a8afb6;
+}
+
+.vs__dropdown-menu::-webkit-scrollbar-thumb:hover {
+    background-color: #7b7d80;
+}
+
+
+/* icon (+) combobox */
+
+.icon-plus-cbx {
+    position: absolute;
+    width: 32px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    top: 1px;
+    right: 29px;
+    border-right: 1px solid #babec5;
+    background-color: #ffffff;
+}
+
+.icon-plus-cbx:hover {
+    cursor: pointer;
+    background-color: #e0e0e0;
+}
+
+.icon-plus {
+    margin: auto;
+}

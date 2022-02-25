@@ -102,7 +102,7 @@
 .v-autocomplete.v-input>.v-input__control>.v-input__slot {
     min-height: 32px !important;
     border-radius: 2px !important;
-    padding: 0 7px 0 12px !important;
+    padding: 0 4px 0 12px !important;
     border: 1px solid #babec5;
     top: -4px !important;
     margin-bottom: 0px;
@@ -124,9 +124,10 @@
     border-color: #2ca01c !important;
 }
 
-.v-text-field--enclosed.v-input--dense:not(.v-text-field--solo).v-text-field--outlined .v-input__append-inner {
-    margin-top: 4px !important;
-}
+
+/* .v-input__append-inner {
+    margin-top: 0px !important;
+} */
 
 .v-input {
     font-size: 13px !important;

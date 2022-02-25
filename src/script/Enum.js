@@ -126,8 +126,36 @@ const FormMode = Object.freeze({
             text: "Bắt buộc nhập",
             value: 2
         }
+    ],
+    reason: [{
+            text: "1. Trả tiền nhà cung cấp không theo hóa đơn",
+            value: 1
+        },
+        {
+            text: "2. Tạm ứng cho nhân viên",
+            value: 2
+        },
+        {
+            text: "3. Chi mua ngoài có hóa đơn",
+            value: 3
+        },
+        {
+            text: "4. Trả lương nhân viên",
+            value: 4
+        },
+        {
+            text: "5. Chuyển tiền cho chi nhánh khác",
+            value: 5
+        },
+        {
+            text: "6. Gửi tiền vào ngân hàng",
+            value: 6
+        },
+        {
+            text: "7. Chi khác",
+            value: 7
+        },
     ]
-
 
 });
 

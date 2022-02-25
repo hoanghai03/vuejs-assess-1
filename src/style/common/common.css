@@ -66,11 +66,11 @@
 }
 
 .w-100 {
-    width: 100px;
+    width: 100px !important;
 }
 
 .w-120 {
-    width: 120px;
+    width: 120px !important;
 }
 
 .w-110 {
@@ -83,6 +83,54 @@
 
 .w-30 {
     width: 20px;
+}
+
+.w-150 {
+    width: 150px;
+}
+
+.w-200 {
+    width: 200px !important;
+}
+
+.w-150 {
+    width: 150px !important;
+}
+
+.w-250 {
+    width: 250px !important;
+}
+
+.w-300 {
+    width: 300px !important;
+}
+
+.w-350 {
+    width: 350px;
+}
+
+.w-143 {
+    width: 143px;
+}
+
+.m-w-895 {
+    width: 895px;
+}
+
+.m-w-120 {
+    min-width: 120px;
+}
+
+.m-w-100 {
+    min-width: 100px;
+}
+
+.m-w-250 {
+    min-width: 250px;
+}
+
+.m-w-300 {
+    min-width: 300px;
 }
 
 .m-w-10 {
@@ -121,20 +169,48 @@
     padding-right: 0.5rem!important;
 }
 
+.m-0 {
+    margin: 0 !important;
+}
+
 .m-r-12 {
     margin-right: 12px;
+}
+
+.m-r-16 {
+    margin-right: 16px;
 }
 
 .m-l-100 {
     margin-left: 100px !important;
 }
 
+.m-l-24 {
+    margin-left: 24px;
+}
+
 .p-r-12 {
     padding-right: 12px !important;
 }
 
+.p-r-10 {
+    padding-right: 10px !important;
+}
+
 .p-l-10 {
     padding-left: 10px;
+}
+
+.p-l-12 {
+    padding-left: 12px;
+}
+
+.p-l-24 {
+    padding-left: 24px;
+}
+
+.m-6-8 {
+    margin: 6px 8px;
 }
 
 .p-l-30 {
@@ -169,12 +245,20 @@
     padding-right: 16px !important;
 }
 
+.m-r-8 {
+    margin-right: 8px !important;
+}
+
 .p-l-16 {
     padding-left: 16px !important;
 }
 
 .p-b-16 {
     padding-bottom: 16px !important;
+}
+
+.p-b-6 {
+    padding-bottom: 6px !important;
 }
 
 .p-b-12 {
@@ -187,6 +271,10 @@
 
 .p-0-10-10 {
     padding: 0 10px 10px;
+}
+
+.p-0-10 {
+    padding: 0 10px !important;
 }
 
 .pb-2 {
@@ -213,6 +301,30 @@
     width: 50%;
 }
 
+.w-80per {
+    width: 80%;
+}
+
+.w-20per {
+    width: 20%;
+}
+
+.w-75per {
+    width: 75%;
+}
+
+.w-25per {
+    width: 25%;
+}
+
+.w-43per {
+    width: 43%;
+}
+
+.w-57per {
+    width: 57%;
+}
+
 .align-center {
     align-items: center;
 }
@@ -223,4 +335,35 @@
 
 label {
     cursor: pointer;
+}
+
+.bgc-white {
+    background-color: #ffffff;
+}
+
+.color-white {
+    color: #ffffff !important;
+}
+
+.ps-relative {
+    position: relative;
+}
+
+.bgc-grey {
+    background-color: #f3f8f8 !important;
+}
+
+.no-wrap {
+    white-space: nowrap;
+}
+
+
+/* nhập text bên phải */
+
+.text-right {
+    text-align: right !important;
+}
+
+.text-bold {
+    font-weight: bold;
 }

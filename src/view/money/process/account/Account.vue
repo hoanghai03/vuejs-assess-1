@@ -31,27 +31,9 @@
           />
           <div class="icon-input m-icon m-icon-input"></div>
         </div>
-        <div id="refresh" class="icon-load m-icon m-icon-load"></div>
+        <div id="refresh" class="icon-load m-icon m-icon-load" @click="loadData"></div>
       </div>
       <div class="m-table">
-        <!-- <TableT
-          ref="table"
-          sum-text="sum"
-          index-text="#"
-          :data="data"
-          :columns="columns"
-          :stripe="props.stripe"
-          :border="props.border"
-          :show-header="props.showHeader"
-          :show-summary="props.showSummary"
-          :show-row-hover="props.showRowHover"
-          :show-index="props.showIndex"
-          :tree-type="props.treeType"
-          :is-fold="false"
-          :expand-type="props.expandType"
-          :selection-type="props.selectionType"
-        >
-        </TableT> -->
         <table class="common-table" border="0" cellspacing="0">
           <colgroup>
             <col style="min-width: 9px" />
@@ -67,7 +49,7 @@
             <col style="min-width: 20px" />
           </colgroup>
           <thead>
-            <tr>
+            <tr >
               <th></th>
               <th class="ps-absolute"></th>
               <th>SỐ TÀI KHOẢN</th>
@@ -81,17 +63,15 @@
               <th></th>
             </tr>
           </thead>
-
-          </table>
+        </table>
         <RowTreeGrid 
-          :data="data" 
-          @dbOnClickTr="dbOnClickTr($event)"
-        >
+        :data="data" 
+        @dbOnClickTr="dbOnClickTr($event)">
         </RowTreeGrid>
       </div>
       <div class="paging-bar">
         <div class="paging-text">
-          Tổng số <b class="total-record">{{data.length}}</b> bản ghi
+          Tổng số <b class="total-record">{{ recordNumber }}</b> bản ghi
         </div>
       </div>
     </div>
@@ -113,10 +93,29 @@
       @expenseItem="setExpenseItem($event)"
       @statisticalCode="setStatisticalCode($event)"
     ></account-detail>
+    <!-- ==============================popup ======================================-->
+    <account-popup
+      :isShow="isShowPopupDetail"
+      :textPopup="textPopup"
+      :employeeId="id"
+      :isShowBtn="isShowleft"
+      :textLeft="textLeft"
+      :isDelete="isDelete"
+      :isAgree="isAgree"
+      :isDelAll="isDelAll"
+      :checkedId="checkedId"
+      :host="host"
+      @loadData="loadData($event)"
+      @showPopup="showPopupParent"
+    />
+    <!-- ==============================loading ======================================-->
+    <base-overlay :overlay="overlay"></base-overlay>
   </div>
 </template>
 <script>
-// import TableT from "vue-table-with-tree-grid";
+import BaseOverlay from "../../../../components/base/BaseOverlay.vue";
+import AccountPopup from "../../../../components/base/BasePopup.vue";
+
 import Account from "../../../../models/account.js";
 import AccountDetail from "./AccountDetail.vue";
 import RowTreeGrid from "./RowTreeGrid.vue";
@@ -129,6 +128,8 @@ export default {
     // TableT,
     RowTreeGrid,
     AccountDetail,
+    AccountPopup,
+    BaseOverlay,
   },
   data() {
     return {
@@ -138,15 +139,43 @@ export default {
       accountCombobox: [],
       data: [],
       FormMode,
-      ToastMessenge
+      ToastMessenge,
+      duplicateCodeFirst: "Mã nhân viên <",
+      duplicateCodeLast: "> đã tồn tại trong hệ thống,vui lòng kiểm tra lại.",
+
+      checkedId: [],
+      id: null,
+      isDelAll: false,
+      isShowPopupDetail: false,
+      textPopup: null,
+      textLeft: "",
+      isAgree: false,
+      isShowleft: false,
+      isDelete: null,
+      overlay: false,
+      recordNumber: 0,
     };
   },
-  computed: {
-    propList() {
-      return Object.keys(this.props).map((item) => ({
-        name: item,
-      }));
-    },
+mounted() {
+    // Bắt sự kiện shortcuts
+    const keysPressed = {};
+    const me = this;
+    document.addEventListener("keydown", (event) => {
+      if (
+        keysPressed["Control"] &&
+        (
+          event.key == "o" ||
+          event.key == "O")
+      ) {
+        event.preventDefault(); // hủy sự kiện mặc định
+      }
+      keysPressed[event.key] = true;
+      // Show dialog
+      if (keysPressed["Control"] && (event.key == "o" || event.key == "O")) {
+        //TODO
+        me.btnAddAccount();
+      }
+    });
   },
   created() {
     // khởi tạo dữ liêu trong table
@@ -158,25 +187,26 @@ export default {
      * Load dữ liệu
      * creatdBy NHHai 17/2/2022
      */
-    loadData() {
+    async loadData() {
       var me = this;
-
-      axios
-        .get(`${this.host}GetAccountTree`)
-        .then((response) => {
-          if (response.data.success) {
-            me.data = response.data.data;
-            // setTimeout(() => {
-            //   const rows = document.querySelectorAll(".zk-table__body-row");
-            //   console.log(rows);
-            //   rows.forEach((row) =>
-            //     row.addEventListener("dblclick", () => {
-            //       this.btnAddAccount();
-            //     })
-            //   );
-            // }, 300);
-          }
-        });
+      me.overlay = true;
+      var accountCbx = await me.getAccounts();
+      if (!accountCbx.data.data) {
+        me.checkDataEmpty();
+        me.overlay = false;
+        return
+      }
+      else {
+        me.recordNumber = accountCbx.data.data?.length;
+      }
+      axios.get(`${this.host}GetAccountTree`).then((response) => {
+        if (response.data.success) {
+          me.data = response.data.data;
+          me.overlay = false;
+        } else {
+          me.responseWithError(response);
+        }
+      });
     },
     /**
      * Mở form thêm mới
@@ -184,24 +214,27 @@ export default {
      */
     async btnAddAccount() {
       var me = this;
+      me.overlay = true;
       // hiển thị dialog
       me.showDialogParent(true);
       // gán giá trị măc định cho account
       me.account = new Account();
       // lấy dữ liệu cho combobox data
-      me.listAccounts()
+      me.listAccounts();
       // if(!response.data.data){
       //   return;
       // }
       this.listAccounts();
-
+      this.forcusOnInput();
+    },
+    forcusOnInput() {
       // focus vào ô số tài khoản
       setTimeout(() => {
         document.getElementById("accountNumber").focus();
+        this.overlay = false;
       }, 0);
     },
-
-    async listAccounts(){
+    async listAccounts() {
       var me = this;
       me.accountCombobox = [];
       var accountCbx = await me.getAccounts();
@@ -224,45 +257,41 @@ export default {
       var me = this;
       if (accountId != null) {
         // load dữ liệu
-        // me.overlay = true;
+        me.overlay = true;
         // lấy dữ liệu theo id
         var response = await me.loadAccountWithId(accountId);
         // xét trường hợp data rỗng
         if (!response.data.data) {
-          // me.checkDataEmpty();
+          me.checkDataEmpty();
           return;
         }
         // gán dữ liệu cho supplierProps
         me.account = response.data.data;
         this.listAccounts();
-        // gán giá trị cho cờ nhân bản
-        // this.isReplication = value;
-        //kiểm tra là nhân bản hay ko
-        // if (this.isReplication) {
-        //   // thực hiện lấy mã code
-        //   var data = await this.loadNewSupplierCode();
-        //   if (data.data != "") {
-        //     // gán dữ liệu vào supplierCode
-        //     this.supplierProps.supplierCode = data.data;
-        //   }
-        // }
-        // hiển thị danh sách nhóm nhà cung cấp
-        // me.listSupplierGroups();
-        // hiển thị danh sách nhân viên
-        // me.listEmployees();
-        //ẩn button vừa nhấn
-        // me.isShowEntityDelRight = false;
         // Hiển thị dialog thông tin chi tiết nhân viên
         me.showDialogParent(true);
         // focus
-        // this.forcusOnInput();
-        // ẩn load dữ liệu
-        // me.overlay = false;
+        this.forcusOnInput();
       }
     },
 
-    loadAccountWithId(value){
-      return axios.get(`${this.host}`+`${value}`);
+    /**
+     * Hàm kiểm tra dữ liệu trống
+     * createdBy NHHAi 14/2/2022
+     */
+    checkDataEmpty() {
+      this.textPopup = FormMode.No_Data;
+      this.isInfo = true;
+      this.showButtonLeft(false);
+      this.showPopupParent(true);
+      // ẩn dữ liệu
+      this.overlay = false;
+      // load lại dữ liệu
+      this.loadData();
+    },
+
+    loadAccountWithId(value) {
+      return axios.get(`${this.host}` + `${value}`);
     },
 
     /**
@@ -355,15 +384,15 @@ export default {
       this.account.detailByStatisticalCodeKind = value;
     },
 
-        /**
-    * Hàm load tất cả dữ liệu 
-    * createdBy NHHai 20/2/2022
-    */
-    getAccounts(){
-      return axios.get(this.host)
+    /**
+     * Hàm load tất cả dữ liệu
+     * createdBy NHHai 20/2/2022
+     */
+    getAccounts() {
+      return axios.get(this.host);
     },
 
-        /**
+    /**
      * gán giá trị parentId
      * CreatedBy NHHai 20/2/2022
      */
@@ -378,16 +407,7 @@ export default {
      */
     saveAccount(value) {
       var me = this;
-      // hiển thị loading
-      // me.overlay = true;
-      // xét trường hợp không chọn tài khoản trong combobox
-      // if (value.supplierValue.employeeId == "") {
-      //   delete value.supplierValue["employeeId"];
-      // }
-      // xét trường hợp không chọn danh xưng trong combobox
-      // if (value.supplierValue.prefix == "") {
-      //   delete value.supplierValue["prefix"];
-      // }
+      me.overlay = true;
       var api;
       if (!value.account.accountId) {
         delete value.account["accountId"];
@@ -395,16 +415,13 @@ export default {
         api = axios.post(me.host, value.account);
       } else {
         //gọi api thực hiện cất dữ liệu
-        api = axios.put(
-          me.host + `${value.account.accountId}`,
-          value.account
-        );
+        api = axios.put(me.host + `${value.account.accountId}`, value.account);
       }
       api.then((response) => {
         if (response.data.success && response.data.data) {
           if (value.value == FormMode.SaveAndAdd) {
             // TH nếu bấm Cất và Thêm thì sẽ hiện form thêm mới
-            me.btnAddOnClick();
+            me.btnAddAccount();
           } else {
             // ẩn form
             me.showDialogParent(false);
@@ -425,14 +442,12 @@ export default {
               ToastMessenge.Success
             );
           }
+          me.overlay = false;
         } else {
           //   // gọi đến hàm trả về lỗi
           me.responseWithError(response);
-          //   // ẩn loading
-          me.overlay = false;
         }
       });
-  
     },
 
     /**
@@ -447,20 +462,73 @@ export default {
         dismissible: true,
       });
     },
+
+    /**
+     * hàm trả về lỗi khi gọi api
+     * @param res lỗi
+     * createdBy NHHAi 14/1//2022
+     */
+    responseWithError(res) {
+      var me = this;
+      // ẩn loading
+      me.overlay = false;
+      if (res.data) {
+        const statusCode = res.data.code;
+        switch (statusCode) {
+          // nếu mã lỗi 400 thì hiển thị cảnh thông báo lỗi
+          case 400:
+            me.showButtonLeft(false);
+            me.isAgree = true;
+            me.isDelete = null;
+            me.textPopup =
+              this.duplicateCodeFirst +
+              `${me.account.accountNumber}` +
+              this.duplicateCodeLast;
+            me.showPopupParent(true);
+            break;
+          case 500:
+            me.showButtonLeft(false);
+            me.isDelete = null;
+            me.textPopup = res.data.errorMessage;
+            me.showPopupParent(true);
+            break;
+          default:
+            break;
+        }
+      } else {
+        me.showButtonLeft(false);
+        me.isDelete = null;
+        me.textPopup = FormMode.Status_500;
+        me.showPopupParent(true);
+      }
+    },
+
+    /**
+     * Hàm gán hiển thị button left
+     * createdBy NHHAI 15/2/2022
+     * @param {*} value true or false
+     */
+    showButtonLeft(value) {
+      this.isShowleft = value;
+    },
+
+    /**
+     * Hàm gán hiển thị popup
+     * createdBy NHHAI 15/2/2022
+     * @param {*} value true or false
+     */
+    showPopupParent(value) {
+      this.isShowPopupDetail = value;
+      if (value == false) {
+        // hiển thị nút đóng đồng ý ở giữa popup
+        this.isAgree = false;
+      }
+    },
   },
 };
 </script>
 
 <style scoped lang="css">
-.switch-list {
-  margin: 20px 0;
-  list-style: none;
-  overflow: hidden;
-}
-.switch-item {
-  margin: 20px;
-  float: left;
-}
 @import url("../../../../style/layout/content.css");
 @import url("../../../../style/component/button.css");
 @import url("../../../../style/component/checkbox.css");

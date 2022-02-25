@@ -15,31 +15,31 @@ export default class Account {
     // Có hoạch toán ngoại tệ (0-sai,1-đúng)
     foreignCurrencyAccount = false;
     //Đối tượng (1- nhà cung cấp,2-khách hàng,3-nhân viên)
-    // detailByObjectKind = null;
+    detailByObjectKind = null;
     detailByObjectKindName = "";
     //Theo dõi chi tiết theo Đối tượng THCP( 0- Chỉ cảnh báo; 1- Bắt buộc nhập)
-    // detailByCostAggregationObjKind = "";
+    detailByCostAggregationObjKind = null;
     detailByCostAggregationObjKindName = "";
     //Theo dõi chi tiết theo Đơn đặt hàng (0 - Chỉ cảnh báo; 1- Bắt buộc nhấp)
-    // detailByOrderKind = "";
+    detailByOrderKind = null;
     detailByOrderKindName = "";
     //Theo dõi chi tiết theo Hợp đồng mua (0 - Chỉ cảnh báo; 1- Bắt buộc nhấp)
-    // detailByPurchaseContractKind = "";
+    detailByPurchaseContractKind = null;
     detailByPurchaseContractKindName = "";
     //Theo dõi chi tiết theo Đơn vị (0 - Chỉ cảnh báo; 1- Bắt buộc nhấp)
-    // detailByUnitKind = "";
+    detailByUnitKind = null;
     detailByUnitKindName = "";
     //Theo dõi chi tiết theo Công trình (0 - Chỉ cảnh báo; 1- Bắt buộc nhấp)
-    // detailByContructionKind = "";
+    detailByContructionKind = null;
     detailByContructionKindName = "";
     //Theo dõi chi tiết theo Hợp đồng bán (0 - Chỉ cảnh báo; 1- Bắt buộc nhấp)
-    // detailByContractSaleKind = "";
+    detailByContractSaleKind = null;
     detailByContractSaleKindName = "";
     //Theo dõi chi tiết theo Khoản mục chi phí (0 - Chỉ cảnh báo; 1- Bắt buộc nhấp)
-    // detailByExpenseItemKind = "";
+    detailByExpenseItemKind = null;
     detailByExpenseItemKindName = "";
     //Theo dõi chi tiết theo Mã thống kê(0 - Chỉ cảnh báo; 1- Bắt buộc nhấp)
-    // detailByStatisticalCodeKind = "";
+    detailByStatisticalCodeKind = null;
     detailByStatisticalCodeKindName = "";
     //Theo dõi chi tiết theo Đối tượng(0 - Không theo dõi; 1- Theo dõi)
     detailByObject = false;
@@ -62,7 +62,7 @@ export default class Account {
     detailByAccount = false;
 
     // id của cha
-    parentId = "";
+    parentId = null;
     // tên của tài khoản tổng hợp
     parentName = "";
     // child index

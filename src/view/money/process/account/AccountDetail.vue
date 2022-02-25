@@ -18,7 +18,11 @@
         </div>
         <div class="dialog-close">
           <div class="icon-help m-icon m-icon-help" title="Giúp F1"></div>
-          <div class="icon-close m-icon m-icon-close" title="Đóng (ESC)"></div>
+          <div
+            class="icon-close m-icon m-icon-close"
+            title="Đóng (ESC)"
+            @click="btnCloseOnClickHeader"
+          ></div>
         </div>
       </div>
       <div
@@ -33,7 +37,7 @@
                   id="accountNumber"
                   class="m-input check"
                   type="text"
-                  maxlength="12"
+                  maxlength="20"
                   ref="accountNumber"
                   :title="messageEmptyAccountNumber"
                   :class="{
@@ -373,6 +377,7 @@ import { required } from "vuelidate/lib/validators";
 import BaseCombobox from "../../../../components/base/BaseCombobox.vue";
 import FormMode from "../../../../script/enum.js";
 import AccountPopup from "../../../../components/base/BasePopup.vue";
+import Account from "../../../../models/supplier";
 export default {
   name: "accountDetail",
   components: { BaseCombobox, AccountPopup },
@@ -418,7 +423,49 @@ export default {
       textLeft: "",
       isDelete: "",
       isAsk: false,
+      oldValue: new Account(),
     };
+  },
+  mounted() {
+    // Bắt sự kiện shortcuts
+    const keysPressed = {};
+    const me = this;
+    document.addEventListener("keydown", (event) => {
+      // đóng dialog khi click ESC
+      if (event.key == "Escape" && me.checkCloseDialog && me.isShow) {
+        me.btnCloseOnClickHeader();
+      }
+      me.checkCloseDialog = true;
+
+      if (keysPressed["Control"] && (event.key == "s" || event.key == "S")) {
+        event.preventDefault(); // hủy sự kiện mặc định
+      }
+      keysPressed[event.key] = true;
+      // Lưu
+      if (
+        keysPressed["Control"] &&
+        !keysPressed["Shift"] &&
+        (event.key == "s" || event.key == "S") &&
+        me.isShow
+      ) {
+        //TODO
+        me.btnSaveOnClick(FormMode.Save);
+      }
+      // Lưu và thêm mới
+      if (
+        keysPressed["Control"] &&
+        keysPressed["Shift"] &&
+        (event.key == "s" || event.key == "S") &&
+        me.isShow
+      ) {
+        //TODO
+        me.btnSaveOnClick(FormMode.SaveAndAdd);
+      }
+    });
+    // xóa sự kiện keydown
+    document.addEventListener("keyup", (event) => {
+      delete keysPressed[event.key];
+    });
   },
   validations: {
     account: {
@@ -433,10 +480,10 @@ export default {
   watch: {
     /**
      * Hiển thị giá trị trên combobox khi click chuột vào Tr
-     * createdBy NHHai 4/1/2022
+     * createdBy NHHai 20/2/2022
      */
     account: function () {
-      // kiểm tra giá trị department
+      // kiểm tra giá trị
       if (this.account.accountId != "") {
         // Gán giá trị cho combobox tài khoản tổng hợp
         this.selectAccount = {};
@@ -546,7 +593,7 @@ export default {
         this.select = {};
         this.select.text = "Dư nợ";
         this.select.value = 1;
-        // // xóa dữ liệu combobox danh xưng và xóa cảnh báo
+        // xóa dữ liệu combobox danh xưng và xóa cảnh báo
         this.selectObject = {};
         this.selectObject.text = null;
         this.selectObject.value = null;
@@ -583,6 +630,11 @@ export default {
         this.selectStatisticalCode.text = null;
         this.selectStatisticalCode.value = null;
       }
+
+      // gán giá trị account cho oldValue
+      this.oldValue = {
+        ...this.account,
+      };
     },
     /**
      * chọn danh xưng
@@ -865,6 +917,30 @@ export default {
         this.isAsk = false;
         // cờ đóng khi bấm nut ESC
         this.checkCloseDialog = false;
+      }
+    },
+
+    /**
+     * Hàm hiển thị popup khi click vào đấu X ở dialog
+     * createdBy NHHAi 11/1/2021
+     */
+    btnCloseOnClickHeader() {
+      // so sánh 2 object
+      if (JSON.stringify(this.oldValue) !== JSON.stringify(this.account)) {
+        // TH 2 obj khác nhau
+        this.isShowleft = true;
+        this.isAsk = true;
+        // gán text
+        this.textLeft = this.FormMode.Text_Left_Exit;
+        this.isDelete = this.FormMode.Is_Delete_N;
+        this.textPopup = this.FormMode.Data_Changed;
+        // Hiển thị popup
+        this.showPopupParent(true);
+        // this.$emit("compareObj", this.empl);
+      } else {
+        // TH 2 obj giống nhau
+        // đóng dialog
+        this.btnCloseOnClick();
       }
     },
   },

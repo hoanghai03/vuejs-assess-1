@@ -17,8 +17,8 @@
                   id="rdOrganize"
                   type="radio"
                   name="Group"
-                  value="1"
-                  v-model="change"
+                  value="0"
+                  v-model="supplier.category"
                 />
                 <div class="checkmark">
                   <div></div>
@@ -30,8 +30,8 @@
                   id="rdPerson"
                   type="radio"
                   name="Group"
-                  value="2"
-                  v-model="change"
+                  value="1"
+                  v-model="supplier.category"
                 />
                 <div class="checkmark">
                   <div></div>
@@ -64,7 +64,7 @@
       <div class="dialog-content">
         <div class="content-overflow">
           <div class="top-content">
-            <div class="content-left" v-if="change == 1">
+            <div class="content-left" v-if="supplier.category == 0">
               <div class="display-flex">
                 <div class="input-id p-r-12">
                   <div class="text-input">Mã số thuế</div>
@@ -120,7 +120,7 @@
                 ></textarea>
               </div>
             </div>
-            <div class="content-left" v-if="change == 2">
+            <div class="content-left" v-else>
               <div class="display-flex">
                 <div class="input-name p-r-12">
                   <div class="text-input">Mã nhà cung cấp <span>*</span></div>
@@ -162,10 +162,17 @@
                   <div class="w-256">
                     <div>
                       <input
+                        maxlength="100"
+                        class="m-input check"
                         type="text"
-                        class="m-input"
-                        placeholder="Họ và tên"
-                        v-model.trim="supplier.contactName"
+                        ref="supplierName"
+                        required
+                        :title="messageEmptySupplierName"
+                        :class="{
+                          'input-warning': $v.supplier.supplierName.$error,
+                        }"
+                        v-model.trim="$v.supplier.supplierName.$model"
+                        @blur="blurSupplierName"
                       />
                     </div>
                   </div>
@@ -182,7 +189,7 @@
                 ></textarea>
               </div>
             </div>
-            <div class="content-right" v-if="change == 1">
+            <div class="content-right" v-if="supplier.category == 0">
               <div class="display-flex">
                 <div class="input-id p-r-12">
                   <div class="text-input">Điện thoại</div>
@@ -206,71 +213,147 @@
               </div>
               <div>
                 <div class="text-input">Nhóm nhà cung cấp</div>
-                <v-combobox
-                  :items="itemsSupplierGroup"
-                  multiple
-                  small-chips
-                  v-model="arr"
-                  :dense="true"
-                >
-                  <template v-slot:item="{ item }">
-                    <v-list-item-action @click.stop="multipleSelection(item)">{{
-                      item.text
-                    }}</v-list-item-action>
-                  </template>
-                  <template v-slot:selection="{ item }">
-                    <v-chip
-                      close
-                      dark
-                      color="info"
-                      @click:close="deleteChip(item)"
-                      >{{ item.text }}</v-chip
-                    >
-                  </template>
-                </v-combobox>
+                <div class="ps-relative">
+                  <v-select
+                    multiple
+                    label="supplierGroupCode"
+                    :options="itemsSupplierGroup"
+                    :reduce="(option) => option.supplierGroupId"
+                    v-model="supplier.supplierGroupIds"
+                  >
+                    <template #list-header>
+                      <div class="cbx__header display-flex">
+                        <div class="vs__option w-150">
+                          <b>Mã nhóm KH,NCC</b>
+                        </div>
+                        <div class="vs__option w-200">
+                          <b>Tên nhóm KH,NCC</b>
+                        </div>
+                      </div>
+                    </template>
+                    <template v-slot:option="option">
+                      <div class="cbx__body display-flex">
+                        <div class="vs__option w-150">
+                          <b>{{ option.supplierGroupCode }}</b>
+                        </div>
+                        <div class="vs__option w-200">
+                          <b>{{ option.supplierGroupName }}</b>
+                        </div>
+                      </div>
+                    </template>
+                  </v-select>
+                  <div class="icon-plus-cbx">
+                    <div
+                      class="icon-plus m-icon mi-icon-16 mi-plus--success"
+                    ></div>
+                  </div>
+                </div>
               </div>
               <div>
                 <div class="text-input">Nhân viên mua hàng</div>
-                <base-combobox
-                  :selectVal="select"
-                  :value="itemsEmployee"
-                  @selectValue="selectValue($event)"
-                ></base-combobox>
+                <div class="ps-relative">
+                  <v-select
+                    label="fullName"
+                    :options="itemsEmployee"
+                    :reduce="(option) => option.employeeId"
+                    v-model="supplier.employeeId"
+                  >
+                    <template #list-header>
+                      <div class="cbx__header display-flex">
+                        <div class="vs__option w-150"><b>Mã nhân viên</b></div>
+                        <div class="vs__option w-200"><b>Tên nhân viên</b></div>
+                      </div>
+                    </template>
+                    <template v-slot:option="option">
+                      <div class="cbx__body display-flex">
+                        <div class="vs__option w-150">
+                          <b>{{ option.employeeCode }}</b>
+                        </div>
+                        <div class="vs__option w-200">
+                          <b>{{ option.fullName }}</b>
+                        </div>
+                      </div>
+                    </template>
+                  </v-select>
+                  <div class="icon-plus-cbx">
+                    <div
+                      class="icon-plus m-icon mi-icon-16 mi-plus--success"
+                    ></div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="content-right" v-if="change == 2">
+            <div class="content-right" v-else>
               <div>
                 <div class="text-input">Nhóm nhà cung cấp</div>
-                <v-combobox
-                  :items="itemsSupplierGroup"
-                  multiple
-                  small-chips
-                  v-model="arr"
-                  :dense="true"
-                >
-                  <template v-slot:item="{ item }">
-                    <v-list-item-action @click.stop="multipleSelection(item)">{{
-                      item.text
-                    }}</v-list-item-action>
-                  </template>
-                  <template v-slot:selection="{ item }">
-                    <v-chip
-                      close
-                      dark
-                      color="info"
-                      @click:close="deleteChip(item)"
-                      >{{ item.text }}</v-chip
-                    >
-                  </template>
-                </v-combobox>
+                <div class="ps-relative">
+                  <v-select
+                    multiple
+                    label="supplierGroupCode"
+                    :options="itemsSupplierGroup"
+                    :reduce="(option) => option.supplierGroupId"
+                    v-model="supplier.supplierGroupIds"
+                  >
+                    <template #list-header>
+                      <div class="cbx__header display-flex">
+                        <div class="vs__option w-150">
+                          <b>Mã nhóm KH,NCC</b>
+                        </div>
+                        <div class="vs__option w-200">
+                          <b>Tên nhóm KH,NCC</b>
+                        </div>
+                      </div>
+                    </template>
+                    <template v-slot:option="option">
+                      <div class="cbx__body display-flex">
+                        <div class="vs__option w-150">
+                          <b>{{ option.supplierGroupCode }}</b>
+                        </div>
+                        <div class="vs__option w-200">
+                          <b>{{ option.supplierGroupName }}</b>
+                        </div>
+                      </div>
+                    </template>
+                  </v-select>
+                  <div class="icon-plus-cbx">
+                    <div
+                      class="icon-plus m-icon mi-icon-16 mi-plus--success"
+                    ></div>
+                  </div>
+                </div>
               </div>
               <div>
                 <div class="text-input">Nhân viên mua hàng</div>
-                <base-combobox
-                  :selectVal="select"
-                  :value="itemsEmployee"
-                  @selectValue="selectValue($event)"
-                ></base-combobox>
+                <div class="ps-relative">
+                  <v-select
+                    label="fullName"
+                    :options="itemsEmployee"
+                    :reduce="(option) => option.employeeId"
+                    v-model="supplier.employeeId"
+                  >
+                    <template #list-header>
+                      <div class="cbx__header display-flex">
+                        <div class="vs__option w-150"><b>Mã nhân viên</b></div>
+                        <div class="vs__option w-200"><b>Tên nhân viên</b></div>
+                      </div>
+                    </template>
+                    <template v-slot:option="option">
+                      <div class="cbx__body display-flex">
+                        <div class="vs__option w-150">
+                          <b>{{ option.employeeCode }}</b>
+                        </div>
+                        <div class="vs__option w-200">
+                          <b>{{ option.fullName }}</b>
+                        </div>
+                      </div>
+                    </template>
+                  </v-select>
+                  <div class="icon-plus-cbx">
+                    <div
+                      class="icon-plus m-icon mi-icon-16 mi-plus--success"
+                    ></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -291,7 +374,7 @@
               <li class="ms-tabs-btn"><div class="ms-label">Ghi chú</div></li>
             </ul>
             <div class="con-slot-tabs">
-              <div class="w-1/2 p-r-26 w-418" v-if="change == 1">
+              <div class="w-1/2 p-r-26 w-418" v-if="supplier.category == 0">
                 <div class="text-input">Người liên hệ</div>
                 <div class="display-flex">
                   <div class="pr-2 w-1/3">
@@ -329,11 +412,11 @@
                     type="text"
                     class="m-input"
                     placeholder="Số điện thoại"
-                    v-model.trim="supplier.phoneNumber"
+                    v-model.trim="supplier.contactPhoneNumber"
                   />
                 </div>
               </div>
-              <div class="w-1/2 p-r-26 w-418" v-if="change == 2">
+              <div class="w-1/2 p-r-26 w-418" v-else>
                 <div class="text-input">Thông tin liên hệ</div>
                 <div class="pb-2">
                   <input
@@ -352,6 +435,7 @@
                     type="text"
                     class="m-input"
                     placeholder="Điện thoại di động"
+                    v-model="supplier.contactPhoneNumber"
                   />
                 </div>
                 <div class="pb-2 w-188">
@@ -359,6 +443,7 @@
                     type="text"
                     class="m-input"
                     placeholder="Điện thoại cố định"
+                    v-model="supplier.phoneNumber"
                   />
                 </div>
                 <div class="text-input">Đại diện theo PL</div>
@@ -371,7 +456,7 @@
                   />
                 </div>
               </div>
-              <div class="w-1/2 w-418" v-if="change == 1">
+              <div class="w-1/2 w-418" v-if="supplier.category == 0">
                 <div class="text-input">Đại diện theo PL</div>
                 <div class="pb-2">
                   <input
@@ -382,17 +467,30 @@
                   />
                 </div>
               </div>
-              <div class="w-1/2 w-418" v-if="change == 2">
+              <div class="w-1/2 w-418" v-else>
                 <div class="text-input">Thông tin CMND/Thẻ căn cước</div>
                 <div class="pb-2 w-188">
                   <input
                     type="text"
                     class="m-input"
                     placeholder="Số CMND/Thẻ căn cước"
+                    v-model="supplier.identifyNumber"
                   />
                 </div>
+                <div class="pb-2 w-188">
+                  <date-picker
+                    format="DD/MM/YYYY"
+                    placeholder="Ngày cấp"
+                    v-model="supplier.identifyDate"
+                  ></date-picker>
+                </div>
                 <div class="pb-2">
-                  <input type="text" class="m-input" placeholder="Nơi cấp" />
+                  <input
+                    type="text"
+                    class="m-input"
+                    placeholder="Nơi cấp"
+                    v-model="supplier.place"
+                  />
                 </div>
               </div>
             </div>
@@ -450,19 +548,22 @@
 </template>
 
 <script>
+import DatePicker from "vue2-datepicker";
+import "vue2-datepicker/index.css";
 import SupplierPopup from "../../../../components/base/BasePopup.vue";
 import BaseCombobox from "../../../../components/base/BaseCombobox.vue";
 import FormMode from "../../../../script/enum.js";
 import { required, email } from "vuelidate/lib/validators";
 import Supplier from "../../../../models/supplier";
+import vSelect from "vue-select";
+import "vue-select/dist/vue-select.css";
 export default {
   name: "supplierDetail",
-  components: { BaseCombobox, SupplierPopup },
+  components: { BaseCombobox, SupplierPopup, vSelect, DatePicker },
   props: ["isShow", "supplier", "itemsSupplierGroup", "itemsEmployee"],
   data() {
     return {
       change: 1,
-      select: [],
       selectPrefix: [],
       arr: [],
       FormMode,
@@ -529,19 +630,11 @@ export default {
     supplier: function () {
       // kiểm tra giá trị
       if (this.supplier.employeeId != "") {
-        // Gán giá trị cho combobox nhân viên
-        this.select = {};
-        this.select.text = this.supplier.fullName;
-        this.select.value = this.supplier.employeeId;
         // Gán giá trị cho combobox danh xưng
         this.selectPrefix = {};
         this.selectPrefix.text = this.supplier.prefixName;
         this.selectPrefix.value = this.supplier.prefix;
       } else {
-        // xóa dữ liệu combobox nhân viên và xóa cảnh báo
-        this.select = {};
-        this.select.text = "";
-        this.select.value = "";
         // xóa dữ liệu combobox danh xưng và xóa cảnh báo
         this.selectPrefix = {};
         this.selectPrefix.text = "";
@@ -554,13 +647,6 @@ export default {
       };
     },
 
-    /**
-     * chọn nhân viên
-     * CreatedBy NHHai 28/12/2021
-     */
-    select: function (value) {
-      this.$emit("employeeId", value.value);
-    },
     /**
      * chọn danh xưng
      * CreatedBy NHHai 28/12/2021
@@ -584,12 +670,6 @@ export default {
     },
   },
   methods: {
-    // hàm gán giá trị cho select nhân viên
-    // cretedBy NHHAi 15/2/2022
-    selectValue(value) {
-      this.select = value;
-    },
-
     // hàm gán giá trị cho select danh xưng
     // cretedBy NHHAi 15/2/2022
     selectValuePrefix(value) {
@@ -702,7 +782,8 @@ export default {
       }
 
       // lấy dữ liệu
-      me.$emit("saveSupplier", { supplierValue: me.supplier, value: value });
+      // me.$emit("saveSupplier", { supplierValue: me.supplier, value: value });
+      me.$emit("saveSupplier", value);
       me.$v.$reset();
     },
 
@@ -758,4 +839,5 @@ export default {
 @import url("../../../../style/component/comboboxMultiple.css");
 @import url("../../../../style/component/tab.css");
 @import url("../../../../style/component/textarea.css");
+@import url("../../../../style/component/customCombobox.css");
 </style>

@@ -5,13 +5,14 @@
     :dense="true"
     :disabled="disabled"
     :filled="filled"
-  ></v-combobox>
+  >
+  </v-combobox>
 </template>
 
 <script>
 export default {
   name: "BaseCombobox",
-  props: ["selectVal", "value","disabled","filled"],
+  props: ["selectVal", "value", "disabled", "filled"],
   data() {
     return {
       select: [],
@@ -26,13 +27,13 @@ export default {
     select(value) {
       this.$emit("selectValue", value);
     },
-    disabled(value){
-      if(value){
+    disabled(value) {
+      if (value) {
         this.select = {};
         this.select.text = null;
         this.select.value = null;
       }
-    }
+    },
   },
 };
 </script>

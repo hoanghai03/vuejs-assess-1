@@ -1,0 +1,216 @@
+.dialog-pm {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+}
+
+
+/* top */
+
+.dialog-pm-top {
+    padding: 16px 16px 20px 16px;
+    position: fixed;
+    top: 0;
+    background: #f4f5f8;
+    width: 100%;
+}
+
+.text-header {
+    font-weight: 700;
+    font-size: 24px;
+    top: -7px;
+    left: 20px;
+    padding: 0 0 0 12px;
+    color: #111;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.text-lisence {
+    padding-top: 28px;
+    padding-left: 0.5rem;
+}
+
+
+/* content */
+
+.body-part {
+    overflow: auto;
+    height: calc(100vh - 122px);
+    position: sticky;
+    top: 10px;
+}
+
+div.body-part::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    background-color: #f1f1f1;
+}
+
+div.body-part::-webkit-scrollbar-thumb {
+    background-color: #a8afb6;
+}
+
+div.body-part::-webkit-scrollbar-thumb:hover {
+    background-color: #7b7d80;
+}
+
+.dialog-pm-content {
+    padding: 8px 24px 20px;
+    background: #f4f5f8;
+    width: 100%;
+    position: sticky;
+    left: 0;
+}
+
+.left-seperate {
+    padding-left: 16px;
+    border-left: 1px solid #d4d7dc;
+    width: 100%;
+}
+
+.text-total-money {
+    justify-content: end;
+    display: flex;
+}
+
+.number-total-money {
+    font-size: 36px;
+    font-weight: 700;
+    justify-content: end;
+    display: flex;
+}
+
+.show-more {
+    cursor: pointer;
+    color: #0075c0;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 12px;
+}
+
+.tab-detail {
+    display: flex;
+    padding: 16px 0 16px 8px;
+    width: 100%;
+    background-color: #ffffff;
+    position: sticky;
+    left: 0;
+    z-index: -1;
+}
+
+.tab-label {
+    color: #0075c0;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 13px;
+    text-decoration: underline;
+}
+
+.tab-detail-right {
+    position: relative;
+    right: 30px;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.th-table {
+    position: sticky;
+    top: 0 !important;
+}
+
+.border-r-b {
+    border-right: 1px dotted #c7c7c7 !important;
+    border-bottom: 1px solid #c7c7c7 !important;
+}
+
+.border-l-b {
+    border-left: 1px dotted #c7c7c7 !important;
+    border-bottom: 1px solid #c7c7c7 !important;
+}
+
+.z-index--1 {
+    z-index: -1 !important;
+}
+
+.r-40 {
+    right: 40px !important;
+}
+
+.r-0 {
+    right: 0 !important;
+    background-color: #ffffff !important;
+}
+
+.r-20 {
+    right: 20px !important;
+}
+
+.td-bottom-table {
+    height: 34px;
+    background-color: #ffffff;
+}
+
+.bg-color {
+    background-color: #f8f9fe;
+}
+
+.max-size-upload {
+    margin-left: 15px;
+    color: #757575;
+    white-space: nowrap;
+}
+
+.upload-file {
+    cursor: pointer;
+    width: 338px;
+    height: 49px;
+    line-height: 49px;
+    justify-content: center;
+    border-radius: 2px;
+    border: 1px solid #c4c8ec;
+    padding-left: 50px;
+    font-size: 12px;
+    font-family: notosans italic;
+    color: #9e9e9e;
+}
+
+.sticky {
+    position: sticky;
+    left: 0;
+}
+
+.clear {
+    position: sticky;
+    left: 0;
+    width: 100%;
+    height: 26px;
+    background-color: #ffffff;
+}
+
+
+/* bottom */
+
+.dialog-pm-bottom {
+    width: 100%;
+    background-color: #38393d;
+    align-items: center;
+    padding: 0 16px;
+    position: fixed;
+    bottom: 0;
+    height: 50px;
+}
+
+
+/* vị trí của cất và đóng */
+
+.visit {
+    right: 16px !important;
+    bottom: 43px !important;
+}

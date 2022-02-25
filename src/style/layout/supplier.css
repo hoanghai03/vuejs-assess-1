@@ -13,7 +13,7 @@
     margin-top: 6px;
 }
 
-.header-content .tour-label {
+.tour-label {
     white-space: nowrap;
     color: #0075c0;
     font-size: 13px;
@@ -21,12 +21,12 @@
     margin-right: 10px;
 }
 
-.header-content .tour-label:hover {
+.tour-label:hover {
     cursor: pointer;
     text-decoration: underline;
 }
 
-.header-content .button-header {
+.button-header {
     display: flex;
     position: relative;
 }
