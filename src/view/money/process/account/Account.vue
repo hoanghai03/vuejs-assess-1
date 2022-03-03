@@ -31,7 +31,11 @@
           />
           <div class="icon-input m-icon m-icon-input"></div>
         </div>
-        <div id="refresh" class="icon-load m-icon m-icon-load" @click="loadData"></div>
+        <div
+          id="refresh"
+          class="icon-load m-icon m-icon-load"
+          @click="loadData"
+        ></div>
       </div>
       <div class="m-table">
         <table class="common-table" border="0" cellspacing="0">
@@ -49,9 +53,9 @@
             <col style="min-width: 20px" />
           </colgroup>
           <thead>
-            <tr >
+            <tr>
               <th></th>
-              <th class="ps-absolute"></th>
+              <th class="ps-absolute" v-bind:style="{ top: '-34px' }"></th>
               <th>SỐ TÀI KHOẢN</th>
               <th>TÊN TÀI KHOẢN</th>
               <th>TÍNH CHẤT</th>
@@ -64,9 +68,11 @@
             </tr>
           </thead>
         </table>
-        <RowTreeGrid 
-        :data="data" 
-        @dbOnClickTr="dbOnClickTr($event)">
+        <RowTreeGrid
+          :data="data"
+          @dbOnClickTr="dbOnClickTr($event)"
+          @showBtnDel="showBtnDel($event)"
+        >
         </RowTreeGrid>
       </div>
       <div class="paging-bar">
@@ -75,13 +81,27 @@
         </div>
       </div>
     </div>
+    <div
+      id="delEntity"
+      ref="delEntityRight"
+      class="none"
+      :class="{
+        'multiple-entity': isShowEntityDelRight,
+        show: isShowEntityDelRight,
+      }"
+    >
+      <div class="multiple">Nhân bản</div>
+      <div class="multiple" @click="showPopupDel">Xóa</div>
+      <div class="multiple">Ngưng sử dụng</div>
+    </div>
     <account-detail
       :isShow="isShowDialogDetail"
       :account="account"
       :accountCombobox="accountCombobox"
+      :accountNumber="accountNumber"
       @saveAccount="saveAccount($event)"
       @showDialog="showDialogParent"
-      @parentId="setParentId($event)"
+      @parentId="setParentId"
       @select="setSelect($event)"
       @object="setObject($event)"
       @costAggregationObj="setCostAggregationObj($event)"
@@ -105,6 +125,7 @@
       :isDelAll="isDelAll"
       :checkedId="checkedId"
       :host="host"
+      :isInfo="isInfo"
       @loadData="loadData($event)"
       @showPopup="showPopupParent"
     />
@@ -142,8 +163,8 @@ export default {
       ToastMessenge,
       duplicateCodeFirst: "Mã nhân viên <",
       duplicateCodeLast: "> đã tồn tại trong hệ thống,vui lòng kiểm tra lại.",
-
       checkedId: [],
+      isInfo: false,
       id: null,
       isDelAll: false,
       isShowPopupDetail: false,
@@ -154,19 +175,19 @@ export default {
       isDelete: null,
       overlay: false,
       recordNumber: 0,
+      isShowEntityDelRight: false,
+      checkID: null,
+      deleteFirst: `Bạn có thực sự muốn xóa tài khoản <`,
+      deleteLast: `> không?`,
+      accountNumber: "",
     };
   },
-mounted() {
+  mounted() {
     // Bắt sự kiện shortcuts
     const keysPressed = {};
     const me = this;
     document.addEventListener("keydown", (event) => {
-      if (
-        keysPressed["Control"] &&
-        (
-          event.key == "o" ||
-          event.key == "O")
-      ) {
+      if (keysPressed["Control"] && (event.key == "o" || event.key == "O")) {
         event.preventDefault(); // hủy sự kiện mặc định
       }
       keysPressed[event.key] = true;
@@ -176,6 +197,10 @@ mounted() {
         me.btnAddAccount();
       }
     });
+    // xóa sự kiện keydown
+    document.addEventListener("keyup", (event) => {
+      delete keysPressed[event.key];
+    });
   },
   created() {
     // khởi tạo dữ liêu trong table
@@ -184,24 +209,87 @@ mounted() {
 
   methods: {
     /**
+     * Hiên thị popup xóa
+     * CreatedBy NHHai 28/2/2022
+     */
+    async showPopupDel() {
+      var me = this;
+      // hiển thị loading
+      me.overlay = true;
+      me.id = me.checkID;
+      // ẩn button xóa
+      me.isShowEntityDelRight = false;
+      // lấy mã code
+      var response = await me.loadAccountWithIdChild(me.id);
+      if (response.data.success) {
+        // xét trường hợp data rỗng
+        if (!response.data.data) {
+          this.checkDataEmpty();
+          return;
+        }
+        var accountNumber = response.data.data;
+        // gán text popup
+        me.textPopup = me.deleteFirst + accountNumber + me.deleteLast;
+        // icon
+        me.isInfo = false;
+        // hiển thị
+        me.display();
+      } else {
+        //hiển thị popup
+        // hiển thị icon
+        me.isInfo = true;
+        // ẩn các trường hợp nút bấm
+        me.isAgree = false;
+        me.isDelete = null;
+        me.isShowleft = false;
+        // hiển thị popup
+        me.showPopupParent(true);
+        me.textPopup = response.data.errorMessage;
+      }
+
+      me.overlay = false;
+    },
+
+    /**
+     * Hàm chung trong hiển thị popup del
+     * createdBy NHHAi 14/2/2022
+     */
+    display() {
+      this.isDelete = this.FormMode.Is_Delete_Y;
+      this.textLeft = this.FormMode.Text_Left;
+      this.showButtonLeft(true);
+      this.showPopupParent(true);
+      // ẩn loading
+      this.overlay = false;
+    },
+
+    loadAccountWithIdChild(accountId) {
+      return axios.get(this.host + "AccountId/" + accountId);
+    },
+    /**
+     * hiển thị nút xóa
+     * CreatedBy NHHai 13/2/2022
+     */
+    showBtnDel(value) {
+      this.checkID = value.id;
+      this.isShowEntityDelRight = value.isShow;
+      var rect = value.sender.currentTarget.getBoundingClientRect();
+      var top = rect.top + 20;
+      this.$refs.delEntityRight.style.top = `${top}px`;
+    },
+    /**
      * Load dữ liệu
      * creatdBy NHHai 17/2/2022
      */
     async loadData() {
       var me = this;
       me.overlay = true;
-      var accountCbx = await me.getAccounts();
-      if (!accountCbx.data.data) {
-        me.checkDataEmpty();
-        me.overlay = false;
-        return
-      }
-      else {
-        me.recordNumber = accountCbx.data.data?.length;
-      }
       axios.get(`${this.host}GetAccountTree`).then((response) => {
         if (response.data.success) {
-          me.data = response.data.data;
+          // lấy danh sách
+          me.data = response.data.data.entitys;
+          // lấy tổng số bản ghi
+          me.reco = response.data.data.totalEntitys;
           me.overlay = false;
         } else {
           me.responseWithError(response);
@@ -214,6 +302,7 @@ mounted() {
      */
     async btnAddAccount() {
       var me = this;
+      me.accountNumber = "";
       me.overlay = true;
       // hiển thị dialog
       me.showDialogParent(true);
@@ -224,8 +313,7 @@ mounted() {
       // if(!response.data.data){
       //   return;
       // }
-      this.listAccounts();
-      this.forcusOnInput();
+      me.forcusOnInput();
     },
     forcusOnInput() {
       // focus vào ô số tài khoản
@@ -238,14 +326,17 @@ mounted() {
       var me = this;
       me.accountCombobox = [];
       var accountCbx = await me.getAccounts();
-      accountCbx.data.data.forEach((res) => {
-        // lấy text và value
-        var account = {};
-        account.text = res.accountNumber;
-        account.value = res.accountId;
-        // gán giá trị cho supplierGroups
-        me.accountCombobox.push(account);
-      });
+      // accountCbx.data.data.forEach((res) => {
+      //   // lấy text và value
+      //   var account = {};
+      //   account.text = res.accountNumber;
+      //   account.value = res.accountId;
+      //   // gán giá trị cho supplierGroups
+      //   me.accountCombobox.push(account);
+      // });
+      if (accountCbx && accountCbx.data.data) {
+        me.accountCombobox = accountCbx.data.data;
+      }
     },
 
     /**
@@ -267,6 +358,7 @@ mounted() {
         }
         // gán dữ liệu cho supplierProps
         me.account = response.data.data;
+        me.accountNumber = response.data.data.parentName;
         this.listAccounts();
         // Hiển thị dialog thông tin chi tiết nhân viên
         me.showDialogParent(true);
@@ -396,9 +488,15 @@ mounted() {
      * gán giá trị parentId
      * CreatedBy NHHai 20/2/2022
      */
-    setParentId(value) {
-      if (value == undefined) value = null;
-      this.account.parentId = value;
+    setParentId() {
+      var me = this;
+      if (me.account.parentId) {
+        axios.get(me.host + me.account.parentId).then((res) => {
+          if (res && res.data.success) {
+            me.accountNumber = res.data.data.accountNumber;
+          }
+        });
+      }
     },
 
     /**
@@ -480,10 +578,17 @@ mounted() {
             me.showButtonLeft(false);
             me.isAgree = true;
             me.isDelete = null;
-            me.textPopup =
-              this.duplicateCodeFirst +
-              `${me.account.accountNumber}` +
-              this.duplicateCodeLast;
+            if (res.data.validateInfo[0].errorCode == 2) {
+              me.textPopup =
+                res.data.validateInfo[0].fieldName +
+                " " +
+                me.account.accountNumber +
+                res.data.validateInfo[0].errorMessage;
+            } else {
+              me.textPopup =
+                res.data.validateInfo[0].fieldName +
+                res.data.validateInfo[0].errorMessage;
+            }
             me.showPopupParent(true);
             break;
           case 500:
@@ -519,10 +624,6 @@ mounted() {
      */
     showPopupParent(value) {
       this.isShowPopupDetail = value;
-      if (value == false) {
-        // hiển thị nút đóng đồng ý ở giữa popup
-        this.isAgree = false;
-      }
     },
   },
 };

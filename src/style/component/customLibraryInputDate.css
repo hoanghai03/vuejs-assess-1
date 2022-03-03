@@ -5,6 +5,10 @@
 .mx-input {
     height: 32px !important;
     border-radius: 2px !important;
+    /* border: 1px solid #babec5 !important; */
+}
+
+.mx-input:hover {
     border: 1px solid #babec5 !important;
 }
 
@@ -19,4 +23,13 @@
 
 .mx-datepicker svg {
     cursor: pointer;
+}
+
+.mx-input:disabled {
+    color: rgb(0, 0, 0) !important;
+}
+
+.mx-input {
+    color: rgb(0, 0, 0) !important;
+    font-size: 13px;
 }

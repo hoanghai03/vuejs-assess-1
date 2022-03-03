@@ -1,5 +1,5 @@
 <template>
-  <div class="dialog-pm" v-if="isShow">
+  <div class="dialog-pm" v-if="isShow" >
     <div class="dialog-pm-top display-flex">
       <div class="flex-1 display-flex align-center">
         <div class="m-icon mi-24 mi-recent-log"></div>
@@ -7,7 +7,13 @@
           Phiếu chi {{ payment.paymentNumber }}
         </div>
         <div class="m-l-24 w-350 bgc-white">
-          <v-combobox v-model="reasonA" :items="FormMode.reason" :dense="true">
+          <v-combobox
+            :disabled="disabled"
+            :filled="disabled"
+            v-model="reasonA"
+            :items="FormMode.reason"
+            :dense="true"
+          >
           </v-combobox>
         </div>
       </div>
@@ -16,7 +22,11 @@
         <a class="tour-label p-l-5 m-0">Hướng dẫn</a>
         <div class="m-6-8 mi-24 m-icon mi-setting__detail"></div>
         <div class="m-6-8 mi-24 m-icon m-icon-help" title="Giúp F1"></div>
-        <div class="m-6-8 mi-24 m-icon m-icon-close" title="Đóng (ESC)"></div>
+        <div
+          class="m-6-8 mi-24 m-icon m-icon-close"
+          title="Đóng (ESC)"
+          @click="btnCloseOnClickHeader"
+        ></div>
       </div>
     </div>
     <div class="body-part">
@@ -27,7 +37,8 @@
               <div class="p-r-12 w-43per">
                 <div class="text-input">Đối tượng</div>
                 <div class="object bgc-white ps-relative">
-                  <v-select
+                  <!--<v-select
+                    :disabled="disabled"
                     label="supplierName"
                     :options="suppliers"
                     :reduce="(option) => option.supplierId"
@@ -72,12 +83,45 @@
                         </div>
                       </div>
                     </template>
-                  </v-select>
-                  <div class="icon-plus-cbx">
+                  </v-select>-->
+                  <AutocompleteCombobox
+                    :data="suppliers"
+                    ref="cbxSupplier"
+                    :allowNull="true"
+                    :disable="disabled"
+                    :hasAddAction="true"
+                    :columnNames="[
+                      'Đối tượng',
+                      'Tên đối tượng',
+                      'Mã số thuế',
+                      'Địa chỉ',
+                      'điện thoại',
+                    ]"
+                    :valueField="'supplierId'"
+                    :showFields="[
+                      'supplierCode',
+                      'supplierName',
+                      'supplierTaxCode',
+                      'address',
+                      'phoneNumber',
+                    ]"
+                    :selectedValue="'supplierCode'"
+                    v-model="payment.supplierId"
+                    :columnWidths="[
+                      '100px',
+                      '100px',
+                      '100px',
+                      '100px',
+                      '100px',
+                    ]"
+                    :hasTitleRow="true"
+                    @input="changeSupplier($event)"
+                  ></AutocompleteCombobox>
+                  <!--<div class="icon-plus-cbx">
                     <div
                       class="icon-plus m-icon mi-icon-16 mi-plus--success"
                     ></div>
-                  </div>
+                  </div>-->
                 </div>
               </div>
               <div class="w-57per">
@@ -86,6 +130,7 @@
                   class="m-input bgc-white"
                   type="text"
                   v-model.trim="payment.supplierContactName"
+                  :disabled="disabled"
                 />
               </div>
             </div>
@@ -94,6 +139,7 @@
               <input
                 class="m-input bgc-white"
                 type="text"
+                :disabled="disabled"
                 v-model.trim="payment.address"
               />
             </div>
@@ -102,6 +148,7 @@
               <input
                 class="m-input bgc-white"
                 type="text"
+                :disabled="disabled"
                 v-model.trim="payment.description"
               />
             </div>
@@ -109,7 +156,8 @@
               <div class="w-43per p-r-12">
                 <div class="text-input">Nhân viên</div>
                 <div class="employee bgc-white ps-relative">
-                  <v-select
+                  <!--<v-select
+                    :disabled="disabled"
                     label="fullName"
                     :options="employees"
                     :reduce="(option) => option.employeeId"
@@ -147,13 +195,35 @@
                         </div>
                       </div>
                     </template>
-                  </v-select>
-
-                  <div class="icon-plus-cbx">
+                  </v-select>-->
+                  <AutocompleteCombobox
+                    :data="employees"
+                    :allowNull="true"
+                    :disable="disabled"
+                    :hasAddAction="true"
+                    :columnNames="[
+                      'mã nhân viên',
+                      'Tên nhên viên',
+                      'Đơn vị',
+                      'Đt di động',
+                    ]"
+                    :valueField="'employeeId'"
+                    :showFields="[
+                      'employeeCode',
+                      'fullName',
+                      'departmentName',
+                      'phoneNumber',
+                    ]"
+                    :selectedValue="'fullName'"
+                    v-model="payment.employeeId"
+                    :columnWidths="['100px', '100px', '100px', '100px']"
+                    :hasTitleRow="true"
+                  ></AutocompleteCombobox>
+                  <!--<div class="icon-plus-cbx">
                     <div
                       class="icon-plus m-icon mi-icon-16 mi-plus--success"
                     ></div>
-                  </div>
+                  </div>-->
                 </div>
               </div>
               <div class="w-143">
@@ -164,6 +234,7 @@
                   placeholder="Số lượng"
                   type="text"
                   maxlength="20"
+                  :disabled="disabled"
                   v-model="payment.documentIncluded"
                   @keypress="isNumber($event)"
                 />
@@ -179,8 +250,10 @@
             <div class="left-seperate p-b-12">
               <div class="text-input">Ngày hạch toán</div>
               <date-picker
+                :disabled="disabled"
                 format="DD/MM/YYYY"
                 type="date"
+                :input-error="true"
                 placeholder="DD/MM/YYYY"
                 :value="payment.accountingDate"
                 @input="changeAccountingDate($event)"
@@ -189,6 +262,7 @@
             <div class="left-seperate p-b-12">
               <div class="text-input">Ngày phiếu chi</div>
               <date-picker
+                :disabled="disabled"
                 format="DD/MM/YYYY"
                 type="date"
                 placeholder="DD/MM/YYYY"
@@ -200,6 +274,7 @@
               <input
                 class="m-input bgc-white"
                 type="text"
+                :disabled="disabled"
                 v-model.trim="payment.paymentNumber"
               />
             </div>
@@ -207,7 +282,9 @@
         </div>
         <div class="w-25per">
           <div class="text-total-money">Tổng tiền</div>
-          <div class="number-total-money">{{ payment.totalAmount }}</div>
+          <div class="number-total-money">
+            {{ payment.totalAmount | formatCurrency }}
+          </div>
         </div>
       </div>
       <div class="tab-detail">
@@ -217,7 +294,10 @@
         <div class="display-flex tab-detail-right">
           <div class="label-option p-r-10">Loại tiền</div>
           <div class="w-100">
-            <BaseCombobox></BaseCombobox>
+            <BaseCombobox
+              :disabled="disabled"
+              :filled="disabled"
+            ></BaseCombobox>
           </div>
         </div>
       </div>
@@ -240,11 +320,11 @@
           <col style="min-width: 4px" />
         </colgroup>
         <thead>
-          <tr class="th-table">
+          <tr >
             <th></th>
             <th>#</th>
-            <th>DIỄN GIẢI</th>
-            <th>TK NỢ</th>
+            <th class="ps-unset">DIỄN GIẢI</th>
+            <th class="ps-unset">TK NỢ</th>
             <th>TK CÓ</th>
             <th class="text-right">SỐ TIỀN</th>
             <th>ĐỐI TƯỢNG</th>
@@ -259,6 +339,7 @@
             v-for="(item, index) in paymentDetail"
             :key="index"
             @click="focusInputTd(index)"
+            :disabled="disabled"
           >
             <td></td>
             <td :class="{ 'bgc-grey': isShowInput[index] }">{{ index + 1 }}</td>
@@ -271,12 +352,12 @@
               <span v-else>{{ item.description }}</span>
             </td>
             <td :class="{ 'bgc-grey': isShowInput[index] }">
-              <div v-if="isShowInput[index]" class="bgc-white">
-                <v-select
+              <div v-if="isShowInput[index]" class="bgc-white ps-relative">
+                <!--<v-select
                   label="accountNumber"
                   :options="accountDebit"
                   :reduce="(option) => option.accountId"
-                  v-model="item.debitAccount"
+                  v-model.trim="item.debitAccount"
                   @input="getAccountNumberDebit(index)"
                 >
                   <template #list-header>
@@ -299,14 +380,37 @@
                       </div>
                     </div>
                   </template>
-                </v-select>
+                </v-select>-->
+                <AutocompleteCombobox
+                  :data="accountDebit"
+                  :allowNull="false"
+                  :columnNames="['Số tài khoản', 'Tên tài khoản']"
+                  :valueField="'accountId'"
+                  :showFields="['accountNumber', 'accountName']"
+                  :selectedValue="'accountNumber'"
+                  v-model="item.debitAccount"
+                  :columnWidths="['100px', '100px']"
+                  :hasTitleRow="true"
+                  :validateProp="isValidateDebit[index]"
+                  @input="getAccountNumberDebit(index)"
+                ></AutocompleteCombobox>
+                <div
+                  v-if="isValidateDebit[index]"
+                  class="m-icon mi-icon-16 mi-exclamation-cell--error cell-error-icon-cbx"
+                ></div>
               </div>
 
-              <span v-else>{{ item.debitAccountNumber }}</span>
+              <div class="ps-relative" v-else>
+                {{ item.debitAccountNumber }}
+                <div
+                  v-if="isValidateDebit[index]"
+                  class="m-icon mi-icon-16 mi-exclamation-cell--error cell-error-icon"
+                ></div>
+              </div>
             </td>
             <td :class="{ 'bgc-grey': isShowInput[index] }">
-              <div v-if="isShowInput[index]" class="bgc-white">
-                <v-select
+              <div v-if="isShowInput[index]" class="bgc-white ps-relative">
+                <!--<v-select
                   label="accountNumber"
                   :options="accountCredit"
                   :reduce="(option) => option.accountId"
@@ -333,10 +437,32 @@
                       </div>
                     </div>
                   </template>
-                </v-select>
+                </v-select>-->
+                <AutocompleteCombobox
+                  :data="accountCredit"
+                  :allowNull="false"
+                  :columnNames="['Số tài khoản', 'Tên tài khoản']"
+                  :valueField="'accountId'"
+                  :showFields="['accountNumber', 'accountName']"
+                  :selectedValue="'accountNumber'"
+                  v-model="item.creditAccount"
+                  :columnWidths="['100px', '100px']"
+                  :hasTitleRow="true"
+                  @input="getAccountNumberCredit(index)"
+                ></AutocompleteCombobox>
+                <div
+                  v-if="isValidateCredit[index]"
+                  class="m-icon mi-icon-16 mi-exclamation-cell--error cell-error-icon-cbx"
+                ></div>
               </div>
 
-              <span v-else>{{ item.creditAccountNumber }}</span>
+              <div class="ps-relative" v-else>
+                {{ item.creditAccountNumber }}
+                <div
+                  v-if="isValidateCredit[index]"
+                  class="m-icon mi-icon-16 mi-exclamation-cell--error cell-error-icon"
+                ></div>
+              </div>
             </td>
             <td :class="{ 'bgc-grey': isShowInput[index] }">
               <div v-if="isShowInput[index]">
@@ -349,12 +475,12 @@
                 />
               </div>
               <div v-else class="text-right">
-                <span>{{ item.amount }}</span>
+                <span>{{ item.amount | formatCurrency }}</span>
               </div>
             </td>
             <td :class="{ 'bgc-grey': isShowInput[index] }">
               <div v-if="isShowInput[index]" class="bgc-white">
-                <v-select
+                <!--<v-select
                   label="supplierCode"
                   :options="suppliers"
                   :reduce="(option) => option.supplierId"
@@ -399,7 +525,33 @@
                       </div>
                     </div>
                   </template>
-                </v-select>
+                </v-select>-->
+                <AutocompleteCombobox
+                  :data="suppliers"
+                  :allowNull="true"
+                  :hasAddAction="false"
+                  :columnNames="[
+                    'Đối tượng',
+                    'Tên đối tượng',
+                    'Mã số thuế',
+                    'Địa chỉ',
+                    'điện thoại',
+                  ]"
+                  :valueField="'supplierId'"
+                  :showFields="[
+                    'supplierCode',
+                    'supplierName',
+                    'supplierTaxCode',
+                    'address',
+                    'phoneNumber',
+                  ]"
+                  :selectedValue="'supplierCode'"
+                  v-model="item.supplierId"
+                  :columnWidths="['100px', '100px', '100px', '100px', '100px']"
+                  :left="true"
+                  :hasTitleRow="true"
+                  @input="changeSupplierInDetail(index)"
+                ></AutocompleteCombobox>
               </div>
               <span v-else>{{ item.supplierCode }}</span>
             </td>
@@ -457,8 +609,13 @@
         </button>
       </div>
       <div class="display-flex">
-        <button class="m-second-btn color-white">Cất</button>
-        <button class="btn-radius-left radius-left" @click="saveData">
+        <button
+          class="m-second-btn color-white"
+          @click="btnSaveOnClick(FormMode.SaveAndDisable)"
+        >
+          Cất
+        </button>
+        <button class="btn-radius-left radius-left" @click="btnSaveOnClick">
           {{ textBtn }}
         </button>
         <button class="btn-radius-right radius-right" @click="showVisit">
@@ -468,23 +625,48 @@
       </div>
     </div>
     <div v-if="isShowVisit" id="delEntity" class="multiple-entity visit">
-      <div class="multiple" @click="saveData(FormMode.SaveAndAdd)">Cất và Thêm</div>
-      <div class="multiple" @click="saveData(FormMode.Save)">Cất và Đóng</div>
+      <div class="multiple" @click="btnSaveOnClick(FormMode.SaveAndAdd)">
+        Cất và Thêm
+      </div>
+      <div class="multiple" @click="btnSaveOnClick(FormMode.Save)">
+        Cất và Đóng
+      </div>
       <div class="multiple">Cất và In</div>
     </div>
+    <supplier-popup
+      @showPopup="showPopupParent"
+      @saveData="saveData($event)"
+      :textPopup="textPopup"
+      :isShow="isShowPopupDetail"
+      :isInfo="isInfo"
+      :isShowBtn="isShowleft"
+      :textLeft="textLeft"
+      :isDelete="isDelete"
+      :isAsk="isAsk"
+    />
   </div>
 </template>
 
 <script>
 import BaseCombobox from "../../../components/base/BaseCombobox.vue";
+import AutocompleteCombobox from "../../../components/base/AutocompleteCombobox.vue";
+import SupplierPopup from "../../../components/base/BasePopup.vue";
 import DatePicker from "vue2-datepicker";
 import FormMode from "../../../script/enum.js";
 import "vue2-datepicker/index.css";
-import vSelect from "vue-select";
-import "vue-select/dist/vue-select.css";
+// import vSelect from "vue-select";
+// import "vue-select/dist/vue-select.css";
+import Payment from "../../../models/payment.js";
+// import { required } from "vuelidate/lib/validators";
 export default {
   name: "PaymentDetail",
-  components: { BaseCombobox, DatePicker, vSelect },
+  components: {
+    BaseCombobox,
+    DatePicker,
+    // vSelect,
+    SupplierPopup,
+    AutocompleteCombobox,
+  },
   props: [
     "isShow",
     "suppliers",
@@ -494,10 +676,60 @@ export default {
     "checkDelOnClickTr",
     "accountDebit",
     "accountCredit",
+    "disabled",
   ],
+  mounted() {
+    // Bắt sự kiện shortcuts
+    const keysPressed = {};
+    const me = this;
+    document.addEventListener("keydown", (event) => {
+      // đóng dialog khi click ESC
+      if (event.key == "Escape") {
+        me.btnCloseOnClickHeader();
+      }
+
+      if (keysPressed["Control"] && (event.key == "s" || event.key == "S")) {
+        event.preventDefault(); // hủy sự kiện mặc định
+      }
+      keysPressed[event.key] = true;
+      // Lưu
+      // if (
+      //   keysPressed["Control"] &&
+      //   !keysPressed["Shift"] &&
+      //   (event.key == "s" || event.key == "S") &&
+      //   me.isShow
+      // ) {
+      //   //TODO
+      //   me.btnSaveOnClick(FormMode.Save);
+      // }
+      // // Lưu và thêm mới
+      // if (
+      //   keysPressed["Control"] &&
+      //   keysPressed["Shift"] &&
+      //   (event.key == "s" || event.key == "S") &&
+      //   me.isShow
+      // ) {
+      //   //TODO
+      //   me.btnSaveOnClick(FormMode.SaveAndAdd);
+      // }
+    });
+    // xóa sự kiện keydown
+    document.addEventListener("keyup", (event) => {
+      delete keysPressed[event.key];
+    });
+  },
+  filters: {
+    formatCurrency: (value) => {
+      return parseFloat(value)
+        .toFixed(1)
+        .replace(/(\d)(?=(\d{3})+\.)/g, "$1.");
+    },
+  },
   data() {
     return {
       isShowInput: [],
+      isValidateDebit: [],
+      isValidateCredit: [],
       FormMode,
       reasonA: {
         text: "7. Chi khác",
@@ -508,30 +740,89 @@ export default {
       checkBtn: 1,
       save: "Cất và Đóng",
       saveAndAdd: "Cất và Thêm",
+      isShowPopupDetail: false,
+      textPopup: null,
+      isInfo: false,
+      isShowleft: false,
+      textLeft: "",
+      isDelete: "",
+      isAsk: false,
+      oldValue: new Payment(),
+      oldValueDetails: null,
+      checkValidateCbx: false,
     };
   },
   watch: {
     // set giá trị mặc đinh khi bấm vào nút chi tiền ngoài giao diện chính
-    isShow: function(){
-      this.textBtn= "Cất và Đóng",
-      this.checkBtn= 1
-    }
+    isShow: function () {
+      (this.textBtn = "Cất và Đóng"), (this.checkBtn = 1);
+      // gán giá trị empl cho oldValue
+      this.oldValue = { ...this.payment };
+      this.oldValueDetails = [...this.paymentDetail];
+    },
+
+    /**
+     * Hàm kiểm tra sự thay đổi của payment
+     */
+    payment: function () {
+      this.isShowInput = Array(this.paymentDetail.length || 0).fill(false);
+      this.isValidateDebit = Array(this.paymentDetail.length || 0).fill(false);
+      this.isValidateCredit = Array(this.paymentDetail.length || 0).fill(false);
+    },
   },
-  mounted() {
+  created() {
     this.isShowInput = Array(this.paymentDetail.length || 0).fill(false);
   },
+  // validations: {
+  //   paymentDetail: {
+  //     $each: {
+  //       accountCredit: {
+  //         required,
+  //       },
+  //       accountDebit: {
+  //         required,
+  //       },
+  //     },
+  //   },
+  // },
   methods: {
+    /**
+     * hiển thịp popup
+     * CreatedBy NHHai 15/2/2022
+     */
+    showPopupParent(value) {
+      this.isShowPopupDetail = value;
+      if (!value) {
+        this.isInfo = false;
+        this.isAsk = false;
+        // cờ đóng khi bấm nut ESC
+        this.checkCloseDialog = false;
+      }
+    },
+    /**
+     * Hàm lưu dữ liệu
+     * createdBy NHHAi 11/1/2021
+     */
+    saveData(value) {
+      if (value) {
+        this.btnSaveOnClick(this.FormMode.Save);
+      } else {
+        this.btnCloseDialog();
+      }
+    },
     /**
      * Hàm khi click vào td
      * @param index
      * creaedBy NHHai 21/2/2022
      */
     focusInputTd(index) {
-      this.isShowInput = Array(this.paymentDetail.length || 0).fill(false);
-      this.isShowInput[index] = true;
-      this.isShowInput = [...this.isShowInput];
-      // emit để xóa dòng mới nhất nhưng chưa chỉnh sửa
-      this.$emit("delOnClickTr", index);
+      if (!this.disabled) {
+        this.isShowInput = Array(this.paymentDetail.length || 0).fill(false);
+        this.isShowInput[index] = true;
+        this.isShowInput = [...this.isShowInput];
+        // emit để xóa dòng mới nhất nhưng chưa chỉnh sửa
+        this.$emit("delOnClickTr", index);
+      }
     },
 
     /**
@@ -550,7 +841,18 @@ export default {
     changeAccountingDate(value) {
       var accountingDate = this.payment.accountingDate;
       var paymentDate = this.payment.paymentDate;
-      if (accountingDate.getTime() == paymentDate.getTime()) {
+      // xóa cảnh báo
+      if (value && paymentDate && value.getTime() >= paymentDate.getTime())
+        document
+          .querySelector(".mx-input-wrapper input")
+          .classList.remove("input-warning");
+
+      if (
+        (!accountingDate && !paymentDate) ||
+        (accountingDate &&
+          paymentDate &&
+          accountingDate.getTime() == paymentDate.getTime())
+      ) {
         // thay đổi giá trị accountingDate và paymentDate giống nhau
         this.$emit("changeDate", value);
       } else this.$emit("changeAccountingDate", value);
@@ -577,7 +879,9 @@ export default {
      * creaedBy NHHai 21/2/2022
      */
     addColPaymentDetail() {
-      this.$emit("addColPaymentDetailEmit");
+      if (!this.disabled) {
+        this.$emit("addColPaymentDetailEmit");
+      }
     },
 
     /**
@@ -585,7 +889,9 @@ export default {
      * creaedBy NHHai 21/2/2022
      */
     delAllCol() {
-      this.$emit("delAllColEmit");
+      if (!this.disabled) {
+        this.$emit("delAllColEmit");
+      }
     },
 
     /**
@@ -612,8 +918,10 @@ export default {
      */
     comcalculateTotalAmountputed() {
       var me = this;
+      me.payment.totalAmount = 0;
       me.paymentDetail.forEach((value) => {
-        me.payment.totalAmount += parseInt(value.amount);
+        me.payment.totalAmount =
+          parseInt(me.payment.totalAmount) + parseInt(value.amount);
       });
     },
 
@@ -622,7 +930,9 @@ export default {
      * creaedBy NHHai 21/2/2022
      */
     delAnyRow(index) {
-      this.$emit("delAnyRowProp", index);
+      if (!this.disabled) {
+        this.$emit("delAnyRowProp", index);
+      }
     },
 
     /**
@@ -630,6 +940,9 @@ export default {
      * creaedBy NHHai 21/2/2022
      */
     getAccountNumberDebit(index) {
+      if (!this.paymentDetail[index].debitAccount)
+        this.isValidateDebit[index] = true;
+      else this.isValidateDebit[index] = false;
       this.$emit("getAccountNumberDebitProps", index);
     },
 
@@ -638,6 +951,9 @@ export default {
      * creaedBy NHHai 21/2/2022
      */
     getAccountNumberCredit(index) {
+      if (!this.paymentDetail[index].creditAccount)
+        this.isValidateCredit[index] = true;
+      else this.isValidateCredit[index] = false;
       this.$emit("getAccountNumberCreditProps", index);
     },
 
@@ -646,29 +962,106 @@ export default {
      * creaedBy NHHai 21/2/2022
      */
     showVisit() {
-      this.isShowVisit = !this.isShowVisit;
+      if (!this.disabled) {
+        this.isShowVisit = !this.isShowVisit;
+      }
     },
 
     /**
      * Hàm lưu dữ liệu
      * creaedBy NHHai 21/2/2022
      */
-    saveData(number) {
-      switch (number) {
-        case this.FormMode.Save:
-          this.textBtn = this.save;
-          this.checkBtn = this.FormMode.Save;
-          break;
-        case this.FormMode.SaveAndAdd:
-          this.textBtn = this.saveAndAdd;
-          this.checkBtn = this.FormMode.SaveAndAdd;
-          break;
-        default:
-          break;
+    btnSaveOnClick(number) {
+      this.checkValidateCbx = false;
+
+      if (!this.disabled) {
+        switch (number) {
+          case this.FormMode.Save:
+            this.textBtn = this.save;
+            this.checkBtn = this.FormMode.Save;
+            break;
+          case this.FormMode.SaveAndAdd:
+            this.textBtn = this.saveAndAdd;
+            this.checkBtn = this.FormMode.SaveAndAdd;
+            break;
+          default:
+            break;
+        }
+        // ẩn form chọn Cất và Đóng, Cất và Thêm
+        this.isShowVisit = false;
+        // kiểm tra dữ liệu trống
+        // this.$v.$touch();
+        // validate dữ liệu
+        // kiểm tra dữ liệu ngày hạch toán và ngày phiếu thu
+        if (
+          this.payment.accountingDate.getTime() <
+          this.payment.paymentDate.getTime()
+        ) {
+          //focus
+          // me.$refs.supplierName.focus();
+          // hiển thị cảnh báo
+          document
+            .querySelector(".mx-input-wrapper input")
+            .classList.add("input-warning");
+          //hiển thị popup
+          this.isInfo = true;
+          this.showPopupParent(true);
+          this.textPopup = FormMode.Error_Date;
+          return;
+        }
+        // kiểm tra combobox tài khoản nợ và có
+        this.paymentDetail.forEach((value, index) => {
+          if (!value.debitAccount || value.debitAccount == "") {
+            this.isInfo = true;
+            this.showPopupParent(true);
+            // hiển thị border màu đỏ
+            this.isValidateDebit[index] = true;
+            this.textPopup = FormMode.Empty_Account_Debit;
+            this.checkValidateCbx = true;
+          }
+          if (!value.creditAccount || value.creditAccount == "") {
+            this.isInfo = true;
+            this.showPopupParent(true);
+            // hiển thị border màu đỏ
+            this.isValidateCredit[index] = true;
+            this.textPopup = FormMode.Empty_Account_Credit;
+            this.checkValidateCbx = true;
+          }
+        });
+        if (this.checkValidateCbx) return;
+        this.isShowInput = Array(this.paymentDetail.length || 0).fill(false);
+        if (number == this.FormMode.SaveAndDisable) {
+          this.$emit("saveData", number);
+        } else this.$emit("saveData", this.checkBtn);
       }
-      console.log(this.checkBtn);
-      // ẩn form chọn Cất và Đóng, Cất và Thêm
-      this.isShowVisit = false;
+    },
+
+    /**
+     * Hàm hiển thị popup khi click vào đấu X ở dialog
+     * createdBy NHHAi 28/2/2022
+     */
+    btnCloseOnClickHeader() {
+      // so sánh 2 object
+      if (
+        JSON.stringify(this.oldValue) !== JSON.stringify(this.payment) ||
+        JSON.stringify(this.oldValueDetails) !==
+          JSON.stringify(this.paymentDetail)
+      ) {
+        // TH 2 obj khác nhau
+        this.isShowleft = true;
+        this.isAsk = true;
+        // gán text
+        this.textLeft = this.FormMode.Text_Left_Exit;
+        this.isDelete = this.FormMode.Is_Delete_N;
+        this.textPopup = this.FormMode.Data_Changed;
+        // Hiển thị popup
+        this.showPopupParent(true);
+        // this.$emit("compareObj", this.empl);
+      } else {
+        // TH 2 obj giống nhau
+        // đóng dialog
+        this.btnCloseDialog();
+      }
     },
   },
 };

@@ -1,7 +1,7 @@
 export default class Payment {
-    paymentId = "";
+    paymentId = "00000000-0000-0000-0000-000000000000";
     // khóa ngoại ( nhà cung cấp)  = "";
-    supplierId = "";
+    supplierId = null;
     // đối tượng = "";
     supplierObject = "";
     // người nhận = "";
@@ -11,15 +11,15 @@ export default class Payment {
     // lý do chi = "";
     journalMemo = "";
     // nhân viên = "";
-    employeeId = "";
-    // ngày hạch toán = "";
-    accountingDate = new Date();
+    employeeId = null;
     // phiếu chi = "";
     paymentDate = new Date();
+    // ngày hạch toán = "";
+    accountingDate = new Date();
     // số phiếu chi = "";
     paymentNumber = "";
     // số chứng từ gốc = "";
-    documentIncluded = "";
+    documentIncluded = "0";
     // tổng tiền = "";
     totalAmount = 0.0;
     // diễn giải

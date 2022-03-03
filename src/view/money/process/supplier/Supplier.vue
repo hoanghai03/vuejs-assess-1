@@ -135,8 +135,7 @@
           </thead>
           <tbody>
             <tr
-              v-for="supplier in suppliers"
-              :key="supplier.supplierId"
+              v-for="supplier in suppliers" :key="supplier.supplierId"
               @dblclick="dbOnClickTr(supplier.supplierId, false)"
             >
               <td></td>
@@ -159,12 +158,12 @@
               <td>{{ supplier.phoneNumber }}</td>
               <td>{{ supplier.debt }}</td>
               <td>{{ supplier.debt }}</td>
-              <td>
+              <td class="text-bold">
                 <button
                   class="btnEdit"
                   @click="dbOnClickTr(supplier.supplierId, false)"
                 >
-                  Sửa
+                  Lập CT mua hàng
                 </button>
                 <button
                   class="icon-down-delete m-icon m-icon-down-delete"
@@ -453,8 +452,9 @@ export default {
     loadData(value) {
       var me = this;
       // gán giá trị 1 cho page number
-      if (value == FormMode.Page_Number_1)
+      if (value == FormMode.Page_Number_1) {
         me.paginationRequest.PageNumber = FormMode.Page_Number_1;
+      }
       me.overlay = true;
 
       axios
@@ -686,11 +686,9 @@ export default {
             me.showButtonLeft(false);
             me.isAgree = true;
             me.isDelete = null;
-            // me.textPopup =
-            //   this.duplicateCodeFirst +
-            //   `${me.supplierProps.supplierCode}` +
-            //   this.duplicateCodeLast;
-            me.textPopup = res.data.validateInfo?.errorMessage;
+            me.textPopup =
+              res.data.validateInfo[0].fieldName +
+              res.data.validateInfo[0].errorMessage;
             me.showPopupParent(true);
             break;
           case 500:
@@ -732,6 +730,7 @@ export default {
         // gán dữ liệu vào supplierCode
         this.supplierProps.supplierCode = response.data;
       }
+      this.supplierProps.supplierGroupIds = [];
       // hiển thị danh sách nhóm nhà cung cấp
       this.listSupplierGroups();
       // hiển thị danh sách nhân viên
@@ -803,7 +802,7 @@ export default {
         // lấy dữ liệu theo id
         var response = await me.loadSupplierWithId(supplierId);
         // xét trường hợp data rỗng
-        if (!response.data.data) {
+        if (response && !response.data.data) {
           me.checkDataEmpty();
           return;
         }
@@ -818,14 +817,14 @@ export default {
         if (me.supplierProps.supplierGroupIds != "") {
           me.supplierProps.supplierGroupIds =
             me.supplierProps.supplierGroupIds.split(",");
-        }
+        } else me.supplierProps.supplierGroupIds = [];
         // gán giá trị cho cờ nhân bản
         this.isReplication = value;
         //kiểm tra là nhân bản hay ko
         if (this.isReplication) {
           // thực hiện lấy mã code
           var data = await this.loadNewSupplierCode();
-          if (data.data != "") {
+          if (data && data.data != "") {
             // gán dữ liệu vào supplierCode
             this.supplierProps.supplierCode = data.data;
           }
@@ -833,7 +832,11 @@ export default {
         // hiển thị danh sách nhóm nhà cung cấp
         me.listSupplierGroups();
         // hiển thị danh sách nhân viên
-        me.listEmployees();
+        var listEmployees = await me.getListEmployees();
+        // gán danh sách nhân viên cho employees
+        if (listEmployees && listEmployees.data.success) {
+          me.employees = listEmployees.data.data;
+        }
         //ẩn button vừa nhấn
         me.isShowEntityDelRight = false;
         // Hiển thị dialog thông tin chi tiết nhân viên
@@ -871,16 +874,10 @@ export default {
       var me = this;
       me.employees = [];
       var listEmployees = await me.getListEmployees();
-      // listEmployees.data.data.forEach((res) => {
-      //   // lấy text và value
-      //   var employee = {};
-      //   employee.text = res.fullName;
-      //   employee.value = res.employeeId;
-      //   // gán giá trị cho supplierGroups
-      //   me.employees.push(employee);
-      // });
       // gán danh sách nhân viên cho employees
-      me.employees = listEmployees.data.data;
+      if (listEmployees && listEmployees.data.success) {
+        me.employees = listEmployees.data.data;
+      }
     },
 
     /**
@@ -918,10 +915,8 @@ export default {
         delete me.supplierProps["prefix"];
       }
       // biến đỏi mảng thành chuỗi
-      if (me.supplierProps.supplierGroupIds != "") {
-        me.supplierProps.supplierGroupIds =
-          me.supplierProps.supplierGroupIds.join();
-      }
+      me.supplierProps.supplierGroupIds =
+        me.supplierProps.supplierGroupIds.join();
       var api;
       if (!me.supplierProps.supplierId) {
         delete me.supplierProps["supplierId"];

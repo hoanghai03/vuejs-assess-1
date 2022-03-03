@@ -12,7 +12,7 @@
     background-color: #ffffff;
     z-index: 1003;
     width: 900px;
-    top: calc(50% - 301px);
+    top: calc(50% - 301px) !important;
     left: calc(50% - 450px);
     border-radius: 2px;
 }

@@ -39,9 +39,23 @@
     overflow: auto;
 }
 
+.dialog-content .vs__dropdown-menu {
+    min-width: 350px;
+    overflow: auto;
+}
+
 .employee .vs__dropdown-menu {
     min-width: 580px;
     overflow: auto;
+}
+
+td .vs__dropdown-menu {
+    /* position: absolute !important;
+    top: 100%;
+    left: 0;
+    width: 100px !important;
+    /* position: fixed !important; */
+    /* left: 0; */
 }
 
 

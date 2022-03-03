@@ -43,8 +43,9 @@
 /* tab trang thu chi tiền */
 
 .con-ms-ul-tabs {
-    position: relative;
     margin-top: 25px;
+    position: sticky;
+    left: 0;
 }
 
 .ms-tabs-ul-payment {
@@ -52,7 +53,6 @@
     width: 100%;
     height: 100%;
     padding-left: 0;
-    position: relative;
     display: flex;
 }
 

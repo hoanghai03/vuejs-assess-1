@@ -58,7 +58,8 @@ const routers = [{
         component: Account,
     }
 ]
-
+import PaymentDetail from "./view/money/payment/PaymentDetail.vue";
+Vue.component("PaymentDetail", PaymentDetail);
 const router = new VueRouter({
     routes: routers,
     mode: 'history'

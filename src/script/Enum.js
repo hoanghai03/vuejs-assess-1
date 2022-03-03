@@ -5,6 +5,7 @@ const FormMode = Object.freeze({
     Save: 1,
     //Cất và thêm
     SaveAndAdd: 2,
+    SaveAndDisable: 3,
     // xét trường hợp xóa nhiều và xóa 1 bản ghi
     Delete: 1,
     DeleteAll: 2,
@@ -35,6 +36,10 @@ const FormMode = Object.freeze({
     SupplierCode_Not_Regex: "Mã nhà cung cấp không đúng định dạng",
     Invalid_Date: "Ngày tháng không hợp lệ",
     No_Data: "Dữ liệu không còn tồn tại trong hệ thống",
+    Error_Date: "Ngày hạch toán phải lớn hơn hoặc bằng ngày chứng từ.",
+    Empty_Account_Debit: "Tài khoản nợ không được để trống.",
+    Empty_Account_Credit: "Tài khoản có không được để trống.",
+    Identify_Date: "Ngày cấp không được lớn hơn ngày hiện tại",
     //text button popup
     Text_Left: "Không",
     Text_Left_Exit: "Hủy",

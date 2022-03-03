@@ -152,11 +152,6 @@ div.body-part::-webkit-scrollbar-thumb:hover {
     right: 20px !important;
 }
 
-.td-bottom-table {
-    height: 34px;
-    background-color: #ffffff;
-}
-
 .bg-color {
     background-color: #f8f9fe;
 }

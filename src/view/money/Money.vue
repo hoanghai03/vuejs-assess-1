@@ -2,10 +2,10 @@
   <div>
       <div class="content p-top-14">
           <div class="ul-tabs">
-            <router-link class="ms-tabs-btn" to="/money/process">
+            <router-link  to="/money/process">
                 <div class="ms-labels">Quy trình</div>
             </router-link>
-            <router-link class="ms-tabs-btn" to="/money/payment">
+            <router-link  to="/money/payment">
                 <div class="ms-labels">Thu, chi tiền </div>
             </router-link>
           </div>
@@ -13,7 +13,11 @@
       </div>
   </div>
 </template>
-
+<script>
+export default {
+  name:"Money"
+}
+</script>
 <style scoped>
 @import url('../../style/layout/content.css');
 /* @import url('../../style/page/main.css'); */

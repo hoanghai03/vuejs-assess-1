@@ -62,7 +62,7 @@
       <div class="filter">
         <div class="button-left">
           <div class="m-icon mi-24 mi-arrow-check-all"></div>
-          <button class="btn-left m-r-12">
+          <button class="btn-left m-r-12" @click="showDelete($event)">
             Thực hiện hàng loạt
             <div class="mi-16 m-icon mi-arrow-up--black opacity-05"></div>
           </button>
@@ -78,28 +78,33 @@
             class="m-input"
             type="text"
             placeholder="Nhập từ khóa tìm kiếm"
+            v-model.trim="paginationRequest.FilterText"
+            @keyup.enter="loadData(FormMode.Page_Number_1)"
           />
           <div class="icon-input m-icon m-icon-input"></div>
         </div>
-        <div id="refresh" class="icon-load m-icon m-icon-load"></div>
-        <div class="icon-excel m-icon mi-excel__nav"></div>
+        <div
+          id="refresh"
+          class="icon-load m-icon m-icon-load"
+          @click="loadData(FormMode.Page_Number_1)"
+        ></div>
+        <div class="icon-excel m-icon mi-excel__nav" @click="exportData"></div>
         <div class="icon-excel m-icon mi-setting__list"></div>
       </div>
       <div class="m-table">
-        <!-- <table border="0" cellspacing="0">
+        <table class="common-table" border="0" cellspacing="0">
           <colgroup>
             <col style="min-width: 20px" />
             <col style="min-width: 40px" />
+            <col style="min-width: 147px" />
+            <col style="min-width: 125px" />
+            <col style="min-width: 320px" />
             <col style="min-width: 150px" />
-            <col style="min-width: 200px" />
+            <col style="min-width: 228px" />
+            <col style="min-width: 323px" />
+            <col style="min-width: 150px" />
             <col style="min-width: 120px" />
-            <col style="min-width: 150px" />
-            <col style="min-width: 150px" />
-            <col style="min-width: 150px" />
-            <col style="min-width: 150px" />
-            <col style="min-width: 150px" />
-            <col style="min-width: 150px" />
-            <col style="min-width: 250px" />
+            <col style="min-width: 200px" />
             <col style="min-width: 120px" />
             <col style="min-width: 30px" />
             <col style="min-width: 20px" />
@@ -111,17 +116,17 @@
                 <input
                   type="checkbox"
                   class="m-icon-checkbox th-checkbox"
+                  @click="checkAll()"
                 />
               </th>
-              <th>MÃ NHÀ CUNG CẤP</th>
-              <th>TÊN NHÀ CUNG CẤP</th>
-              <th>ĐỊA CHỈ</th>
+              <th>NGÀY HẠCH TOÁN</th>
+              <th>SỐ CHỨNG TỪ</th>
               <th>DIỄN GIẢI</th>
-              <th>CÔNG NỢ</th>
-              <th>NHÓM KH,NCC</th>
-              <th>MÃ SỐ THUẾ</th>
-              <th>ĐIỆN THOẠI</th>
-              <th>SỐ CMND</th>
+              <th class="text-right-col">SỐ TIỀN</th>
+              <th>ĐỐI TƯỢNG</th>
+              <th>LÝ DO THU/CHI</th>
+              <th>lOẠI CHỨNG TỪ</th>
+              <th>HẠCH TOÁN GỘP NHIỀU HÓA ĐƠN</th>
               <th>CHI NHÁNH</th>
               <th class="text-function">CHỨC NĂNG</th>
               <th></th>
@@ -130,95 +135,160 @@
           </thead>
           <tbody>
             <tr
-              v-for="supplier in suppliers"
-              :key="supplier.supplierId"
-              @dblclick="dbOnClickTr(supplier.supplierId, false)"
+              v-for="payment in payments"
+              :key="payment.paymentId"
+              @dblclick="dbOnClickTr(payment.paymentId, false)"
             >
               <td></td>
               <td>
                 <input
                   type="checkbox"
                   class="m-icon-checkbox"
-                  :value="supplier.supplierId"
+                  :value="payment.paymentId"
                   v-model="checkedId"
                   @change="checkboxOnTr"
                 />
               </td>
-              <td>{{ supplier.supplierCode }}</td>
-              <td>{{ supplier.supplierName }}</td>
-              <td>{{ supplier.address }}</td>
-              <td>{{ supplier.description }}</td>
-              <td>{{ supplier.debt }}</td>
-              <td>{{ supplier.supplierGroupIds }}</td>
-              <td>{{ supplier.supplierTaxCode }}</td>
-              <td>{{ supplier.phoneNumber }}</td>
-              <td>{{ supplier.debt }}</td>
-              <td>{{ supplier.debt }}</td>
-              <td>
+              <td class="text-center-col">
+                {{
+                  payment.accountingDate | formatDate(payment.accountingDate)
+                }}
+              </td>
+              <td class="color-0075c0">{{ payment.paymentNumber }}</td>
+              <td>{{ payment.description }}</td>
+              <td class="text-right-col">
+                {{ payment.totalAmount | formatCurrency }}
+              </td>
+              <td>{{ payment.supplierObject }}</td>
+              <td>{{ payment.journalMemo }}</td>
+              <td>{{ payment.typeDocument }}</td>
+              <td>{{ payment.accountMultiple }}</td>
+              <td>{{ payment.branch }}</td>
+              <td class="text-bold">
                 <button
                   class="btnEdit"
-                  @click="dbOnClickTr(supplier.supplierId, false)"
+                  @click="dbOnClickTr(payment.paymentId, false)"
                 >
-                  Sửa
+                  Xem
                 </button>
                 <button
                   class="icon-down-delete m-icon m-icon-down-delete"
-                  @click="showBtnDel(supplier.supplierId, $event)"
+                  @click="showBtnDel(payment.paymentId, $event)"
                 ></button>
               </td>
               <td></td>
               <td></td>
             </tr>
           </tbody>
-        </table> -->
-        <div class="below-table">
-          <div class="no-data">
-            <img
-              class="img-no-data"
-              src="https://actappg1.misacdn.net/img/bg_report_nodata.76e50bd8.svg"
-              alt=""
-            />
-            <div>Không có dữ liệu</div>
+          <tr v-if="totalRecord > 0" class="td-bottom-table td-bottom-sticky">
+            <td class="p-0-10 sticky bgc-white"></td>
+            <td class="p-0-10 bg-color"></td>
+            <td class="p-0-10 bg-color text-center text-bold">Tổng</td>
+            <td class="p-0-10 bg-color"></td>
+            <td class="p-0-10 bg-color"></td>
+            <td class="p-0-10 bg-color text-right text-bold">
+              {{ totalAmount | formatCurrency }}
+            </td>
+            <td class="p-0-10 bg-color"></td>
+            <td class="p-0-10 bg-color"></td>
+            <td class="p-0-10 bg-color"></td>
+            <td class="p-0-10 bg-color"></td>
+            <td class="p-0-10 bg-color"></td>
+            <td class="p-0-10 sticky bg-color r-20"></td>
+            <td class="p-0-10 sticky r-0 bgc-white"></td>
+          </tr>
+          <div class="below-table" v-if="totalRecord == 0">
+            <div class="no-data">
+              <img
+                class="img-no-data"
+                src="https://actappg1.misacdn.net/img/bg_report_nodata.76e50bd8.svg"
+                alt=""
+              />
+              <div>Không có dữ liệu</div>
+            </div>
           </div>
-        </div>
+        </table>
       </div>
-      <div id="delEntity" ref="delEntityRight" class="none">
-        <div class="multiple">Nhân bản</div>
-        <div class="multiple">Xóa</div>
-        <div class="multiple">Ngưng sử dụng</div>
+      <div
+        id="delEntity"
+        ref="delEntityRight"
+        class="none"
+        :class="{
+          'multiple-entity': isShowEntityDelRight,
+          show: isShowEntityDelRight,
+        }"
+      >
+        <div class="multiple">Bỏ ghi</div>
+        <div class="multiple" @click="dbOnClickTr(checkID, true)">Nhân bản</div>
+        <div class="multiple" @click="showPopupDel(FormMode.Delete)">Xóa</div>
       </div>
-      <div id="delEntity" class="delete-entity" ref="delEntitysLeft">Xóa</div>
+      <div
+        id="delEntity"
+        class="delete-entity"
+        :class="{ show: showD, left: isShowLeftDel }"
+        ref="delEntitysLeft"
+        @click="showPopupDel(FormMode.DeleteAll)"
+      >
+        Xóa
+      </div>
       <div class="paging-bar">
         <div class="paging-text">
-          Tổng số <b class="total-record"></b> bản ghi
+          Tổng số <b class="total-record">{{ totalRecord }}</b> bản ghi
         </div>
-        <div class="mselect" id="cbxPageSize">
-          <div class="select">bản ghi trên trang</div>
-          <div class="icon-select show-select"></div>
+        <div class="mselect" id="cbxPageSize" @click="showPageSize">
+          <div class="select">
+            {{ paginationRequest.PageSize }} bản ghi trên trang
+          </div>
+          <div class="icon-select show-select" @click="showPageSize"></div>
           <div
             class="icon-dropdown m-icon m-icon-dropdown-select show-select"
+            @click="showPageSize"
           ></div>
 
-          <div class="data-select" id="dataSelect">
-            <div class="select-item item-10" value="10">
+          <div
+            class="data-select"
+            id="dataSelect"
+            :class="{ show: isShowPageSize }"
+          >
+            <div
+              class="select-item item-10"
+              value="10"
+              @click="setPageSize(FormMode.Page_Size_10)"
+            >
               10 bản ghi trên trang
             </div>
-            <div class="select-item item-20" value="20">
+            <div
+              class="select-item item-20"
+              value="20"
+              @click="setPageSize(FormMode.Page_Size_20)"
+            >
               20 bản ghi trên trang
             </div>
-            <div class="select-item item-30" value="30">
+            <div
+              class="select-item item-30"
+              value="30"
+              @click="setPageSize(FormMode.Page_Size_30)"
+            >
               30 bản ghi trên trang
             </div>
-            <div class="select-item item-50" value="50">
+            <div
+              class="select-item item-50"
+              value="50"
+              @click="setPageSize(FormMode.Page_Size_50)"
+            >
               50 bản ghi trên trang
             </div>
-            <div class="select-item item-100" value="100">
+            <div
+              class="select-item item-100"
+              value="100"
+              @click="setPageSize(FormMode.Page_Size_100)"
+            >
               100 bản ghi trên trang
             </div>
           </div>
         </div>
         <div class="paging">
-          <!-- <paginate
+          <paginate
             :page-count="totalPage"
             :page-range="3"
             :margin-pages="1"
@@ -233,11 +303,15 @@
             v-model="paginationRequest.PageNumber"
             :click-handler="loadData"
           >
-          </paginate> -->
+          </paginate>
           <!-- <div class="p-right">Sau</div> -->
         </div>
       </div>
     </div>
+    <!-- ==============================loading ======================================-->
+    <base-overlay :overlay="overlay"></base-overlay>
+    <!-- ==============================dialog ======================================-->
+
     <PaymentDetail
       :isShow="isShowPopupDetail"
       :suppliers="suppliers"
@@ -247,6 +321,7 @@
       :checkDelOnClickTr="checkDelOnClickTr"
       :accountDebit="accountDebit"
       :accountCredit="accountCredit"
+      :disabled="disabled"
       @isShow="toggleDialog($event)"
       @getAccountNumberDebitProps="getAccountNumberDebit($event)"
       @getAccountNumberCreditProps="getAccountNumberCredit($event)"
@@ -258,24 +333,45 @@
       @delAllColEmit="delAllCol"
       @delOnClickTr="delOnClickTr($event)"
       @delAnyRowProp="delAnyRow($event)"
+      @saveData="saveData($event)"
     ></PaymentDetail>
+
+    <!-- ==============================popup ======================================-->
+    <payment-popup
+      :isShow="isShowPopup"
+      :textPopup="textPopup"
+      :employeeId="id"
+      :isShowBtn="isShowleft"
+      :textLeft="textLeft"
+      :isDelete="isDelete"
+      :isAgree="isAgree"
+      :isDelAll="isDelAll"
+      :checkedId="checkedId"
+      :isIncrease="isIncrease"
+      :host="host"
+      @btnSaveIncreaseProp="getPaymentNumber"
+      @loadData="loadData($event)"
+      @showPopup="showPopupParent"
+    />
   </div>
 </template>
 <script>
 import axios from "axios";
-// import Supplier from "../../../../models/supplier.js";
-// import PaginationRequest from "../../../../models/request.js";
+import PaginationRequest from "../../../models/request.js";
 // import ServiceResult from "../../../../models/service-result.js";
-
+import BaseOverlay from "../../../components/base/BaseOverlay.vue";
+import Paginate from "vuejs-paginate";
 // import SupplierGroup from "../../../../models/supplierGroup.js";
-// import FormMode from "../../../../script/enum.js";
-// import ToastMessenge from "../../../../script/toast.js";
+import FormMode from "../../../script/enum.js";
+import ToastMessenge from "../../../script/toast.js";
 import PaymentDetailModel from "../../../models/paymentDetail.js";
 import PaymentDetail from "./PaymentDetail.vue";
+
 import Payment from "../../../models/payment.js";
+import PaymentPopup from "../../../components/base/BasePopup.vue";
 export default {
   name: "Payment",
-  components: { PaymentDetail },
+  components: { PaymentDetail, BaseOverlay, Paginate, PaymentPopup },
   data() {
     return {
       hostSuppliers: `${process.env.VUE_APP_BASE_URL}/Suppliers/`,
@@ -284,11 +380,20 @@ export default {
       hostAccounts: `${process.env.VUE_APP_BASE_URL}/Accounts/`,
       getDebit: "GetAccountDebit",
       getCredit: "GetAccountCredit",
+      detailMaster: "MasterDetail/",
+      guid: "00000000-0000-0000-0000-000000000000",
+      textFirst: "Số chứng từ <",
+      textBody: "> đã tồn tại. Nếu không tìm thấy số chứng từ <",
+      textLast:
+        ">. Vui lòng thực hiện tính năng bảo trì số chứng từ. Xem hướng dẫn tại đây. Bạn có muốn chương trình tự động tăng số chứng từ không?",
+      payments: [],
       suppliers: [],
       employees: [],
       accountDebit: [],
       accountCredit: [],
+      checkedId: [],
       isShowPopupDetail: false,
+      isShowPopup: false,
       debit: false,
       totalDebit: false,
       payment: new Payment(),
@@ -296,16 +401,220 @@ export default {
       description: "Chi tiền cho ",
       oldSupplierId: null, // giá trị supplerId cũ,
       checkDelOnClickTr: false, // xóa dòng mới nhất
+      FormMode,
+      overlay: false,
+      paginationRequest: new PaginationRequest(),
+      totalRecord: null,
+      totalPage: 0,
+      isShowPageSize: false,
+      isShowEntityDelRight: false,
+      checkID: null,
+      isCheckAll: false,
+      showD: false,
+      isShowLeftDel: false,
+      export: "export",
+      ToastMessenge,
+      isReplication: false,
+      id: null,
+      isDelAll: false,
+      textPopup: null,
+      textLeft: "",
+      isAgree: false,
+      isShowleft: false,
+      isDelete: null,
+      isShowDialogDetail: false,
+      deleteEmplFirst: `Bạn có thực sự muốn xóa phiếu chi <`,
+      deleteEmplLast: `> không?`,
+      disabled: false,
+      isIncrease: false,
+      checkBtn: 1,
+      totalAmount: 0,
     };
   },
-  created(){
+  created() {
     this.loadData();
   },
-  methods: {
+  mounted() {
+    // Bắt sự kiện shortcuts
+    const keysPressed = {};
+    const me = this;
+    document.addEventListener("keydown", (event) => {
+      if (
+        keysPressed["Control"] &&
+        (event.key == "d" ||
+          event.key == "D" ||
+          event.key == "o" ||
+          event.key == "O")
+      ) {
+        event.preventDefault(); // hủy sự kiện mặc định
+      }
+      keysPressed[event.key] = true;
 
-    loadData(){
+      // Xóa nhiều bản ghi
+      if (
+        keysPressed["Control"] &&
+        (event.key == "d" || event.key == "D") &&
+        me.checkedId.length != 0 &&
+        !me.isShowDialogDetail
+      ) {
+        //TODO
+        me.showPopupDel(FormMode.DeleteAll);
+      }
 
+      // Show dialog
+      if (
+        keysPressed["Control"] &&
+        (event.key == "o" || event.key == "O") &&
+        !me.isShow
+      ) {
+        //TODO
+        me.btnAddPayment();
+        event.preventDefault();
+      }
+    });
+    // xóa sự kiện keydown
+    document.addEventListener("keyup", (event) => {
+      delete keysPressed[event.key];
+    });
+  },
+  watch: {
+    /**
+     * Hàm hiển thị button xóa
+     * createdBy NHHai 13/2/2022
+     */
+    checkedId(value) {
+      // TH nếu có click chọn ô input thì hiển thị nút xóa
+      if (value.length > 0) {
+        this.isShowEntityDel = true;
+        this.isShowLeftDel = true;
+      } else {
+        // TH không chọn button nào thì ẩn nút xóa
+        this.isShowEntityDel = false;
+        this.isShowLeftDel = false;
+        this.showD = false;
+      }
     },
+  },
+  filters: {
+    /**
+     * Hàm format ngày tháng
+     * createdBy: NHHai 15/12/2021
+     * @param {*} value trả về kiểu dữ liệu bất kì
+     */
+    formatDate: function (value) {
+      if (value) {
+        var date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+          return "";
+        } else {
+          let day = date.getDate();
+          let month = date.getMonth() + 1;
+          let year = date.getFullYear();
+          day = day < 10 ? "0" + day : day;
+          month = month < 10 ? "0" + month : month;
+          return day + "/" + month + "/" + year;
+        }
+      }
+    },
+
+    /**
+     * Hàm format tiền
+     * createdBy: NHHai 15/12/2021
+     * @param {*} value trả về kiểu dữ liệu bất kì
+     */
+    formatCurrency: (value) => {
+      return parseFloat(value)
+        .toFixed(1)
+        .replace(/(\d)(?=(\d{3})+\.)/g, "$1.");
+    },
+  },
+  methods: {
+    /**
+     * Hàm lấy paymentNumber mới nhất
+     * createdBy NHHAi 25/2/2022
+     */
+    async getPaymentNumber() {
+      var me = this;
+      // lấy số phiếu chi mới
+      var newPaymentNumber = await me.getNewPaymentNumber();
+
+      if (newPaymentNumber && newPaymentNumber.data.success) {
+        me.payment.paymentNumber = newPaymentNumber.data?.data;
+      } else {
+        // sinh lỗi ==================================================================================
+        me.responseWithError(newPaymentNumber);
+      }
+      if (me.checkBtn == 2) me.checkBtn = 3;
+      me.saveData(me.checkBtn);
+    },
+    /**
+     * Hàm load dữ liệu
+     * createdBy NHHAi 25/2/2022
+     */
+    loadData(value) {
+      var me = this;
+      // gán giá trị 1 cho page number
+      if (value == FormMode.Page_Number_1)
+        me.paginationRequest.PageNumber = FormMode.Page_Number_1;
+      me.overlay = true;
+
+      axios
+        .post(`${this.host}filter`, me.paginationRequest)
+        .then((response) => {
+          if (response && response.data.success) {
+            // gán dữ liệu vào employees
+            me.payments = response.data.data.data;
+            // tổng số bản ghi
+            me.totalRecord = response.data.data.totalRecord;
+            me.totalPage = response.data.data.totalPage;
+            //Tính tổng số tiền
+            me.totalAmount = 0;
+            if (me.payments != null) {
+              me.payments.forEach((value) => {
+                me.totalAmount += value.totalAmount;
+              });
+            }
+
+            // ẩn button xóa
+            me.showD = false;
+            // ẩn checkall
+            me.isCheckAll = false;
+            me.checkedId = [];
+            // ẩn loading
+            me.overlay = false;
+            // class ẩn hiện vị trí
+            me.isShowEntityDelRight = false;
+          } else {
+            me.responseWithError(response);
+            me.overlay = false;
+          }
+        });
+    },
+
+    /**
+     * hiển thị bảng chọn pagesize
+     * CreatedBy NHHai 13/2/2022
+     */
+    showPageSize() {
+      // hiển thị bảng chọn kích thước trang
+      if (this.isShowPageSize) {
+        this.isShowPageSize = false;
+      } else {
+        this.isShowPageSize = true;
+      }
+    },
+    /**
+     *  hiển thị số bản ghi trên trang
+     * CreatedBy NHHai 13/2/2022
+     */
+    setPageSize(value) {
+      // gán giá trị cho pageSize
+      if (value != null && value > 0) {
+        this.paginationRequest.PageSize = value;
+        this.loadData(FormMode.Page_Number_1);
+      }
+    },
+
     /**
      * hàm biến đổi debit = false
      * createdBy NHHAi 13/2/2022
@@ -352,56 +661,27 @@ export default {
      */
     async btnAddPayment() {
       var me = this;
-      me.payment = new Payment();
-      // lấy dữ liệu nhân viên và nhà cung cấp
-      var responseEmployees = await me.getListEmployee();
-      var responseSuppliers = await me.getListSupplier();
+      // cho phép nhập
+      me.disabled = false;
+      me.overlay = true;
       // lấy số phiếu chi mới
       var newPaymentNumber = await me.getNewPaymentNumber();
-      // lấy tài khoản dư nợ
-      var accountDebit = await me.getAccountDebit();
-      // lấy tài khoản dư có
-      var accountCredit = await me.getAccountCredit();
+      me.payment = new Payment();
 
-      if (newPaymentNumber.data.success) {
+      if (newPaymentNumber && newPaymentNumber.data.success) {
         me.payment.paymentNumber = newPaymentNumber.data?.data;
       } else {
         // sinh lỗi ==================================================================================
+        me.responseWithError(newPaymentNumber);
       }
-
-      // gán dữ liệu cho suppliers và employees
-      if (responseEmployees.data.success) {
-        me.employees = responseEmployees.data?.data;
-      } else {
-        // sinh lỗi ==================================================================================
-      }
-
-      if (responseSuppliers.data.success) {
-        me.suppliers = responseSuppliers.data?.data;
-      } else {
-        // sinh lỗi ==================================================================================
-      }
-
-      if (accountDebit.data.success) {
-        me.accountDebit = accountDebit.data?.data;
-      } else {
-        // sinh lỗi ==================================================================================
-      }
-
-      if (accountCredit.data.success) {
-        me.accountCredit = accountCredit.data?.data;
-      } else {
-        // sinh lỗi ==================================================================================
-      }
-
+      // lấy dữ liệu trong các combobox
+      me.getDataInCombobox();
       // gán dữ liệu cho paymentDetail
       me.paymentDetail = [];
       me.paymentDetail.push(new PaymentDetailModel());
 
       //lấy giá trị supplier cũ
-      me.oldSupplierId = "";
-      // hiển thị popup
-      me.toggleDialog(true);
+      me.oldSupplierId = null;
     },
 
     /**
@@ -446,7 +726,9 @@ export default {
      */
     getSupplierById(value) {
       try {
-        return axios.get(this.hostSuppliers + value);
+        if (value) {
+          return axios.get(this.hostSuppliers + value);
+        }
       } catch {
         return;
       }
@@ -499,7 +781,7 @@ export default {
     async changeSupplier() {
       var me = this;
       var response = await me.getSupplierById(this.payment.supplierId);
-      if (response.data.success) {
+      if (response && response.data.success) {
         var value = response.data.data;
         // gán giá trị cho paymentDetail
         me.paymentDetail.forEach((paymentDetail) => {
@@ -539,7 +821,7 @@ export default {
       var response = await me.getSupplierById(
         me.paymentDetail[index].supplierId
       );
-      if (response.data.success) {
+      if (response && response.data.success) {
         var val = response.data.data;
         // gán giá trị cho cột đối tượng và tên đối tượng
         me.paymentDetail[index].supplierCode = val.supplierCode;
@@ -569,25 +851,33 @@ export default {
      */
     async getAccountNumberDebit(index) {
       var me = this;
-      var response = await me.getAccountById(me.paymentDetail[index].debitAccount);
-      if (response.data.success) {
-        var data = response.data.data;
-        me.paymentDetail[index].debitAccountNumber = data.accountNumber;
-      }
+      console.log(1);
+      if (me.paymentDetail[index].debitAccount) {
+        var response = await me.getAccountById(
+          me.paymentDetail[index].debitAccount
+        );
+        if (response && response.data.success) {
+          var data = response.data.data;
+          me.paymentDetail[index].debitAccountNumber = data.accountNumber;
+        }
+      } else me.paymentDetail[index].debitAccountNumber = "";
     },
 
-    
     /**
      * Hàm gán giá trị cho creditAccountNumber
      * creaedBy NHHai 21/2/2022
      */
     async getAccountNumberCredit(index) {
       var me = this;
-      var response = await me.getAccountById(me.paymentDetail[index].creditAccount);
-      if (response.data.success) {
-        var data = response.data.data;
-        me.paymentDetail[index].creditAccountNumber = data.accountNumber;
-      }
+      if (me.paymentDetail[index].creditAccount) {
+        var response = await me.getAccountById(
+          me.paymentDetail[index].creditAccount
+        );
+        if (response && response.data.success) {
+          var data = response.data.data;
+          me.paymentDetail[index].creditAccountNumber = data.accountNumber;
+        }
+      } else me.paymentDetail[index].creditAccountNumber = "";
     },
 
     /**
@@ -596,7 +886,9 @@ export default {
      */
     getAccountById(value) {
       try {
-        return axios.get(this.hostAccounts + value);
+        if (value) {
+          return axios.get(this.hostAccounts + value);
+        }
       } catch {
         return;
       }
@@ -606,8 +898,8 @@ export default {
      * Hàm xóa 1 hàm bất kỳ
      * creaedBy NHHai 21/2/2022
      */
-    delAnyRow(index){
-      this.paymentDetail.splice(index,1);
+    delAnyRow(index) {
+      this.paymentDetail.splice(index, 1);
     },
     /**
      * Hàm xóa tất cả các hàng
@@ -634,6 +926,345 @@ export default {
         ) {
           this.paymentDetail.pop();
           this.checkDelOnClickTr = false;
+        }
+      }
+    },
+
+    /**
+     * hiển thị nút bỏ ghi và nhân bản
+     * CreatedBy NHHai 13/2/2022
+     */
+    showBtnDel(paymentId, sender) {
+      this.checkID = paymentId;
+      var rect = sender.currentTarget.getBoundingClientRect();
+      var top = rect.top + 20;
+      this.$refs.delEntityRight.style.top = `${top}px`;
+      // class ẩn hiện vị trí
+      this.isShowEntityDelRight = !this.isShowEntityDelRight;
+    },
+    /**
+     * Hàm checkall
+     * createdBy NHHAi 13/2/2022
+     */
+    checkAll() {
+      // xét trường hợp nếu đã check hết các hàng thì sẽ bỏ check toàn bộ
+      if (this.checkedId.length == this.paginationRequest.PageSize) {
+        this.checkedId = [];
+      }
+      // trường hợp chưa check hết hàng thì nó sẽ check hết
+      else if (this.checkedId.length >= 0) {
+        this.checkedId = [];
+        // thêm id vào mảng
+        this.payments.forEach((payment) => {
+          this.checkedId.push(payment.paymentId);
+        });
+      }
+    },
+
+    /**
+     * Hàm xử lý khi checkbox ở vị trí Tr trên table
+     * createdBy NHHAi 13/2/2022
+     */
+    checkboxOnTr() {
+      if (this.checkedId.length < this.paginationRequest.PageSize) {
+        this.isCheckAll = false;
+      } else if (this.checkedId.length == this.paginationRequest.PageSize) {
+        this.isCheckAll = true;
+      }
+    },
+
+    /**
+     * Hàm show btn xóa khi click vào Thực hiện hàng loạt
+     * createdBy NHHAi 13/2/2022
+     */
+    showDelete(sender) {
+      if (this.isShowEntityDel) {
+        this.showD = !this.showD;
+        // hiển thị vị trí của button xóa
+        var rect = sender.currentTarget.getBoundingClientRect();
+        var top = rect.top + 30;
+        var left = rect.left + 100;
+        this.$refs.delEntitysLeft.style.top = `${top}px`;
+        this.$refs.delEntitysLeft.style.left = `${left}px`;
+      }
+    },
+
+    /**
+     * Hàm export dữ liệu ra excel
+     * createdBy NHHai 14/2/2022
+     */
+    exportData() {
+      try {
+        window.location.href = this.host + this.export;
+      } catch (error) {
+        this.responseWithError(error);
+      }
+    },
+
+    /**
+     * Hàm lưu dữ liệu
+     * createdBy NHHai 26/2/2022
+     */
+    saveData(value) {
+      var me = this;
+      me.checkBtn = value;
+      axios
+        .post(me.host + "MasterDetail", {
+          Entity: me.payment,
+          EntityDetails: me.paymentDetail,
+        })
+        .then((response) => {
+          if (response && response.data.success && response.data.data) {
+            if (me.checkBtn == me.FormMode.SaveAndAdd) {
+              // TH nếu bấm Cất và Thêm thì sẽ hiện form thêm mới
+              me.btnAddPayment();
+            } else if (me.checkBtn == me.FormMode.SaveAndDisable) {
+              me.disabled = true;
+            } else {
+              // ẩn form
+              me.toggleDialog(false);
+            }
+            // Load lại dữ liệu
+            me.loadData(FormMode.Page_Number_1);
+            // toast messenge
+            // hiện toast mesenge khi thêm mới thành công
+            me.toastMessenge(
+              ToastMessenge.Messenge_Success,
+              ToastMessenge.Success
+            );
+            // ẩn popup
+            me.showPopupParent(false);
+          } else {
+            // gọi đến hàm trả về lỗi
+            me.responseWithError(response);
+            // ẩn loading
+            me.overlay = false;
+          }
+        });
+    },
+
+    /**
+     * Hàm db click trên tr
+     * createdBy NHHAi 20/1/2022
+     */
+    async dbOnClickTr(value, bool) {
+      var me = this;
+
+      if (value) {
+        me.overlay = true;
+        // lấy số phiếu chi mới nếu là nhân bản
+        if (bool) {
+          var newPaymentNumber = await me.getNewPaymentNumber();
+          me.disabled = false;
+        } else me.disabled = true;
+
+        axios
+          .get(me.host + `${me.detailMaster}` + `${value}`)
+          .then((response) => {
+            if (response && response.data.success) {
+              var data = response.data.data;
+              // lấy dữ liệu
+              me.payment = data.entity;
+              me.paymentDetail = data.entityDetails;
+
+              if (bool && newPaymentNumber.data.success) {
+                me.payment.paymentNumber = newPaymentNumber.data?.data;
+                // lấy ngày hiện tại nếu nhân bản
+                me.payment.accountingDate = new Date();
+                me.payment.paymentDate = new Date();
+              } else {
+                // format ngày
+                me.payment.accountingDate = new Date(me.payment.accountingDate);
+                me.payment.paymentDate = new Date(me.payment.paymentDate);
+                // sinh lỗi ==================================================================================
+              }
+              // class ẩn hiện vị trí
+              me.isShowEntityDelRight = false;
+              // lấy dữ liệu trong các combobox
+              me.getDataInCombobox();
+            } else {
+              me.responseWithError(response);
+              me.overlay = false;
+            }
+          });
+      }
+    },
+
+    async getDataInCombobox() {
+      var me = this;
+      // hiển thị popup
+      me.toggleDialog(true);
+
+      me.overlay = false;
+      // lấy dữ liệu nhân viên và nhà cung cấp
+      var responseEmployees = await me.getListEmployee();
+      var responseSuppliers = await me.getListSupplier();
+
+      // gán dữ liệu cho suppliers và employees
+      if (responseEmployees.data.success) {
+        me.employees = responseEmployees.data?.data;
+      } else {
+        // sinh lỗi ==================================================================================
+        me.responseWithError(responseEmployees);
+      }
+
+      if (responseSuppliers.data.success) {
+        me.suppliers = responseSuppliers.data?.data;
+      } else {
+        // sinh lỗi ==================================================================================
+        me.responseWithError(responseSuppliers);
+      }
+
+      // lấy tài khoản dư nợ
+      var accountDebit = await me.getAccountDebit();
+      // lấy tài khoản dư có
+      var accountCredit = await me.getAccountCredit();
+
+      if (accountDebit.data.success) {
+        me.accountDebit = accountDebit.data?.data;
+      } else {
+        // sinh lỗi ==================================================================================
+        me.responseWithError(accountDebit);
+      }
+
+      if (accountCredit.data.success) {
+        me.accountCredit = accountCredit.data?.data;
+      } else {
+        // sinh lỗi ==================================================================================
+        me.responseWithError(accountCredit);
+      }
+    },
+
+    /**
+     * Hiên thị popup xóa
+     * CreatedBy NHHai 13/2/2022
+     */
+    async showPopupDel(value) {
+      // hiển thị loading
+      this.overlay = true;
+      if (value == this.FormMode.Delete) {
+        this.id = this.checkID;
+        // ẩn button xóa
+        this.isShowEntityDelRight = false;
+        // TH không phải chọn xóa tất cả
+        this.isDelAll = false;
+        // lấy mã code
+        var response = await this.loadPaymentWithId(this.id);
+        // xét trường hợp data rỗng
+        // if (!response.data.data) {
+        //   this.checkDataEmpty();
+        //   return;
+        // }
+        var paymentNumber = response.data.data.paymentNumber;
+        // gán text popup
+        this.textPopup =
+          this.deleteEmplFirst + `${paymentNumber}` + this.deleteEmplLast;
+      } else {
+        // TH xóa tất cả
+        this.isDelAll = true;
+        // gán text popup
+        this.textPopup = this.FormMode.Delete_Suppliers_Checked;
+      }
+      // hiển thị
+      this.display();
+    },
+
+    loadPaymentWithId(value) {
+      try {
+        return axios.get(this.host + value);
+      } catch {
+        console.log(1);
+      }
+    },
+
+    /**
+     * Hàm chung trong hiển thị popup del
+     * createdBy NHHAi 14/2/2022
+     */
+    display() {
+      this.isDelete = this.FormMode.Is_Delete_Y;
+      this.textLeft = this.FormMode.Text_Left;
+      this.showButtonLeft(true);
+      this.showPopupParent(true);
+      // ẩn loading
+      this.overlay = false;
+      // class ẩn hiện vị trí
+      this.isShowEntityDelRight = false;
+    },
+
+    /**
+     * Hàm gán hiển thị button left
+     * createdBy NHHAI 15/2/2022
+     * @param {*} value true or false
+     */
+    showButtonLeft(value) {
+      this.isShowleft = value;
+    },
+
+    /**
+     * Hàm hiển thị toast messenge
+     * createdBy NHHAi 20/1/2022
+     */
+    toastMessenge(text, type) {
+      this.$toast.open({
+        message: text,
+        type: type,
+        duration: FormMode.Time,
+        dismissible: true,
+      });
+    },
+    /**
+     * Hàm gán hiển thị popup
+     * createdBy NHHAI 15/2/2022
+     * @param {*} value true or false
+     */
+    showPopupParent(value) {
+      this.isShowPopup = value;
+      if (value == false) {
+        // hiển thị nút đóng đồng ý ở giữa popup
+        this.isAgree = false;
+      }
+    },
+
+    /**
+     * Hàm phản hồi lỗi
+     * createdBy NHHAI 15/2/2022
+     * @param {*} response
+     */
+    responseWithError(response) {
+      var me = this;
+      if (response) {
+        switch (response.data.code) {
+          case 400:
+            if (response.data.validateInfo[0].errorCode == 2) {
+              // TH trùng mã
+              me.showButtonLeft(true);
+              this.textLeft = this.FormMode.Text_Left;
+              // me.isAgree = true;
+              me.isDelete = null;
+              me.isIncrease = true;
+              me.textPopup =
+                this.textFirst +
+                me.payment.paymentNumber +
+                this.textBody +
+                me.payment.paymentNumber +
+                this.textLast;
+              me.showPopupParent(true);
+            } else {
+              me.showButtonLeft(false);
+              me.isAgree = true;
+              me.isDelete = null;
+              me.textPopup =
+                response.data.validateInfo[0].fieldName +
+                response.data.validateInfo[0].errorMessage;
+              me.showPopupParent(true);
+              break;
+            }
+            break;
+          case 500:
+            break;
+          default:
+            break;
         }
       }
     },

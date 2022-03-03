@@ -353,5 +353,17 @@ input[type=checkbox]:checked.m-icon-checkbox {
 }
 
 .mi-plus--success {
-    background-position: -32px -312px;
+    background-position: -25px -305px;
+}
+
+.mi-arrow-dropdown {
+    background-position: -560px -359px;
+}
+
+.mi-exclamation-cell--error {
+    background-position: -1696px -312px;
+}
+
+.mi-close-small {
+    background-position: -80px -312px;
 }

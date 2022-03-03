@@ -45,28 +45,16 @@
             </button>
             <button
               class="icon-down-delete m-icon m-icon-down-delete"
-              @click="showBtnDel(item.accountId, index, $event)"
+              @click="showBtnDel(item.accountId, $event)"
             ></button>
           </div>
           <div class="m-w-30 last-child-2"></div>
           <div class="m-w-20 last-child-1"></div>
         </div>
-        <div
-          id="delEntity"
-          ref="delEntityRight"
-          class="none"
-          :class="{
-            'multiple-entity': isShowRowsDel[index],
-            show: isShowRowsDel[index],
-          }"
-        >
-          <div class="multiple">Nhân bản</div>
-          <div class="multiple">Xóa</div>
-          <div class="multiple">Ngưng sử dụng</div>
-        </div>
         <RowTreeGrid
           v-if="item.children && item.children.length && isShowRows[index]"
           :data="item.children"
+          @showBtnDel="showBtnDel($event)"
           @dbOnClickTr="dbOnClickTr($event)"
         ></RowTreeGrid>
       </div>
@@ -92,13 +80,12 @@ import Popup from "../../../../components/base/BasePopup.vue";
 export default {
   name: "RowTreeGrid",
   components: { Popup },
-  props: ["data"],
+  props: ["data","isShowEntityDelRight"],
   data() {
     return {
       host: `${process.env.VUE_APP_BASE_URL}/Accounts/`,
       isShowRows: [],
       isShowRowsDel: [],
-      isShowEntityDelRight: false,
       checkID: null,
       checkedId: [],
       id: null,
@@ -109,6 +96,7 @@ export default {
       isAgree: false,
       isShowleft: false,
       isDelete: null,
+      isShowEntityDel: false
     };
   },
   mounted() {
@@ -136,15 +124,14 @@ export default {
      * hiển thị nút xóa
      * CreatedBy NHHai 13/2/2022
      */
-    showBtnDel(supplierId, index, sender) {
-      this.checkID = supplierId;
-      // class ẩn hiện vị trí
-      this.isShowRowsDel[index] = !this.isShowRowsDel[index];
-      this.isShowRowsDel = [...this.isShowRowsDel];
-      var rect = sender.currentTarget.getBoundingClientRect();
-      var top = rect.top + 20;
-      console.log(top);
-      // this.$refs.delEntityRight.style.top = `${top}px`;
+    showBtnDel(supplierId,sender) {
+      this.isShowEntityDel = !this.isShowEntityDel;
+      if(sender){
+      this.$emit('showBtnDel', {isShow:this.isShowEntityDel,id: supplierId,sender:sender});
+      }
+      else {
+        this.$emit('showBtnDel', {isShow: supplierId.isShow,id: supplierId.id,sender:supplierId.sender});
+      }
     },
   },
 };

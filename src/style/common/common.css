@@ -367,3 +367,27 @@ label {
 .text-bold {
     font-weight: bold;
 }
+
+.text-center {
+    text-align: center !important;
+}
+
+.bgc-f8f8f8 {
+    background-color: #eff0f2;
+}
+
+.l--600 {
+    left: -600px !important;
+}
+
+.color-0075c0 {
+    color: #0075c0;
+}
+
+.ps-unset {
+    position: unset !important;
+}
+
+.w-408 {
+    width: 408px;
+}

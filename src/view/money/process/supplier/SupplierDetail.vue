@@ -3,7 +3,8 @@
     data-app
     class="m-dialog"
     id="dialog"
-    :class="{ 'm-dialog-show': isShow }"
+    :style="{'display':'block'}"
+    v-if="isShow"
   >
     <div class="m-modal"></div>
     <div class="dialog t-0">
@@ -214,7 +215,7 @@
               <div>
                 <div class="text-input">Nhóm nhà cung cấp</div>
                 <div class="ps-relative">
-                  <v-select
+                  <!--<v-select
                     multiple
                     label="supplierGroupCode"
                     :options="itemsSupplierGroup"
@@ -246,13 +247,30 @@
                     <div
                       class="icon-plus m-icon mi-icon-16 mi-plus--success"
                     ></div>
-                  </div>
+                  </div>-->
+                  <AutocompleteCombobox
+                    :data="itemsSupplierGroup"
+                    :allowNull="true"
+                    :hasAddAction="true"
+                    :multipleChoice="true"
+                    :columnNames="['Mã nhóm KH,NCC', 'Tên nhóm KH,NCC']"
+                    :valueField="'supplierGroupId'"
+                    :showFields="['supplierGroupCode', 'supplierGroupName']"
+                    :selectedValue="'supplierGroupCode'"
+                    v-model="supplier.supplierGroupIds"
+                    @onValueChange="
+                      (value) => (supplier.supplierGroupIds = value)
+                    "
+                    :columnWidths="['10px', '150px']"
+                    :width="true"
+                    :hasTitleRow="true"
+                  ></AutocompleteCombobox>
                 </div>
               </div>
               <div>
                 <div class="text-input">Nhân viên mua hàng</div>
                 <div class="ps-relative">
-                  <v-select
+                  <!--<v-select
                     label="fullName"
                     :options="itemsEmployee"
                     :reduce="(option) => option.employeeId"
@@ -279,7 +297,20 @@
                     <div
                       class="icon-plus m-icon mi-icon-16 mi-plus--success"
                     ></div>
-                  </div>
+                  </div>-->
+                  <AutocompleteCombobox
+                    :data="itemsEmployee"
+                    :allowNull="true"
+                    :hasAddAction="true"
+                    :columnNames="['Mã nhân viên', 'Tên nhân viên']"
+                    :valueField="'employeeId'"
+                    :showFields="['employeeCode', 'fullName']"
+                    :selectedValue="'fullName'"
+                    v-model="supplier.employeeId"
+                    :columnWidths="['150px', '150px']"
+                    :hasTitleRow="true"
+                    :width="true"
+                  ></AutocompleteCombobox>
                 </div>
               </div>
             </div>
@@ -287,7 +318,7 @@
               <div>
                 <div class="text-input">Nhóm nhà cung cấp</div>
                 <div class="ps-relative">
-                  <v-select
+                  <!--<v-select
                     multiple
                     label="supplierGroupCode"
                     :options="itemsSupplierGroup"
@@ -319,13 +350,30 @@
                     <div
                       class="icon-plus m-icon mi-icon-16 mi-plus--success"
                     ></div>
-                  </div>
+                  </div>-->
+                  <AutocompleteCombobox
+                    :data="itemsSupplierGroup"
+                    :allowNull="true"
+                    :hasAddAction="true"
+                    :multipleChoice="true"
+                    :columnNames="['Mã nhóm KH,NCC', 'Tên nhóm KH,NCC']"
+                    :valueField="'supplierGroupId'"
+                    :showFields="['supplierGroupCode', 'supplierGroupName']"
+                    :selectedValue="'supplierGroupCode'"
+                    v-model="supplier.supplierGroupIds"
+                    @onValueChange="
+                      (value) => (supplier.supplierGroupIds = value)
+                    "
+                    :columnWidths="['10px', '150px']"
+                    :width="true"
+                    :hasTitleRow="true"
+                  ></AutocompleteCombobox>
                 </div>
               </div>
               <div>
                 <div class="text-input">Nhân viên mua hàng</div>
                 <div class="ps-relative">
-                  <v-select
+                  <!--<v-select
                     label="fullName"
                     :options="itemsEmployee"
                     :reduce="(option) => option.employeeId"
@@ -352,7 +400,20 @@
                     <div
                       class="icon-plus m-icon mi-icon-16 mi-plus--success"
                     ></div>
-                  </div>
+                  </div>-->
+                  <AutocompleteCombobox
+                    :data="itemsEmployee"
+                    :allowNull="true"
+                    :hasAddAction="true"
+                    :columnNames="['Mã nhân viên', 'Tên nhân viên']"
+                    :valueField="'employeeId'"
+                    :showFields="['employeeCode', 'fullName']"
+                    :selectedValue="'fullName'"
+                    v-model="supplier.employeeId"
+                    :columnWidths="['200px', '200px']"
+                    :hasTitleRow="true"
+                    :width="true"
+                  ></AutocompleteCombobox>
                 </div>
               </div>
             </div>
@@ -482,6 +543,7 @@
                     format="DD/MM/YYYY"
                     placeholder="Ngày cấp"
                     v-model="supplier.identifyDate"
+                    @input="changeDate"
                   ></date-picker>
                 </div>
                 <div class="pb-2">
@@ -555,11 +617,18 @@ import BaseCombobox from "../../../../components/base/BaseCombobox.vue";
 import FormMode from "../../../../script/enum.js";
 import { required, email } from "vuelidate/lib/validators";
 import Supplier from "../../../../models/supplier";
-import vSelect from "vue-select";
-import "vue-select/dist/vue-select.css";
+// import vSelect from "vue-select";
+// import "vue-select/dist/vue-select.css";
+import AutocompleteCombobox from "../../../../components/base/AutocompleteCombobox.vue";
 export default {
   name: "supplierDetail",
-  components: { BaseCombobox, SupplierPopup, vSelect, DatePicker },
+  components: {
+    BaseCombobox,
+    SupplierPopup,
+    // vSelect,
+    DatePicker,
+    AutocompleteCombobox,
+  },
   props: ["isShow", "supplier", "itemsSupplierGroup", "itemsEmployee"],
   data() {
     return {
@@ -587,7 +656,7 @@ export default {
     const me = this;
     document.addEventListener("keydown", (event) => {
       // đóng dialog khi click ESC
-      if (event.key == "Escape" && me.checkCloseDialog && me.isShow) {
+      if (event.key == "Escape" && me.checkCloseDialog) {
         me.btnCloseOnClickHeader();
       }
       me.checkCloseDialog = true;
@@ -670,6 +739,26 @@ export default {
     },
   },
   methods: {
+    /**
+     * Hàm validate dữ liệu date
+     * createdBy NHHAi 15/12/2021
+     */
+    changeDate() {
+      var me = this;
+      var today = new Date();
+      var identifyDate = new Date(me.supplier.identifyDate);
+      if (identifyDate.getTime() > today.getTime()) {
+        // hiển thị cảnh báo
+        document
+          .querySelector(".mx-input-wrapper input")
+          .classList.add("input-warning");
+      } else {
+        // hiển thị cảnh báo
+        document
+          .querySelector(".mx-input-wrapper input")
+          .classList.remove("input-warning");
+      }
+    },
     // hàm gán giá trị cho select danh xưng
     // cretedBy NHHAi 15/2/2022
     selectValuePrefix(value) {
@@ -781,6 +870,21 @@ export default {
         return;
       }
 
+      // trường hợp ngày cấp quá ngày hiện tại
+      var today = new Date();
+      var identifyDate = new Date(me.supplier.identifyDate);
+      if (identifyDate.getTime() > today.getTime()) {
+        // hiển thị cảnh báo
+        document
+          .querySelector(".mx-input-wrapper input")
+          .classList.add("input-warning");
+        //hiển thị popup
+        this.isInfo = true;
+        //hiển thị popup
+        me.showPopupParent(true);
+        me.textPopup = this.FormMode.Identify_Date;
+        return;
+      }
       // lấy dữ liệu
       // me.$emit("saveSupplier", { supplierValue: me.supplier, value: value });
       me.$emit("saveSupplier", value);

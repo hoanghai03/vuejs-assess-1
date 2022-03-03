@@ -1,8 +1,8 @@
 export default class PaymentDetail {
     // khóa chính
-    paymentDetailId = "";
+    paymentDetailId = "00000000-0000-0000-0000-000000000000";
     // khóa ngoại
-    paymentId = "";
+    paymentId = "00000000-0000-0000-0000-000000000000";
     // diễn giải
     description = "";
     // tài khoản nợ
@@ -16,7 +16,7 @@ export default class PaymentDetail {
     // tên đối tượng
     supplierName = "";
     // Mã nhà cung cấp
-    supplierId = "";
+    supplierId = null;
     // mã tài khoản nợ
     debitAccountNumber = ""
         // mã tài khoản có

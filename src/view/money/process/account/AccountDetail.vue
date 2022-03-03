@@ -68,11 +68,54 @@
             <div class="display-flex p-b-12">
               <div class="w-50per p-r-12">
                 <div class="text-input">Tài khoản tổng hợp</div>
-                <BaseCombobox
+                <!--<BaseCombobox
                   :selectVal="selectAccount"
                   :value="accountCombobox"
                   @selectValue="selectValueAccount($event)"
-                ></BaseCombobox>
+                ></BaseCombobox>-->
+                <!--<AutocompleteCombobox
+                  :data="accountCombobox"
+                  :allowNull="true"
+                  :hasAddAction="false"
+                  :columnNames="[
+                    'Số tài khoản',
+                    'Tên tài khoản',
+                  ]"
+                  :valueField="'accountId'"
+                  :showFields="[
+                    'accountNumber',
+                    'accountName',
+                  ]"
+                  :selectedValue="'accountName'"
+                  v-model="account.parentId"
+                  :columnWidths="['100px', '100px']"
+                  :hasTitleRow="true"
+                  @input="changeParentId"
+                ></AutocompleteCombobox>-->
+                <v-select
+                  label="accountNumber"
+                  :options="accountCombobox"
+                  :reduce="(option) => option.accountId"
+                  v-model="account.parentId"
+                  @input="changeParentId"
+                >
+                  <template #list-header>
+                    <div class="cbx__header display-flex">
+                      <div class="vs__option m-w-120"><b>Số tài khoản</b></div>
+                      <div class="vs__option m-w-120"><b>Tên tài khoản</b></div>
+                    </div>
+                  </template>
+                  <template v-slot:option="option">
+                    <div class="cbx__body display-flex">
+                      <div class="vs__option m-w-120">
+                        <b>{{ option.accountNumber }}</b>
+                      </div>
+                      <div class="vs__option m-w-120">
+                        <b>{{ option.accountName }}</b>
+                      </div>
+                    </div>
+                  </template>
+                </v-select>
               </div>
               <div class="w-50per property">
                 <div class="text-input">Tính chất <span>*</span></div>
@@ -361,6 +404,7 @@
     </div>
     <AccountPopup
       @showPopup="showPopupParent"
+      @saveData="saveData($event)"
       :textPopup="textPopup"
       :isShow="isShowPopupDetail"
       :isInfo="isInfo"
@@ -378,10 +422,18 @@ import BaseCombobox from "../../../../components/base/BaseCombobox.vue";
 import FormMode from "../../../../script/enum.js";
 import AccountPopup from "../../../../components/base/BasePopup.vue";
 import Account from "../../../../models/supplier";
+// import AutocompleteCombobox from "../../../../components/base/AutocompleteCombobox.vue";
+import vSelect from "vue-select";
+import "vue-select/dist/vue-select.css";
 export default {
   name: "accountDetail",
-  components: { BaseCombobox, AccountPopup },
-  props: ["isShow", "account", "accountCombobox"],
+  components: {
+    BaseCombobox,
+    AccountPopup,
+    vSelect,
+    // AutocompleteCombobox
+  },
+  props: ["isShow", "account", "accountCombobox", "accountNumber"],
   data() {
     return {
       resize: false,
@@ -486,9 +538,9 @@ export default {
       // kiểm tra giá trị
       if (this.account.accountId != "") {
         // Gán giá trị cho combobox tài khoản tổng hợp
-        this.selectAccount = {};
-        this.selectAccount.text = this.account.parentName;
-        this.selectAccount.value = this.account.parentId;
+        // this.selectAccount = {};
+        // this.selectAccount.text = this.account.parentName;
+        // this.selectAccount.value = this.account.parentId;
         // Gán giá trị cho combobox tính chất
         this.select = {};
         this.select.text = this.account.accountCategorykindName;
@@ -584,9 +636,9 @@ export default {
         }
       } else {
         // Gán giá trị cho combobox tài khoản tổng hợp
-        this.selectAccount = {};
-        this.selectAccount.text = null;
-        this.selectAccount.value = null;
+        // this.selectAccount = {};
+        // this.selectAccount.text = null;
+        // this.selectAccount.value = null;
         // trường hợp khởi đầu thì gán giá trị true cho isVAlidateCBX
         this.isValidateCBX = true;
         // xóa dữ liệu combobox nhân viên và xóa cảnh báo
@@ -731,6 +783,9 @@ export default {
     },
   },
   methods: {
+    changeParentId(){
+      this.$emit('parentId');
+    },
     // hàm gán giá trị cho select
     // cretedBy NHHAi 15/2/2022
     selectValueAccount(value) {
@@ -859,7 +914,7 @@ export default {
         me.textPopup = this.FormMode.AccountNumber_Not_Empty;
         return;
       }
-      var check = me.selectAccount.text;
+      var check = me.accountNumber;
       //Trường hợp mã tài khoản không đúng định dạng
       if (me.account.parentId) {
         if (!me.account.accountNumber.startsWith(check, 0)) {
@@ -883,7 +938,7 @@ export default {
         return;
       }
 
-      // Trường hợp lựa chọn phòng ban trống hoặc sai phòng ban trống
+      // Trường hợp lựa chọn tính chất trống hoặc sai phòng ban trống
       if (me.select.value == undefined || me.select.value == "") {
         this.isInfo = true;
         me.showPopupParent(true);
@@ -940,6 +995,18 @@ export default {
       } else {
         // TH 2 obj giống nhau
         // đóng dialog
+        this.btnCloseOnClick();
+      }
+    },
+
+    /**
+     * Hàm lưu dữ liệu
+     * createdBy NHHAi 11/1/2021
+     */
+    saveData(value) {
+      if (value) {
+        this.btnSaveOnClick(this.FormMode.Save);
+      } else {
         this.btnCloseOnClick();
       }
     },

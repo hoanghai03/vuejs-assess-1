@@ -29,7 +29,9 @@
             </button>
           </div>
         </div>
-        <div  class="popup-bot-right" v-else-if="isDelete == FormMode.Is_Delete_N"
+        <div
+          class="popup-bot-right"
+          v-else-if="isDelete == FormMode.Is_Delete_N"
         >
           <div>
             <div>
@@ -44,6 +46,13 @@
           <div>
             <button id="deleteEntity" class="m-btn" @click="btnCloseOnClick">
               Đồng ý
+            </button>
+          </div>
+        </div>
+        <div class="popup-bot-right" v-else-if="isIncrease">
+          <div>
+            <button id="deleteEntity" class="m-btn" @click="btnSaveIncrease">
+              Có Có
             </button>
           </div>
         </div>
@@ -75,7 +84,8 @@ export default {
     "isAgree",
     "isDelAll",
     "checkedId",
-    "host"
+    "isIncrease",
+    "host",
   ],
   mounted() {
     // Bắt sự kiện shortcuts
@@ -90,8 +100,8 @@ export default {
       }
       // đồng ý
       if (event.key == "Enter" && me.isShow) {
-        if(me.isDelete == FormMode.Is_Delete_Y) me.btnDelEntity();
-        else if(me.isDelete == FormMode.Is_Delete_N) me.saveData(true);
+        if (me.isDelete == FormMode.Is_Delete_Y) me.btnDelEntity();
+        else if (me.isDelete == FormMode.Is_Delete_N) me.saveData(true);
         else me.btnCloseOnClick();
         keysPressed[event.key] = true;
       }
@@ -109,6 +119,13 @@ export default {
     };
   },
   methods: {
+    /**
+     * Hàm tăng mã và lưu
+     * createdBy NHHAi 20/1/2022
+     */
+    btnSaveIncrease() {
+      this.$emit("btnSaveIncreaseProp");
+    },
     /**
      * Hàm hiển thị toast messenge
      * createdBy NHHAi 20/1/2022
@@ -154,8 +171,8 @@ export default {
       }
       // Trường hợp xóa 1 bản ghi
       else api = axios.delete(this.host + `${this.employeeId}`);
-      api
-        .then(function () {
+      api.then(function (response) {
+        if (response.data.success) {
           // nếu thành công thì sẽ ẩn popup và load lại data
           me.btnCloseOnClick();
           // ẩn nút xóa
@@ -165,25 +182,10 @@ export default {
             ToastMessenge.Messenge_Delete_Success,
             ToastMessenge.Success
           );
-        })
-        .catch(function (res) {
-          const statusCode = res.response.status;
-          switch (statusCode) {
-            // nếu mã lỗi 400 thì hiển thị cảnh thông báo lỗi
-            case 400:
-              var data = res.response.data.data;
-              console.log(data);
-              break;
-            case 500:
-              data = res.response.data.userMsg;
-              console.log(data);
-              break;
-            default:
-              break;
-          }
-          // nếu lỗi sẽ ẩn popup
-          me.btnCloseOnClick();
-        });
+        } else {
+          console.log(response.data.errorMessage);
+        }
+      });
     },
   },
 };

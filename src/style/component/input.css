@@ -46,3 +46,7 @@
 .input-warning {
     border-color: red !important;
 }
+
+.m-input:disabled {
+    background-color: #eff0f2;
+}
