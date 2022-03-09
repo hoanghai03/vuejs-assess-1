@@ -25,6 +25,13 @@
     min-height: 18px;
 }
 
+.mi-14 {
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+    min-height: 14px;
+}
+
 
 /* icon menu */
 
@@ -366,4 +373,32 @@ input[type=checkbox]:checked.m-icon-checkbox {
 
 .mi-close-small {
     background-position: -80px -312px;
+}
+
+.mi-chevron-right {
+    background-position: -80px -360px;
+}
+
+.mi-download--processed {
+    background-position: -2144px -200px;
+}
+
+.mi-category {
+    background-position: -568px -30px;
+}
+
+.mi-setting__nav {
+    background-position: -675px -30px;
+}
+
+.mi-chat__nav {
+    background-position: -899px -30px;
+}
+
+.mi-help__nav {
+    background-position: -731px -30px;
+}
+
+.mi-arrow-up--gray {
+    background-position: -944px -360px;
 }

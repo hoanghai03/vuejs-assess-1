@@ -5,9 +5,7 @@
         <div class="title-content">
           <span>Danh sách khách hàng</span>
           <div class="footer-header">
-            <div
-              class="pos-absolute m-icon mi-icon-16 mi-chevron-left--primary"
-            ></div>
+            <div class="pos-absolute m-icon mi-icon-16 mi-chevron-left--primary"></div>
             <a class="text-footer-header" href="#">Tất cả danh mục</a>
           </div>
         </div>
@@ -24,28 +22,18 @@
           <button class="btn-radius-left" @click="btnAddOnClick">Thêm</button>
           <button class="btn-radius-right">
             <div class="line"></div>
-            <div
-              class="pos-icon-btn m-icon mi-icon-16 mi-arrow-up--white"
-            ></div>
+            <div class="pos-icon-btn m-icon mi-icon-16 mi-arrow-up--white"></div>
           </button>
         </div>
       </div>
       <div class="inner-overview">
-        <div
-          class="common-overview dued-debit-overview"
-          @mouseover="falseDebit"
-          @mouseleave="trueDebit"
-        >
+        <div class="common-overview dued-debit-overview" @mouseover="falseDebit" @mouseleave="trueDebit">
           <div class="total-money">444.357.876</div>
           <div class="label-overview">Nợ quá hạn</div>
           <div class="m-icon funnel-icon"></div>
           <div class="bottom-cm-overview" :class="{ none: debit }"></div>
         </div>
-        <div
-          class="common-overview total-debit-overview"
-          @mouseover="falseTotalDebit"
-          @mouseleave="trueTotalDebit"
-        >
+        <div class="common-overview total-debit-overview" @mouseover="falseTotalDebit" @mouseleave="trueTotalDebit">
           <div class="total-money">978.587.564</div>
           <div class="label-overview">Tổng nợ phải thu</div>
           <div class="m-icon funnel-icon"></div>
@@ -80,11 +68,7 @@
           />
           <div class="icon-input m-icon m-icon-input"></div>
         </div>
-        <div
-          id="refresh"
-          class="icon-load m-icon m-icon-load"
-          @click="loadData(FormMode.Page_Number_1)"
-        ></div>
+        <div id="refresh" class="icon-load m-icon m-icon-load" @click="loadData(FormMode.Page_Number_1)"></div>
         <div class="icon-excel m-icon mi-excel__nav" @click="exportData"></div>
         <div class="icon-excel m-icon mi-setting__list"></div>
       </div>
@@ -101,7 +85,6 @@
             <col style="min-width: 150px" />
             <col style="min-width: 150px" />
             <col style="min-width: 150px" />
-            <col style="min-width: 150px" />
             <col style="min-width: 250px" />
             <col style="min-width: 120px" />
             <col style="min-width: 30px" />
@@ -111,19 +94,13 @@
             <tr>
               <th></th>
               <th>
-                <input
-                  type="checkbox"
-                  class="m-icon-checkbox th-checkbox"
-                  v-model="isCheckAll"
-                  @click="checkAll()"
-                />
+                <input type="checkbox" class="m-icon-checkbox th-checkbox" v-model="isCheckAll" @click="checkAll" />
               </th>
               <th>MÃ NHÀ CUNG CẤP</th>
               <th>TÊN NHÀ CUNG CẤP</th>
               <th>ĐỊA CHỈ</th>
               <th>DIỄN GIẢI</th>
               <th>CÔNG NỢ</th>
-              <th>NHÓM KH,NCC</th>
               <th>MÃ SỐ THUẾ</th>
               <th>ĐIỆN THOẠI</th>
               <th>SỐ CMND</th>
@@ -134,41 +111,23 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="supplier in suppliers" :key="supplier.supplierId"
-              @dblclick="dbOnClickTr(supplier.supplierId, false)"
-            >
+            <tr v-for="supplier in suppliers" :key="supplier.supplierId" @dblclick="dbOnClickTr(supplier.supplierId, false)">
               <td></td>
               <td>
-                <input
-                  type="checkbox"
-                  class="m-icon-checkbox"
-                  :value="supplier.supplierId"
-                  v-model="checkedId"
-                  @change="checkboxOnTr"
-                />
+                <input type="checkbox" class="m-icon-checkbox" :value="supplier.supplierId" v-model="checkedId" @change="checkboxOnTr" />
               </td>
               <td>{{ supplier.supplierCode }}</td>
               <td>{{ supplier.supplierName }}</td>
               <td>{{ supplier.address }}</td>
               <td>{{ supplier.description }}</td>
               <td>{{ supplier.debt }}</td>
-              <td>{{ supplier.supplierGroupIds }}</td>
               <td>{{ supplier.supplierTaxCode }}</td>
               <td>{{ supplier.phoneNumber }}</td>
               <td>{{ supplier.debt }}</td>
               <td>{{ supplier.debt }}</td>
               <td class="text-bold">
-                <button
-                  class="btnEdit"
-                  @click="dbOnClickTr(supplier.supplierId, false)"
-                >
-                  Lập CT mua hàng
-                </button>
-                <button
-                  class="icon-down-delete m-icon m-icon-down-delete"
-                  @click="showBtnDel(supplier.supplierId, $event)"
-                ></button>
+                <button class="btnEdit" @click="dbOnClickTr(supplier.supplierId, false)">Lập CT mua hàng</button>
+                <button class="icon-down-delete m-icon m-icon-down-delete" @click="showBtnDel(supplier.supplierId, $event)"></button>
               </td>
               <td></td>
               <td></td>
@@ -177,11 +136,7 @@
         </table>
         <div class="below-table" v-if="totalRecord == 0">
           <div class="no-data">
-            <img
-              class="img-no-data"
-              src="https://actappg1.misacdn.net/img/bg_report_nodata.76e50bd8.svg"
-              alt=""
-            />
+            <img class="img-no-data" src="https://actappg1.misacdn.net/img/bg_report_nodata.76e50bd8.svg" alt="" />
             <div>Không có dữ liệu</div>
           </div>
         </div>
@@ -199,69 +154,22 @@
         <div class="multiple" @click="showPopupDel(FormMode.Delete)">Xóa</div>
         <div class="multiple">Ngưng sử dụng</div>
       </div>
-      <div
-        id="delEntity"
-        class="delete-entity"
-        @click="showPopupDel(FormMode.DeleteAll)"
-        :class="{ show: showD, left: isShowLeftDel }"
-        ref="delEntitysLeft"
-      >
-        Xóa
-      </div>
+      <div id="delEntity" class="delete-entity" @click="showPopupDel(FormMode.DeleteAll)" :class="{ show: showD, left: isShowLeftDel }" ref="delEntitysLeft">Xóa</div>
       <div class="paging-bar">
         <div class="paging-text">
           Tổng số <b class="total-record">{{ totalRecord }}</b> bản ghi
         </div>
         <div class="mselect" id="cbxPageSize" @click="showPageSize">
-          <div class="select">
-            {{ paginationRequest.PageSize }} bản ghi trên trang
-          </div>
+          <div class="select">{{ paginationRequest.PageSize }} bản ghi trên trang</div>
           <div class="icon-select show-select" @click="showPageSize"></div>
-          <div
-            class="icon-dropdown m-icon m-icon-dropdown-select show-select"
-            @click="showPageSize"
-          ></div>
+          <div class="icon-dropdown m-icon m-icon-dropdown-select show-select" @click="showPageSize"></div>
 
-          <div
-            class="data-select"
-            id="dataSelect"
-            :class="{ show: isShowPageSize }"
-          >
-            <div
-              class="select-item item-10"
-              value="10"
-              @click="setPageSize(FormMode.Page_Size_10)"
-            >
-              10 bản ghi trên trang
-            </div>
-            <div
-              class="select-item item-20"
-              value="20"
-              @click="setPageSize(FormMode.Page_Size_20)"
-            >
-              20 bản ghi trên trang
-            </div>
-            <div
-              class="select-item item-30"
-              value="30"
-              @click="setPageSize(FormMode.Page_Size_30)"
-            >
-              30 bản ghi trên trang
-            </div>
-            <div
-              class="select-item item-50"
-              value="50"
-              @click="setPageSize(FormMode.Page_Size_50)"
-            >
-              50 bản ghi trên trang
-            </div>
-            <div
-              class="select-item item-100"
-              value="100"
-              @click="setPageSize(FormMode.Page_Size_100)"
-            >
-              100 bản ghi trên trang
-            </div>
+          <div class="data-select" id="dataSelect" :class="{ show: isShowPageSize }">
+            <div class="select-item item-10" value="10" @click="setPageSize(FormMode.Page_Size_10)">10 bản ghi trên trang</div>
+            <div class="select-item item-20" value="20" @click="setPageSize(FormMode.Page_Size_20)">20 bản ghi trên trang</div>
+            <div class="select-item item-30" value="30" @click="setPageSize(FormMode.Page_Size_30)">30 bản ghi trên trang</div>
+            <div class="select-item item-50" value="50" @click="setPageSize(FormMode.Page_Size_50)">50 bản ghi trên trang</div>
+            <div class="select-item item-100" value="100" @click="setPageSize(FormMode.Page_Size_100)">100 bản ghi trên trang</div>
           </div>
         </div>
         <div class="paging">
@@ -346,7 +254,7 @@ export default {
       debit: true,
       totalDebit: true,
       overlay: false,
-      suppliers: new Supplier(),
+      suppliers: [],
       supplierGroups: [],
       employees: [],
       totalPage: 0,
@@ -385,33 +293,18 @@ export default {
     const keysPressed = {};
     const me = this;
     document.addEventListener("keydown", (event) => {
-      if (
-        keysPressed["Control"] &&
-        (event.key == "d" ||
-          event.key == "D" ||
-          event.key == "o" ||
-          event.key == "O")
-      ) {
+      if (keysPressed["Control"] && (event.key == "d" || event.key == "D" || event.key == "o" || event.key == "O")) {
         event.preventDefault(); // hủy sự kiện mặc định
       }
       keysPressed[event.key] = true;
       // Xóa nhiều bản ghi
-      if (
-        keysPressed["Control"] &&
-        (event.key == "d" || event.key == "D") &&
-        me.checkedId.length != 0 &&
-        !me.isShowDialogDetail
-      ) {
+      if (keysPressed["Control"] && (event.key == "d" || event.key == "D") && me.checkedId.length != 0 && !me.isShowDialogDetail) {
         //TODO
         me.showPopupDel(FormMode.DeleteAll);
       }
 
       // Show dialog
-      if (
-        keysPressed["Control"] &&
-        (event.key == "o" || event.key == "O") &&
-        !me.isShowDialogDetail
-      ) {
+      if (keysPressed["Control"] && (event.key == "o" || event.key == "O") && !me.isShowDialogDetail) {
         //TODO
         me.btnAddOnClick();
         event.preventDefault();
@@ -423,9 +316,9 @@ export default {
     });
   },
   created() {
-    // khởi tạo dữ liêu trong table
     this.loadData();
   },
+
   watch: {
     /**
      * Hàm hiển thị button xóa
@@ -457,27 +350,25 @@ export default {
       }
       me.overlay = true;
 
-      axios
-        .post(`${this.host}filter`, me.paginationRequest)
-        .then((response) => {
-          if (response.data.success) {
-            // gán dữ liệu vào employees
-            me.suppliers = response.data.data.data;
-            // tổng số bản ghi
-            me.totalRecord = response.data.data.totalRecord;
-            me.totalPage = response.data.data.totalPage;
-            // ẩn button xóa
-            me.showD = false;
-            // ẩn checkall
-            me.isCheckAll = false;
-            me.checkedId = [];
-            // ẩn loading
-            me.overlay = false;
-          } else {
-            me.responseWithError(response);
-            me.overlay = false;
-          }
-        });
+      axios.post(`${this.host}filter`, me.paginationRequest).then((response) => {
+        if (response && response.data.success) {
+          // gán dữ liệu vào employees
+          me.suppliers = response.data.data.data;
+          // tổng số bản ghi
+          me.totalRecord = response.data.data.totalRecord;
+          me.totalPage = response.data.data.totalPage;
+          // ẩn button xóa
+          me.showD = false;
+          // ẩn checkall
+          me.isCheckAll = false;
+          me.checkedId = [];
+          // ẩn loading
+          me.overlay = false;
+        } else {
+          me.responseWithError(response);
+          me.overlay = false;
+        }
+      });
     },
     /**
      * hàm biến đổi debit = false
@@ -616,8 +507,7 @@ export default {
         }
         var supplierCode = response.data.data.supplierCode;
         // gán text popup
-        this.textPopup =
-          this.deleteEmplFirst + `${supplierCode}` + this.deleteEmplLast;
+        this.textPopup = this.deleteEmplFirst + `${supplierCode}` + this.deleteEmplLast;
       } else {
         // TH xóa tất cả
         this.isDelAll = true;
@@ -686,15 +576,13 @@ export default {
             me.showButtonLeft(false);
             me.isAgree = true;
             me.isDelete = null;
-            me.textPopup =
-              res.data.validateInfo[0].fieldName +
-              res.data.validateInfo[0].errorMessage;
+            me.textPopup = res.data.validateInfo[0].fieldName + res.data.validateInfo[0].errorMessage;
             me.showPopupParent(true);
             break;
           case 500:
             me.showButtonLeft(false);
             me.isDelete = null;
-            me.textPopup = res.data.validateInfo?.errorMessage;
+            me.textPopup = res.data.errorMessage;
             me.showPopupParent(true);
             break;
           default:
@@ -809,14 +697,11 @@ export default {
         // gán dữ liệu cho supplierProps
         me.supplierProps = response.data.data;
         if (me.supplierProps.identifyDate) {
-          me.supplierProps.identifyDate = new Date(
-            me.supplierProps.identifyDate
-          );
+          me.supplierProps.identifyDate = new Date(me.supplierProps.identifyDate);
         }
         // biến đổi chuỗi thành mảng
         if (me.supplierProps.supplierGroupIds != "") {
-          me.supplierProps.supplierGroupIds =
-            me.supplierProps.supplierGroupIds.split(",");
+          me.supplierProps.supplierGroupIds = me.supplierProps.supplierGroupIds.split(",");
         } else me.supplierProps.supplierGroupIds = [];
         // gán giá trị cho cờ nhân bản
         this.isReplication = value;
@@ -855,14 +740,7 @@ export default {
       var me = this;
       me.supplierGroups = [];
       var listSupplierGroups = await me.getListSupplierGroups();
-      // listSupplierGroups.data.data.forEach((res) => {
-      //   // lấy text và value
-      //   var supplierGroup = {};
-      //   supplierGroup.text = res.supplierGroupName;
-      //   supplierGroup.value = res.supplierGroupId;
-      //   // gán giá trị cho supplierGroups
-      //   me.supplierGroups.push(supplierGroup);
-      // });
+
       me.supplierGroups = listSupplierGroups.data.data;
     },
 
@@ -915,8 +793,7 @@ export default {
         delete me.supplierProps["prefix"];
       }
       // biến đỏi mảng thành chuỗi
-      me.supplierProps.supplierGroupIds =
-        me.supplierProps.supplierGroupIds.join();
+        me.supplierProps.supplierGroupIds = me.supplierProps.supplierGroupIds.join();
       var api;
       if (!me.supplierProps.supplierId) {
         delete me.supplierProps["supplierId"];
@@ -924,13 +801,10 @@ export default {
         api = axios.post(me.host, me.supplierProps);
       } else {
         //gọi api thực hiện cất dữ liệu
-        api = axios.put(
-          me.host + `${me.supplierProps.supplierId}`,
-          me.supplierProps
-        );
+        api = axios.put(me.host + `${me.supplierProps.supplierId}`, me.supplierProps);
       }
       api.then((response) => {
-        if (response.data.success && response.data.data) {
+        if (response && response.data.success && response.data.data) {
           if (value == FormMode.SaveAndAdd) {
             // TH nếu bấm Cất và Thêm thì sẽ hiện form thêm mới
             me.btnAddOnClick();
@@ -943,30 +817,20 @@ export default {
           // toast messenge
           if (!me.supplierProps.supplierId) {
             // hiện toast mesenge khi thêm mới thành công
-            me.toastMessenge(
-              ToastMessenge.Messenge_Success,
-              ToastMessenge.Success
-            );
+            me.toastMessenge(ToastMessenge.Messenge_Success, ToastMessenge.Success);
           } else {
             // hiện toast mesenge khi cập nhật thành công
-            me.toastMessenge(
-              ToastMessenge.Messenge_Update_Success,
-              ToastMessenge.Success
-            );
+            me.toastMessenge(ToastMessenge.Messenge_Update_Success, ToastMessenge.Success);
           }
         } else {
-          //   // gọi đến hàm trả về lỗi
+          // gọi đến hàm trả về lỗi
           me.responseWithError(response);
-          //   // ẩn loading
-          me.overlay = false;
+          // biến đổi chuỗi thành mảng
+          if (me.supplierProps.supplierGroupIds != "") {
+          me.supplierProps.supplierGroupIds = me.supplierProps.supplierGroupIds.split(",");
+        } else me.supplierProps.supplierGroupIds = [];
         }
       });
-      // .catch((res) => {
-      //   // gọi đến hàm trả về lỗi
-      //   me.responseWithError(res);
-      //   // ẩn loading
-      //   me.overlay = false;
-      // });
     },
 
     /**

@@ -4,56 +4,38 @@
     <div class="popup">
       <div class="popup-content">
         <div>
-          <div
-            class="icon-warning m-icon m-icon-warning"
-            :class="{ 'm-icon-info': isInfo, 'm-icon-ask': isAsk }"
-          ></div>
+          <div class="icon-warning m-icon m-icon-warning" :class="{ 'm-icon-info': isInfo, 'm-icon-ask': isAsk }"></div>
           <div class="messenger-warning">{{ textPopup }}</div>
         </div>
         <div class="mess-line"></div>
       </div>
       <div class="popup-bottom">
         <div class="popup-bot-left">
-          <button
-            class="close-popup m-second-btn m-second-btn-hidden"
-            @click="btnCloseOnClick"
-            :class="{ 'm-button-left-show': isShowBtn }"
-          >
+          <button class="close-popup m-second-btn m-second-btn-hidden" @click="btnCloseOnClick" :class="{ 'm-button-left-show': isShowBtn }">
             {{ textLeft }}
           </button>
         </div>
         <div class="popup-bot-right" v-if="isDelete == FormMode.Is_Delete_Y">
           <div>
-            <button id="deleteEntity" class="m-btn" @click="btnDelEntity">
-              Có
-            </button>
+            <button id="deleteEntity" class="m-btn" @click="btnDelEntity">Có</button>
           </div>
         </div>
-        <div
-          class="popup-bot-right"
-          v-else-if="isDelete == FormMode.Is_Delete_N"
-        >
+        <div class="popup-bot-right" v-else-if="isDelete == FormMode.Is_Delete_N">
           <div>
             <div>
-              <button class="m-second-btn" @click="saveData(false)">
-                Không
-              </button>
+              <button class="m-second-btn" @click="saveData(false)">Không</button>
             </div>
             <div><button class="m-btn" @click="saveData(true)">Có</button></div>
           </div>
         </div>
         <div class="popup-bot-right" v-else-if="isAgree == true">
           <div>
-            <button id="deleteEntity" class="m-btn" @click="btnCloseOnClick">
-              Đồng ý
-            </button>
+            <button id="deleteEntity" class="m-btn" @click="btnCloseOnClick">Đồng ý</button>
           </div>
         </div>
         <div class="popup-bot-right" v-else-if="isIncrease">
           <div>
-            <button id="deleteEntity" class="m-btn" @click="btnSaveIncrease">
-              Có Có
-            </button>
+            <button id="deleteEntity" class="m-btn" @click="btnSaveIncrease">Có</button>
           </div>
         </div>
         <div class="popup-bot-middle" v-else>
@@ -94,14 +76,14 @@ export default {
     document.addEventListener("keydown", (event) => {
       // thoát khỏi popup
       if (event.key == "Escape" && me.isShow) {
-        console.log("test");
         me.btnCloseOnClick();
         keysPressed[event.key] = true;
       }
       // đồng ý
       if (event.key == "Enter" && me.isShow) {
-        if (me.isDelete == FormMode.Is_Delete_Y) me.btnDelEntity();
-        else if (me.isDelete == FormMode.Is_Delete_N) me.saveData(true);
+        if ( me.isDelete == FormMode.Is_Delete_Y) me.btnDelEntity();
+        else if ( me.isDelete == FormMode.Is_Delete_N) me.btnSaveIncrease();
+        else if (me.isIncrease) me.btnSaveIncrease();
         else me.btnCloseOnClick();
         keysPressed[event.key] = true;
       }
@@ -178,10 +160,7 @@ export default {
           // ẩn nút xóa
           me.$emit("loadData", FormMode.Page_Number_1);
           // hiện toast mesenge khi xóa
-          me.toastMessenge(
-            ToastMessenge.Messenge_Delete_Success,
-            ToastMessenge.Success
-          );
+          me.toastMessenge(ToastMessenge.Messenge_Delete_Success, ToastMessenge.Success);
         } else {
           console.log(response.data.errorMessage);
         }

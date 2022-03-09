@@ -1,18 +1,9 @@
 <template>
-  <div
-    v-click-outside="onFocusout"
-    class="combobox"
-    style="width: 100%"
-    :class="{ focus: isFocus, validate: validateState, 'bgc-f8f8f8': disable }"
-  >
+  <div v-click-outside="onFocusout" class="combobox" style="width: 100%" :class="{ focus: isFocus, validate: validateState, 'bgc-f8f8f8': disable }">
     <div v-if="multipleChoice" style="display: flex">
       <div v-for="(item, index) in value" :key="index" class="selected-item">
         <div class="item-text">{{ getTextByValue(item) }}</div>
-        <div
-          class="m-icon mi-icon-16 mi-close-small"
-          style="margin-left: 4px"
-          @click="removeItem(index)"
-        ></div>
+        <div class="m-icon mi-icon-16 mi-close-small" style="margin-left: 4px" @click="removeItem(index)"></div>
       </div>
     </div>
     <div style="flex: 1; overflow: hidden">
@@ -33,16 +24,9 @@
     </div>
     <!--<div class="disable-background" v-if="disable"></div>-->
     <div class="btn-dropdown" v-on:click.prevent="onBtnDropdownClick()">
-      <div
-        class="m-icon mi-icon-16 mi-arrow-dropdown"
-        v-bind:class="{ active: isShow && !disable }"
-      ></div>
+      <div class="m-icon mi-icon-16 mi-arrow-dropdown" v-bind:class="{ active: isShow && !disable }"></div>
     </div>
-    <div
-      v-if="hasAddAction"
-      class="btn-dropdown btn-add icon-plus m-icon mi-icon-16 mi-plus--success"
-      v-on:click="onBtnDropdownClick()"
-    >
+    <div v-if="hasAddAction" class="btn-dropdown btn-add icon-plus m-icon mi-icon-16 mi-plus--success" v-on:click="onBtnDropdownClick()">
       <div class="m-icon mi-icon-16 mi-plus-success"></div>
     </div>
     <div
@@ -58,12 +42,7 @@
       }"
     >
       <div v-if="hasTitleRow" class="row title-row">
-        <div
-          :style="{ minWidth: columnWidths[index] }"
-          v-for="(name, index) in columnNames"
-          :key="index"
-          class="column head"
-        >
+        <div :style="{ minWidth: columnWidths[index] }" v-for="(name, index) in columnNames" :key="index" class="column head">
           {{ name }}
         </div>
       </div>
@@ -75,20 +54,11 @@
         v-bind:class="{ selected: selectedItem === index }"
         :key="option[valueField]"
       >
-        <div
-          style="white-space: nowrap"
-          :style="{ minWidth: columnWidths[index] }"
-          v-for="(field, index) in showFields"
-          :key="index"
-          class="column"
-        >
+        <div style="white-space: nowrap" :style="{ minWidth: columnWidths[index] }" v-for="(field, index) in showFields" :key="index" class="column">
           {{ option[field] }}
         </div>
         <div v-if="multipleChoice" class="column check">
-          <div
-            v-if="existItem(option[valueField]) && multipleChoice"
-            class="m-icon mi-icon-16 mi-check"
-          ></div>
+          <div v-if="existItem(option[valueField]) && multipleChoice" class="m-icon mi-icon-16 mi-check"></div>
         </div>
       </div>
       <div v-if="dataFilter.length === 0">Không có dữ liệu hiển thị</div>
@@ -121,15 +91,42 @@ export default {
     "width",
   ],
   watch: {
-    validateProp: function (value) {
-      this.validateState = value;
-      this.titleString = "Dữ liệu không tồn tại trong hệ thống";
-    },
+    // validateProp: function (value) {
+    //   this.validateState = value;
+    //   this.titleString = "Dữ liệu không tồn tại trong hệ thống";
+    // },
     // value: function(newValue){
     //   let item = this.data.find(el => el[this.valueField] == newValue);
     //   if(!this.multipleChoice){
     //     if(item){
     //       this.valueText = item[this.selectValue];
+    //     }
+    //   }
+    // }
+    data: function () {
+      if (!this.multipleChoice) {
+        let i = this.data.findIndex((element) => element[this.valueField] === this.value);
+        if (i != -1) {
+          this.valueText = this.data[i][this.selectedValue];
+          this.selectedItem = this.data.findIndex((element) => element[this.valueField] === this.value);
+        }
+        else {
+          this.valueText = "";
+          this.selectedItem = -1;
+        }
+      }
+
+    },
+    // selectedValue: function(){
+    //         if (!this.multipleChoice) {
+    //     let i = this.data.findIndex((element) => element[this.valueField] === this.value);
+    //     if (i != -1) {
+    //       this.valueText = this.data[i][this.selectedValue];
+    //       this.selectedItem = this.data.findIndex((element) => element[this.valueField] === this.value);
+    //     }
+    //     else {
+    //       this.valueText = "";
+    //       this.selectedItem = -1;
     //     }
     //   }
     // }
@@ -230,45 +227,22 @@ export default {
           // enter
           if (!this.multipleChoice) {
             this.isShow = false;
-            if (
-              this.selectedItem >= 0 &&
-              this.selectedItem < this.dataFilter.length
-            ) {
-              this.valueText =
-                this.dataFilter[this.selectedItem][this.selectedValue];
+            if (this.selectedItem >= 0 && this.selectedItem < this.dataFilter.length) {
+              this.valueText = this.dataFilter[this.selectedItem][this.selectedValue];
             }
-            this.selectedItem = this.data.findIndex(
-              (element) =>
-                element[this.valueField] ===
-                this.dataFilter[this.selectedItem][this.valueField]
-            );
+            this.selectedItem = this.data.findIndex((element) => element[this.valueField] === this.dataFilter[this.selectedItem][this.valueField]);
             this.dataFilter = this.data;
-            this.$emit(
-              "onValueChange",
-              this.data[this.selectedItem][this.valueField]
-            );
+            this.$emit("onValueChange", this.data[this.selectedItem][this.valueField]);
             this.$emit("input", this.data[this.selectedItem][this.valueField]);
+            this.$emit("onChange");
             //this.value[0] = this.data[this.selectedItem][this.valueField];
             break;
           } else {
-            if (
-              this.selectedItem >= 0 &&
-              this.selectedItem < this.dataFilter.length
-            ) {
-              if (
-                !this.existItem(
-                  this.dataFilter[this.selectedItem][this.valueField]
-                )
-              ) {
-                this.value.push(
-                  this.dataFilter[this.selectedItem][this.valueField]
-                );
+            if (this.selectedItem >= 0 && this.selectedItem < this.dataFilter.length) {
+              if (!this.existItem(this.dataFilter[this.selectedItem][this.valueField])) {
+                this.value.push(this.dataFilter[this.selectedItem][this.valueField]);
               }
-              this.selectedItem = this.data.findIndex(
-                (element) =>
-                  element[this.valueField] ===
-                  this.dataFilter[this.selectedItem][this.valueField]
-              );
+              this.selectedItem = this.data.findIndex((element) => element[this.valueField] === this.dataFilter[this.selectedItem][this.valueField]);
               this.dataFilter = this.data;
               this.valueText = "";
               this.$emit("onValueChange", this.value);
@@ -300,9 +274,7 @@ export default {
     onFilter: function () {
       // this.dataFilter = this.data.filter(element => element.departmentName.toLowerCase().includes(this.valueText.toLowerCase().trim())
       // ||element.departmentCode.toLowerCase().includes(this.valueText.toLowerCase().trim()));
-      this.dataFilter = this.data.filter((element) =>
-        this.includeKeyword(this.valueText, element)
-      );
+      this.dataFilter = this.data.filter((element) => this.includeKeyword(this.valueText, element));
       if (this.dataFilter.length === 0) {
         this.validateState = true;
         this.titleString = "Dữ liệu không tồn tại trong hệ thống";
@@ -316,6 +288,7 @@ export default {
         if (!this.multipleChoice) {
           this.$emit("onValueChange", null);
           this.$emit("input", null);
+          this.$emit("onChange");
         }
       }
     },
@@ -332,9 +305,7 @@ export default {
       if (!this.focused) {
         return;
       }
-      this.selectedItem = this.data.findIndex((element) =>
-        this.includeData(this.valueText, element)
-      );
+      this.selectedItem = this.data.findIndex((element) => this.includeData(this.valueText, element));
       if (this.onShow) {
         this.onShow = false;
         this.isShow = false;
@@ -359,6 +330,7 @@ export default {
           } else {
             this.$emit("onValueChange", null);
             this.$emit("input", null);
+
             // this.value[0] = '';
           }
           this.isShow = false;
@@ -381,9 +353,7 @@ export default {
           if (!this.multipleChoice) {
             this.valueText = this.data[this.selectedItem][this.selectedValue];
           } else {
-            if (
-              !this.existItem(this.data[this.selectedItem][this.valueField])
-            ) {
+            if (!this.existItem(this.data[this.selectedItem][this.valueField])) {
               this.value.push(this.data[this.selectedItem][this.valueField]);
             }
             this.valueText = "";
@@ -396,11 +366,8 @@ export default {
       if (this.multipleChoice) {
         this.$emit("onValueChange", this.value);
       } else {
-        this.$emit(
-          "onValueChange",
-          this.data[this.selectedItem][this.valueField]
-        );
-        // this.$emit("input", this.data[this.selectedItem][this.valueField]);
+        this.$emit("onValueChange", this.data[this.selectedItem][this.valueField]);
+        this.$emit("input", this.data[this.selectedItem][this.valueField]);
         // this.value[0] = this.data[this.selectedItem][this.valueField];
       }
     },
@@ -424,9 +391,7 @@ export default {
       this.validateState = false;
       this.titleString = "";
       if (!this.multipleChoice) {
-        this.selectedItem = this.data.findIndex(
-          (element) => element[this.valueField] === id
-        );
+        this.selectedItem = this.data.findIndex((element) => element[this.valueField] === id);
         if (this.selectedItem >= 0) {
           this.valueText = this.data[this.selectedItem][this.selectedValue];
         } else {
@@ -434,13 +399,9 @@ export default {
         }
       } else {
         for (let i = 0; i < id.length; i++) {
-          this.selectedItem = this.data.findIndex(
-            (element) => element[this.valueField] === id[i]
-          );
+          this.selectedItem = this.data.findIndex((element) => element[this.valueField] === id[i]);
           if (this.selectedItem != -1) {
-            if (
-              !this.existItem(this.data[this.selectedItem][this.valueField])
-            ) {
+            if (!this.existItem(this.data[this.selectedItem][this.valueField])) {
               this.value.push(this.data[this.selectedItem][this.valueField]);
             }
           }
@@ -471,9 +432,7 @@ export default {
      * CreatedBy: dvtrung
      */
     onItemClick: function (value) {
-      this.selectedItem = this.data.findIndex(
-        (element) => element[this.valueField] === value
-      );
+      this.selectedItem = this.data.findIndex((element) => element[this.valueField] === value);
       this.dataFilter = this.data;
       if (this.multipleChoice) {
         if (!this.existItem(this.data[this.selectedItem][this.valueField])) {
@@ -490,11 +449,9 @@ export default {
       if (this.multipleChoice) {
         this.$emit("onValueChange", this.value);
       } else {
-        this.$emit(
-          "onValueChange",
-          this.data[this.selectedItem][this.valueField]
-        );
+        this.$emit("onValueChange", this.data[this.selectedItem][this.valueField]);
         this.$emit("input", this.data[this.selectedItem][this.valueField]);
+        this.$emit("onChange");
         // this.value = this.data[this.selectedItem][this.valueField];
       }
     },
@@ -503,13 +460,17 @@ export default {
       this.value.splice(index, 1);
       this.value = JSON.parse(JSON.stringify(this.value));
       this.$emit("onValueChange", this.value);
+      this.$emit("onChange");
       this.$nextTick(function () {
         this.$refs.input.focus();
       });
     },
 
     existItem: function (id) {
-      let ex = this.value.findIndex((element) => element === id);
+      var ex;
+      if (Array.isArray(this.value)) {
+        ex = this.value.findIndex((element) => element === id);
+      }
       if (ex === -1) {
         return false;
       } else {
@@ -520,11 +481,7 @@ export default {
     includeKeyword: function (key, object) {
       for (let i = 0; i < this.showFields.length; i++) {
         if (object[this.showFields[i]] !== null) {
-          if (
-            object[this.showFields[i]]
-              .toLowerCase()
-              .includes(key.toLowerCase().trim())
-          ) {
+          if (object[this.showFields[i]].toLowerCase().includes(key.toLowerCase().trim())) {
             return true;
           }
         }
@@ -534,20 +491,17 @@ export default {
     },
 
     getTextByValue: function (value) {
-      let index = this.data.findIndex(
-        (element) => element[this.valueField] === value
-      );
-      if(index==-1){return}
+      let index = this.data.findIndex((element) => element[this.valueField] === value);
+      if (index == -1) {
+        return;
+      }
       return this.data[index][this.selectedValue];
     },
 
     includeData: function (value, object) {
       for (let i = 0; i < this.showFields.length; i++) {
         if (object[this.showFields[i]] !== null) {
-          if (
-            object[this.showFields[i]].toLowerCase() ===
-            value.toLowerCase().trim()
-          ) {
+          if (object[this.showFields[i]].toLowerCase().trim() === value.toLowerCase().trim()) {
             return true;
           }
         }
@@ -564,24 +518,13 @@ export default {
   mounted: function () {
     // let vm = this;
     if (!this.multipleChoice) {
-      let i = this.data.findIndex(
-        (element) => element[this.valueField] === this.value
-      );
+      let i = this.data.findIndex((element) => element[this.valueField] === this.value);
       if (i != -1) {
         this.valueText = this.data[i][this.selectedValue];
-        this.selectedItem = this.data.findIndex(
-          (element) => element[this.valueField] === this.value
-        );
+        this.selectedItem = this.data.findIndex((element) => element[this.valueField] === this.value);
       }
     }
-    // do{
-    //     this.dataFilter = this.data;
-    // }while(this.data.length === 0);
-    // setTimeout(function(){
-    //     vm.dataFilter = vm.data;
-    // },1000)
   },
-
   // mounted: function(){
   //     this.dataFilter = this.data;
   // }
@@ -598,7 +541,7 @@ export default {
   border-radius: 2px;
   box-sizing: border-box;
   height: 32px;
-   padding-left: 10px; 
+  padding-left: 10px;
 }
 
 .combobox.focus {
@@ -726,6 +669,10 @@ input[type="text"] {
 
 .data-table .row .column.check {
   width: 36px;
+}
+
+.employee .data-table {
+  left: 28px !important;
 }
 
 div.data-table::-webkit-scrollbar {

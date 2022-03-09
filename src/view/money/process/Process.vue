@@ -515,7 +515,8 @@ export default {
         me.payment.address = value.address;
         // gán giá trị lý do chi
         me.payment.description = me.description + value.supplierName;
-
+        // gán giá trị supplierObject
+        me.payment.supplierObject = value.supplierName;
         // gán giá trị supplierId cũ
         me.oldSupplierId = value.supplierId;
       }

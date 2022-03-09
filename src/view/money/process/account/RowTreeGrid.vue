@@ -2,16 +2,9 @@
   <div>
     <div class="account-tree-grid">
       <div v-for="(item, index) in data" :key="item.accountId">
-        <div
-          class="row"
-          @dblclick="dbOnClickTr(item.accountId)"
-          :class="{ 'raw-bold': item.children && item.children.length }"
-        >
+        <div class="row" @dblclick="dbOnClickTr(item.accountId)" :class="{ 'raw-bold': item.children && item.children.length }">
           <div class="m-w-10 first-child"></div>
-          <div
-            class="content-row-table m-w-225 first-col-content p-l-10"
-            v-bind:style="{ 'padding-left': item.childIndex * 30 + 'px' }"
-          >
+          <div class="content-row-table m-w-225 first-col-content p-l-10" v-bind:style="{ 'padding-left': item.childIndex * 30 + 'px' }">
             <div
               class="mi-tree-collapse--small m-icon mi-icon-16"
               v-if="isShowRows[index]"
@@ -38,15 +31,10 @@
           <div class="content-row-table m-w-100 p-l-10">
             {{ item.description }}
           </div>
-          <div class="content-row-table m-w-120 p-l-10"></div>
+          <div class="content-row-table m-w-120 p-l-10">{{item.statusName}}</div>
           <div class="m-w-110 p-l-10 last-child-3">
-            <button class="btnEdit" @click="dbOnClickTr(item.accountId)">
-              Sửa
-            </button>
-            <button
-              class="icon-down-delete m-icon m-icon-down-delete"
-              @click="showBtnDel(item.accountId, $event)"
-            ></button>
+            <button class="btnEdit" @click="dbOnClickTr(item.accountId)">Sửa</button>
+            <button class="icon-down-delete m-icon m-icon-down-delete" @click="showBtnDel(item.accountId, $event)"></button>
           </div>
           <div class="m-w-30 last-child-2"></div>
           <div class="m-w-20 last-child-1"></div>
@@ -80,7 +68,7 @@ import Popup from "../../../../components/base/BasePopup.vue";
 export default {
   name: "RowTreeGrid",
   components: { Popup },
-  props: ["data","isShowEntityDelRight"],
+  props: ["data", "isShowEntityDelRight"],
   data() {
     return {
       host: `${process.env.VUE_APP_BASE_URL}/Accounts/`,
@@ -96,7 +84,7 @@ export default {
       isAgree: false,
       isShowleft: false,
       isDelete: null,
-      isShowEntityDel: false
+      isShowEntityDel: false,
     };
   },
   mounted() {
@@ -124,13 +112,20 @@ export default {
      * hiển thị nút xóa
      * CreatedBy NHHai 13/2/2022
      */
-    showBtnDel(supplierId,sender) {
+    showBtnDel(supplierId, sender) {
       this.isShowEntityDel = !this.isShowEntityDel;
-      if(sender){
-      this.$emit('showBtnDel', {isShow:this.isShowEntityDel,id: supplierId,sender:sender});
-      }
-      else {
-        this.$emit('showBtnDel', {isShow: supplierId.isShow,id: supplierId.id,sender:supplierId.sender});
+      if (sender) {
+        this.$emit("showBtnDel", {
+          isShow: this.isShowEntityDel,
+          id: supplierId,
+          sender: sender,
+        });
+      } else {
+        this.$emit("showBtnDel", {
+          isShow: supplierId.isShow,
+          id: supplierId.id,
+          sender: supplierId.sender,
+        });
       }
     },
   },

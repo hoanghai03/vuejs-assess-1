@@ -109,6 +109,7 @@
     position: relative;
     box-sizing: border-box;
     overflow: visible;
+    outline: none;
 }
 
 .btn-radius-left:hover {

@@ -17,7 +17,6 @@ import Payment from './view/money/payment/Payment.vue'
 import Supplier from './view/money/process/supplier/Supplier.vue'
 import Account from './view/money/process/account/Account.vue'
 
-
 Vue.use(VueToast);
 Vue.use(VueRouter)
 Vue.use(Vuelidate)

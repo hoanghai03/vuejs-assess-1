@@ -4,38 +4,19 @@
       <div class="header-content">
         <div class="title-content"><span>Nhân viên</span></div>
         <div class="button-content">
-          <button
-            id="addEntity"
-            class="m-btn"
-            @click="btnAddOnClick"
-            title="Thêm mới nhân viên"
-          >
-            Thêm mới nhân viên
-          </button>
+          <button id="addEntity" class="m-btn" @click="btnAddOnClick" title="Thêm mới nhân viên">Thêm mới nhân viên</button>
         </div>
       </div>
       <div class="filter">
         <div class="button-left">
-          <button class="btn-left" @click="showDelete()">
-            Thực hiện hàng loạt
-          </button>
+          <button class="btn-left" @click="showDelete()">Thực hiện hàng loạt</button>
           <div class="mi-16 m-icon mi-arrow-up--black"></div>
         </div>
         <div class="block-input">
-          <input
-            id="txtSearch"
-            class="m-input"
-            type="text"
-            placeholder="Tìm theo mã,tên nhân viên"
-            v-model.trim="searchText"
-          />
+          <input id="txtSearch" class="m-input" type="text" placeholder="Tìm theo mã,tên nhân viên" v-model.trim="searchText" />
           <div class="icon-input m-icon m-icon-input"></div>
         </div>
-        <div
-          id="refresh"
-          class="icon-load m-icon m-icon-load"
-          @click="loadData(FormMode.Page_Number_1)"
-        ></div>
+        <div id="refresh" class="icon-load m-icon m-icon-load" @click="loadData(FormMode.Page_Number_1)"></div>
         <div class="icon-excel m-icon mi-excel__nav" @click="exportData"></div>
       </div>
       <div class="m-table">
@@ -61,12 +42,7 @@
             <tr>
               <th></th>
               <th>
-                <input
-                  type="checkbox"
-                  class="m-icon-checkbox th-checkbox"
-                  v-model="isCheckAll"
-                  @click="checkAll()"
-                />
+                <input type="checkbox" class="m-icon-checkbox th-checkbox" v-model="isCheckAll" @click="checkAll()" />
               </th>
               <th fieldName="EmployeeCode">MÃ NHÂN VIÊN</th>
               <th fieldName="EmployeeName">TÊN NHÂN VIÊN</th>
@@ -84,29 +60,17 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="employee in employees"
-              :key="employee.employeeId"
-              @dblclick="dbOnClickTr(employee.employeeId, false)"
-            >
+            <tr v-for="employee in employees" :key="employee.employeeId" @dblclick="dbOnClickTr(employee.employeeId, false)">
               <td></td>
               <td>
-                <input
-                  type="checkbox"
-                  class="m-icon-checkbox"
-                  :value="employee.employeeId"
-                  v-model="checkedId"
-                  @change="checkboxOnTr"
-                />
+                <input type="checkbox" class="m-icon-checkbox" :value="employee.employeeId" v-model="checkedId" @change="checkboxOnTr" />
               </td>
               <td>{{ employee.employeeCode }}</td>
               <td>{{ employee.fullName }}</td>
               <td>{{ employee.genderName }}</td>
 
               <td class="text-center-col">
-                {{
-                  employee.dateOfBirth | formatDateOfBirth(employee.dateOfBirth)
-                }}
+                {{ employee.dateOfBirth | formatDateOfBirth(employee.dateOfBirth) }}
               </td>
               <td>{{ employee.identifyNumber }}</td>
               <td>{{ employee.positionName }}</td>
@@ -115,16 +79,8 @@
               <td>{{ employee.bankName }}</td>
               <td>{{ employee.bankBranchName }}</td>
               <td>
-                <button
-                  class="btnEdit"
-                  @click="dbOnClickTr(employee.employeeId, false)"
-                >
-                  Sửa
-                </button>
-                <button
-                  class="icon-down-delete m-icon m-icon-down-delete"
-                  @click="showBtnDel(employee.employeeId, $event)"
-                ></button>
+                <button class="btnEdit" @click="dbOnClickTr(employee.employeeId, false)">Sửa</button>
+                <button class="icon-down-delete m-icon m-icon-down-delete" @click="showBtnDel(employee.employeeId, $event)"></button>
               </td>
               <td></td>
               <td></td>
@@ -133,11 +89,7 @@
         </table>
         <div class="below-table" v-if="totalRecord == 0">
           <div class="no-data">
-            <img
-              class="img-no-data"
-              src="https://actappg1.misacdn.net/img/bg_report_nodata.76e50bd8.svg"
-              alt=""
-            />
+            <img class="img-no-data" src="https://actappg1.misacdn.net/img/bg_report_nodata.76e50bd8.svg" alt="" />
             <div>Không có dữ liệu</div>
           </div>
         </div>
@@ -154,14 +106,7 @@
         <div class="multiple" @click="showPopupDel(FormMode.Delete)">Xóa</div>
         <div class="multiple">Ngưng sử dụng</div>
       </div>
-      <div
-        id="delEntity"
-        class="delete-entity"
-        @click="showPopupDel(FormMode.DeleteAll)"
-        :class="{ show: showD, left: isShowLeftDel }"
-      >
-        Xóa
-      </div>
+      <div id="delEntity" class="delete-entity" @click="showPopupDel(FormMode.DeleteAll)" :class="{ show: showD, left: isShowLeftDel }">Xóa</div>
       <div class="paging-bar">
         <div class="paging-text">
           Tổng số <b class="total-record">{{ totalRecord }}</b> bản ghi
@@ -169,51 +114,14 @@
         <div class="mselect" id="cbxPageSize" @click="showPageSize">
           <div class="select">{{ pageSize }} bản ghi trên trang</div>
           <div class="icon-select show-select" @click="showPageSize"></div>
-          <div
-            class="icon-dropdown m-icon m-icon-dropdown-select show-select"
-            @click="showPageSize"
-          ></div>
+          <div class="icon-dropdown m-icon m-icon-dropdown-select show-select" @click="showPageSize"></div>
 
-          <div
-            class="data-select"
-            id="dataSelect"
-            :class="{ show: isShowPageSize }"
-          >
-            <div
-              class="select-item item-10"
-              value="10"
-              @click="setPageSize(FormMode.Page_Size_10)"
-            >
-              10 bản ghi trên trang
-            </div>
-            <div
-              class="select-item item-20"
-              value="20"
-              @click="setPageSize(FormMode.Page_Size_20)"
-            >
-              20 bản ghi trên trang
-            </div>
-            <div
-              class="select-item item-30"
-              value="30"
-              @click="setPageSize(FormMode.Page_Size_30)"
-            >
-              30 bản ghi trên trang
-            </div>
-            <div
-              class="select-item item-50"
-              value="50"
-              @click="setPageSize(FormMode.Page_Size_50)"
-            >
-              50 bản ghi trên trang
-            </div>
-            <div
-              class="select-item item-100"
-              value="100"
-              @click="setPageSize(FormMode.Page_Size_100)"
-            >
-              100 bản ghi trên trang
-            </div>
+          <div class="data-select" id="dataSelect" :class="{ show: isShowPageSize }">
+            <div class="select-item item-10" value="10" @click="setPageSize(FormMode.Page_Size_10)">10 bản ghi trên trang</div>
+            <div class="select-item item-20" value="20" @click="setPageSize(FormMode.Page_Size_20)">20 bản ghi trên trang</div>
+            <div class="select-item item-30" value="30" @click="setPageSize(FormMode.Page_Size_30)">30 bản ghi trên trang</div>
+            <div class="select-item item-50" value="50" @click="setPageSize(FormMode.Page_Size_50)">50 bản ghi trên trang</div>
+            <div class="select-item item-100" value="100" @click="setPageSize(FormMode.Page_Size_100)">100 bản ghi trên trang</div>
           </div>
         </div>
         <div class="paging">
@@ -294,22 +202,12 @@ export default {
     const keysPressed = {};
     const me = this;
     document.addEventListener("keydown", (event) => {
-      if (
-        keysPressed["Control"] &&
-        (event.key == "d" ||
-          event.key == "D" ||
-          event.key == "o" ||
-          event.key == "O")
-      ) {
+      if (keysPressed["Control"] && (event.key == "d" || event.key == "D" || event.key == "o" || event.key == "O")) {
         event.preventDefault(); // hủy sự kiện mặc định
       }
       keysPressed[event.key] = true;
       // Xóa nhiều bản ghi
-      if (
-        keysPressed["Control"] &&
-        (event.key == "d" || event.key == "D") &&
-        me.checkedId.length != 0
-      ) {
+      if (keysPressed["Control"] && (event.key == "d" || event.key == "D") && me.checkedId.length != 0) {
         //TODO
         me.showPopupDel(FormMode.DeleteAll);
       }
@@ -490,8 +388,7 @@ export default {
         }
         var employeeCode = response.data.employeeCode;
         // gán text popup
-        this.textPopup =
-          this.deleteEmplFirst + `${employeeCode}` + this.deleteEmplLast;
+        this.textPopup = this.deleteEmplFirst + `${employeeCode}` + this.deleteEmplLast;
       } else {
         // TH xóa tất cả
         this.isDelAll = true;
@@ -627,15 +524,11 @@ export default {
     loadData(value) {
       var me = this;
       // gán giá trị 1 cho page number
-      if (value == FormMode.Page_Number_1)
-        me.pageNumber = FormMode.Page_Number_1;
+      if (value == FormMode.Page_Number_1) me.pageNumber = FormMode.Page_Number_1;
       // hiển thị loading
       me.overlay = true;
       axios
-        .get(
-          this.host +
-            `filter?pageSize=${me.pageSize}&pageNumber=${me.pageNumber}&employeeFilter=${me.searchText}`
-        )
+        .get(this.host + `filter?pageSize=${me.pageSize}&pageNumber=${me.pageNumber}&employeeFilter=${me.searchText}`)
         .then((response) => {
           // gán dữ liệu vào employees
           me.employees = response.data.data;
@@ -766,16 +659,10 @@ export default {
           // toast messenge
           if (!value.employee.employeeId) {
             // hiện toast mesenge khi thêm mới thành công
-            me.toastMessenge(
-              ToastMessenge.Messenge_Success,
-              ToastMessenge.Success
-            );
+            me.toastMessenge(ToastMessenge.Messenge_Success, ToastMessenge.Success);
           } else {
             // hiện toast mesenge khi cập nhật thành công
-            me.toastMessenge(
-              ToastMessenge.Messenge_Update_Success,
-              ToastMessenge.Success
-            );
+            me.toastMessenge(ToastMessenge.Messenge_Update_Success, ToastMessenge.Success);
           }
         })
         .catch((res) => {
@@ -842,10 +729,7 @@ export default {
               }
 
               if (me.textPopup == this.FormMode.EmployeeCode_Duplicate) {
-                me.textPopup =
-                  this.duplicateCodeFirst +
-                  `${me.employee.employeeCode}` +
-                  this.duplicateCodeLast;
+                me.textPopup = this.duplicateCodeFirst + `${me.employee.employeeCode}` + this.duplicateCodeLast;
               }
               me.showPopupParent(true);
             }

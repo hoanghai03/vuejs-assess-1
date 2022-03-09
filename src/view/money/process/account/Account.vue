@@ -5,9 +5,7 @@
         <div class="title-content">
           <span>Hệ thống tài khoản</span>
           <div class="footer-header">
-            <div
-              class="pos-absolute m-icon mi-icon-16 mi-chevron-left--primary"
-            ></div>
+            <div class="pos-absolute m-icon mi-icon-16 mi-chevron-left--primary"></div>
             <a class="text-footer-header" href="#">Tất cả danh mục</a>
           </div>
         </div>
@@ -15,27 +13,16 @@
           <button class="btn-radius-left" @click="btnAddAccount">Thêm</button>
           <button class="btn-radius-right">
             <div class="line"></div>
-            <div
-              class="pos-icon-btn m-icon mi-icon-16 mi-arrow-up--white"
-            ></div>
+            <div class="pos-icon-btn m-icon mi-icon-16 mi-arrow-up--white"></div>
           </button>
         </div>
       </div>
       <div class="filter">
         <div class="button-left">
-          <input
-            id="txtSearch"
-            class="m-input"
-            type="text"
-            placeholder="Tìm theo mã,tên nhân viên"
-          />
+          <input id="txtSearch" class="m-input" type="text" placeholder="Tìm theo mã,tên nhân viên" />
           <div class="icon-input m-icon m-icon-input"></div>
         </div>
-        <div
-          id="refresh"
-          class="icon-load m-icon m-icon-load"
-          @click="loadData"
-        ></div>
+        <div id="refresh" class="icon-load m-icon m-icon-load" @click="loadData"></div>
       </div>
       <div class="m-table">
         <table class="common-table" border="0" cellspacing="0">
@@ -68,12 +55,7 @@
             </tr>
           </thead>
         </table>
-        <RowTreeGrid
-          :data="data"
-          @dbOnClickTr="dbOnClickTr($event)"
-          @showBtnDel="showBtnDel($event)"
-        >
-        </RowTreeGrid>
+        <RowTreeGrid :data="data" @dbOnClickTr="dbOnClickTr($event)" @showBtnDel="showBtnDel($event)"> </RowTreeGrid>
       </div>
       <div class="paging-bar">
         <div class="paging-text">
@@ -208,6 +190,7 @@ export default {
   },
 
   methods: {
+
     /**
      * Hiên thị popup xóa
      * CreatedBy NHHai 28/2/2022
@@ -221,12 +204,7 @@ export default {
       me.isShowEntityDelRight = false;
       // lấy mã code
       var response = await me.loadAccountWithIdChild(me.id);
-      if (response.data.success) {
-        // xét trường hợp data rỗng
-        if (!response.data.data) {
-          this.checkDataEmpty();
-          return;
-        }
+      if (response && response.data.success) {
         var accountNumber = response.data.data;
         // gán text popup
         me.textPopup = me.deleteFirst + accountNumber + me.deleteLast;
@@ -236,6 +214,11 @@ export default {
         me.display();
       } else {
         //hiển thị popup
+        // xét trường hợp data rỗng
+        if (response.data.code == 500) {
+          this.checkDataEmpty();
+          return;
+        }
         // hiển thị icon
         me.isInfo = true;
         // ẩn các trường hợp nút bấm
@@ -285,11 +268,11 @@ export default {
       var me = this;
       me.overlay = true;
       axios.get(`${this.host}GetAccountTree`).then((response) => {
-        if (response.data.success) {
+        if (response && response.data.success) {
           // lấy danh sách
           me.data = response.data.data.entitys;
           // lấy tổng số bản ghi
-          me.reco = response.data.data.totalEntitys;
+          me.recordNumber = response.data.data.totalEntitys;
           me.overlay = false;
         } else {
           me.responseWithError(response);
@@ -352,7 +335,7 @@ export default {
         // lấy dữ liệu theo id
         var response = await me.loadAccountWithId(accountId);
         // xét trường hợp data rỗng
-        if (!response.data.data) {
+        if (response && !response.data.data) {
           me.checkDataEmpty();
           return;
         }
@@ -516,7 +499,7 @@ export default {
         api = axios.put(me.host + `${value.account.accountId}`, value.account);
       }
       api.then((response) => {
-        if (response.data.success && response.data.data) {
+        if (response && response.data.success && response.data.data) {
           if (value.value == FormMode.SaveAndAdd) {
             // TH nếu bấm Cất và Thêm thì sẽ hiện form thêm mới
             me.btnAddAccount();
@@ -529,16 +512,10 @@ export default {
           // toast messenge
           if (!value.account.accountId) {
             // hiện toast mesenge khi thêm mới thành công
-            me.toastMessenge(
-              ToastMessenge.Messenge_Success,
-              ToastMessenge.Success
-            );
+            me.toastMessenge(ToastMessenge.Messenge_Success, ToastMessenge.Success);
           } else {
             // hiện toast mesenge khi cập nhật thành công
-            me.toastMessenge(
-              ToastMessenge.Messenge_Update_Success,
-              ToastMessenge.Success
-            );
+            me.toastMessenge(ToastMessenge.Messenge_Update_Success, ToastMessenge.Success);
           }
           me.overlay = false;
         } else {
@@ -570,7 +547,7 @@ export default {
       var me = this;
       // ẩn loading
       me.overlay = false;
-      if (res.data) {
+      if (res && res.data) {
         const statusCode = res.data.code;
         switch (statusCode) {
           // nếu mã lỗi 400 thì hiển thị cảnh thông báo lỗi
@@ -579,15 +556,9 @@ export default {
             me.isAgree = true;
             me.isDelete = null;
             if (res.data.validateInfo[0].errorCode == 2) {
-              me.textPopup =
-                res.data.validateInfo[0].fieldName +
-                " " +
-                me.account.accountNumber +
-                res.data.validateInfo[0].errorMessage;
+              me.textPopup = res.data.validateInfo[0].fieldName + " " + me.account.accountNumber + res.data.validateInfo[0].errorMessage;
             } else {
-              me.textPopup =
-                res.data.validateInfo[0].fieldName +
-                res.data.validateInfo[0].errorMessage;
+              me.textPopup = res.data.validateInfo[0].fieldName + res.data.validateInfo[0].errorMessage;
             }
             me.showPopupParent(true);
             break;

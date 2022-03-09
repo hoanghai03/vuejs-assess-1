@@ -1,33 +1,17 @@
 <template>
-  <div
-    data-app
-    class="m-dialog h-100vh"
-    id="dialog"
-    :class="{ 'm-dialog-show': isShow }"
-  >
+  <div data-app class="m-dialog h-100vh" id="dialog" :class="{ 'm-dialog-show': isShow }">
     <div class="m-modal"></div>
-    <div
-      id="dialogAccount"
-      ref="dialogAccount"
-      class="dialog-account"
-      :class="{ 'resize-click': resize }"
-    >
+    <div id="dialogAccount" ref="dialogAccount" class="dialog-account" :class="{ 'resize-click': resize }">
       <div class="dialog-header p-l-16 p-b-16">
         <div class="dialog-title p-none">
           <div class="text-title-account p-t-16">Thêm tài khoản</div>
         </div>
         <div class="dialog-close">
           <div class="icon-help m-icon m-icon-help" title="Giúp F1"></div>
-          <div
-            class="icon-close m-icon m-icon-close"
-            title="Đóng (ESC)"
-            @click="btnCloseOnClickHeader"
-          ></div>
+          <div class="icon-close m-icon m-icon-close" title="Đóng (ESC)" @click="btnCloseOnClickHeader"></div>
         </div>
       </div>
-      <div
-        class="dialog-content p-t-12 p-l-16 p-r-16 h-content-account content-account-overflow"
-      >
+      <div class="dialog-content p-t-12 p-l-16 p-r-16 h-content-account content-account-overflow">
         <div class="w-100per display-flex">
           <div class="w-50per p-r-12">
             <div class="display-flex p-b-12">
@@ -37,7 +21,7 @@
                   id="accountNumber"
                   class="m-input check"
                   type="text"
-                  maxlength="20"
+                  maxlength="30"
                   ref="accountNumber"
                   :title="messageEmptyAccountNumber"
                   :class="{
@@ -45,6 +29,7 @@
                   }"
                   v-model.trim="$v.account.accountNumber.$model"
                   @blur="blurAccountNumber"
+                  @keypress="isNumber($event)"
                   required
                 />
               </div>
@@ -68,37 +53,7 @@
             <div class="display-flex p-b-12">
               <div class="w-50per p-r-12">
                 <div class="text-input">Tài khoản tổng hợp</div>
-                <!--<BaseCombobox
-                  :selectVal="selectAccount"
-                  :value="accountCombobox"
-                  @selectValue="selectValueAccount($event)"
-                ></BaseCombobox>-->
-                <!--<AutocompleteCombobox
-                  :data="accountCombobox"
-                  :allowNull="true"
-                  :hasAddAction="false"
-                  :columnNames="[
-                    'Số tài khoản',
-                    'Tên tài khoản',
-                  ]"
-                  :valueField="'accountId'"
-                  :showFields="[
-                    'accountNumber',
-                    'accountName',
-                  ]"
-                  :selectedValue="'accountName'"
-                  v-model="account.parentId"
-                  :columnWidths="['100px', '100px']"
-                  :hasTitleRow="true"
-                  @input="changeParentId"
-                ></AutocompleteCombobox>-->
-                <v-select
-                  label="accountNumber"
-                  :options="accountCombobox"
-                  :reduce="(option) => option.accountId"
-                  v-model="account.parentId"
-                  @input="changeParentId"
-                >
+                <v-select label="accountNumber" :options="accountCombobox" :reduce="(option) => option.accountId" v-model="account.parentId" @input="changeParentId">
                   <template #list-header>
                     <div class="cbx__header display-flex">
                       <div class="vs__option m-w-120"><b>Số tài khoản</b></div>
@@ -119,65 +74,36 @@
               </div>
               <div class="w-50per property">
                 <div class="text-input">Tính chất <span>*</span></div>
-                <BaseCombobox
-                  :selectVal="select"
-                  :value="FormMode.property"
-                  @selectValue="selectValue($event)"
-                ></BaseCombobox>
+                <BaseCombobox :selectVal="select" :value="FormMode.property" @selectValue="selectValue($event)"></BaseCombobox>
               </div>
             </div>
           </div>
           <div class="w-50per align-center d-grid p-b-12">
             <div>
               <div class="text-input">Tên tiếng anh</div>
-              <input
-                maxlength="100"
-                class="m-input check"
-                type="text"
-                v-model="account.accountNameEnglish"
-              />
+              <input maxlength="100" class="m-input check" type="text" v-model="account.accountNameEnglish" />
             </div>
           </div>
         </div>
         <div class="p-b-12">
           <div class="text-input">Diễn giải</div>
-          <textarea
-            class="m-textarea"
-            name=""
-            id=""
-            v-model="account.description"
-          ></textarea>
+          <textarea class="m-textarea" maxlength="255" name="" id="" v-model="account.description"></textarea>
         </div>
         <div class="display-flex">
           <div class="p-r-12">
-            <input
-              type="checkbox"
-              class="m-icon-checkbox"
-              name=""
-              v-model="account.foreignCurrencyAccount"
-            />
+            <input type="checkbox" class="m-icon-checkbox" name="" v-model="account.foreignCurrencyAccount" />
           </div>
-          <label class="checkbox-content" for="check-customer"
-            >Có hoạch toán ngoại tệ</label
-          >
+          <label class="checkbox-content" for="check-customer">Có hoạch toán ngoại tệ</label>
         </div>
         <div class="follow-detail" @click="toggleFollow">
-          <div
-            class="m-icon mi-icon-16 mi-icon-right"
-            :class="{ 'rotate-90': theFollow }"
-          ></div>
+          <div class="m-icon mi-icon-16 mi-icon-right" :class="{ 'rotate-90': theFollow }"></div>
           <span class="text-follow-detail">Theo dõi chi tiết theo</span>
         </div>
         <div class="p-0-10-10 display-flex" v-if="theFollow">
           <div class="w-50per">
             <div class="display-flex m-r-20per align-center p-b-12">
               <div class="w-50per align-center display-flex">
-                <input
-                  id="detail-1"
-                  type="checkbox"
-                  class="m-icon-checkbox"
-                  v-model="account.detailByObject"
-                />
+                <input id="detail-1" type="checkbox" class="m-icon-checkbox" v-model="account.detailByObject" />
                 <label class="p-l-10" for="detail-1">Đối tượng</label>
               </div>
               <div class="w-50per">
@@ -192,12 +118,7 @@
             </div>
             <div class="display-flex m-r-20per align-center p-b-12">
               <div class="w-50per align-center display-flex">
-                <input
-                  id="detail-2"
-                  type="checkbox"
-                  class="m-icon-checkbox"
-                  v-model="account.detailByCostAggregationObj"
-                />
+                <input id="detail-2" type="checkbox" class="m-icon-checkbox" v-model="account.detailByCostAggregationObj" />
                 <label for="detail-2" class="p-l-10">Đối tượng THCP</label>
               </div>
               <div class="w-50per">
@@ -212,12 +133,7 @@
             </div>
             <div class="display-flex m-r-20per align-center p-b-12">
               <div class="w-50per align-center display-flex">
-                <input
-                  id="detail-3"
-                  type="checkbox"
-                  class="m-icon-checkbox"
-                  v-model="account.detailByOrder"
-                />
+                <input id="detail-3" type="checkbox" class="m-icon-checkbox" v-model="account.detailByOrder" />
                 <label for="detail-3" class="p-l-10">Đơn đặt hàng</label>
               </div>
               <div class="w-50per">
@@ -232,12 +148,7 @@
             </div>
             <div class="display-flex m-r-20per align-center p-b-12">
               <div class="w-50per align-center display-flex">
-                <input
-                  id="detail-4"
-                  type="checkbox"
-                  class="m-icon-checkbox"
-                  v-model="account.detailByPurchaseContract"
-                />
+                <input id="detail-4" type="checkbox" class="m-icon-checkbox" v-model="account.detailByPurchaseContract" />
                 <label for="detail-4" class="p-l-10">Hợp đồng mua</label>
               </div>
               <div class="w-50per">
@@ -252,12 +163,7 @@
             </div>
             <div class="display-flex m-r-20per align-center p-b-12">
               <div class="w-50per align-center display-flex">
-                <input
-                  id="detail-5"
-                  type="checkbox"
-                  class="m-icon-checkbox"
-                  v-model="account.detailByUnit"
-                />
+                <input id="detail-5" type="checkbox" class="m-icon-checkbox" v-model="account.detailByUnit" />
                 <label for="detail-5" class="p-l-10">Đơn vị</label>
               </div>
               <div class="w-50per">
@@ -280,12 +186,7 @@
             </div>
             <div class="display-flex m-r-20per align-center p-b-12">
               <div class="w-50per align-center display-flex">
-                <input
-                  id="detail-7"
-                  type="checkbox"
-                  class="m-icon-checkbox"
-                  v-model="account.detailByContruction"
-                />
+                <input id="detail-7" type="checkbox" class="m-icon-checkbox" v-model="account.detailByContruction" />
                 <label for="detail-7" class="p-l-10">Công trình</label>
               </div>
               <div class="w-50per">
@@ -300,12 +201,7 @@
             </div>
             <div class="display-flex m-r-20per align-center p-b-12">
               <div class="w-50per align-center display-flex">
-                <input
-                  id="detail-8"
-                  type="checkbox"
-                  class="m-icon-checkbox"
-                  v-model="account.detailByContractSale"
-                />
+                <input id="detail-8" type="checkbox" class="m-icon-checkbox" v-model="account.detailByContractSale" />
                 <label for="detail-8" class="p-l-10">Hợp đồng bán</label>
               </div>
               <div class="w-50per">
@@ -320,12 +216,7 @@
             </div>
             <div class="display-flex m-r-20per align-center p-b-12">
               <div class="w-50per align-center display-flex">
-                <input
-                  id="detail-9"
-                  type="checkbox"
-                  class="m-icon-checkbox"
-                  v-model="account.detailByExpenseItem"
-                />
+                <input id="detail-9" type="checkbox" class="m-icon-checkbox" v-model="account.detailByExpenseItem" />
                 <label for="detail-9" class="p-l-10">Khoản mục cp</label>
               </div>
               <div class="w-50per">
@@ -340,12 +231,7 @@
             </div>
             <div class="display-flex m-r-20per align-center p-b-12">
               <div class="w-50per align-center display-flex">
-                <input
-                  id="detail-10"
-                  type="checkbox"
-                  class="m-icon-checkbox"
-                  v-model="account.detailByStatisticalCode"
-                />
+                <input id="detail-10" type="checkbox" class="m-icon-checkbox" v-model="account.detailByStatisticalCode" />
                 <label for="detail-10" class="p-l-10">Mã thống kê</label>
               </div>
               <div class="w-50per">
@@ -363,42 +249,18 @@
       </div>
       <div class="dialog-bottom p-l-16 p-r-16 p-b-12">
         <div class="dialog-bot-left">
-          <button
-            id="closeDialog"
-            class="m-second-btn"
-            @click="btnCloseOnClick"
-          >
-            Hủy
-          </button>
+          <button id="closeDialog" class="m-second-btn" @click="btnCloseOnClick">Hủy</button>
         </div>
         <div class="dialog-bot-right">
           <div>
-            <button
-              id="saveEntity"
-              @click="btnSaveOnClick(FormMode.Save)"
-              class="m-second-btn"
-              title="Cất (Ctrl + S)"
-            >
-              Cất
-            </button>
+            <button id="saveEntity" @click="btnSaveOnClick(FormMode.Save)" class="m-second-btn" title="Cất (Ctrl + S)">Cất</button>
           </div>
           <div>
-            <button
-              id="saveAndContinue"
-              class="m-btn"
-              title="Cất và Thêm (Ctrl + Shilf + S)"
-              @click="btnSaveOnClick(FormMode.SaveAndAdd)"
-            >
-              Cất và Thêm
-            </button>
+            <button id="saveAndContinue" class="m-btn" title="Cất và Thêm (Ctrl + Shilf + S)" @click="btnSaveOnClick(FormMode.SaveAndAdd)">Cất và Thêm</button>
           </div>
         </div>
       </div>
-      <div
-        class="resize"
-        @click="resizeOnclick"
-        :class="{ 'rotate-180': rotate }"
-      >
+      <div class="resize" @click="resizeOnclick" :class="{ 'rotate-180': rotate }">
         <div class="m-icon mi-chevron-left mi-icon-16"></div>
       </div>
     </div>
@@ -417,7 +279,7 @@
 </template>
 
 <script>
-import { required } from "vuelidate/lib/validators";
+import { required, minLength } from "vuelidate/lib/validators";
 import BaseCombobox from "../../../../components/base/BaseCombobox.vue";
 import FormMode from "../../../../script/enum.js";
 import AccountPopup from "../../../../components/base/BasePopup.vue";
@@ -494,22 +356,12 @@ export default {
       }
       keysPressed[event.key] = true;
       // Lưu
-      if (
-        keysPressed["Control"] &&
-        !keysPressed["Shift"] &&
-        (event.key == "s" || event.key == "S") &&
-        me.isShow
-      ) {
+      if (keysPressed["Control"] && !keysPressed["Shift"] && (event.key == "s" || event.key == "S") && me.isShow) {
         //TODO
         me.btnSaveOnClick(FormMode.Save);
       }
       // Lưu và thêm mới
-      if (
-        keysPressed["Control"] &&
-        keysPressed["Shift"] &&
-        (event.key == "s" || event.key == "S") &&
-        me.isShow
-      ) {
+      if (keysPressed["Control"] && keysPressed["Shift"] && (event.key == "s" || event.key == "S") && me.isShow) {
         //TODO
         me.btnSaveOnClick(FormMode.SaveAndAdd);
       }
@@ -523,6 +375,7 @@ export default {
     account: {
       accountNumber: {
         required,
+        minLength: minLength(3),
       },
       accountName: {
         required,
@@ -537,10 +390,6 @@ export default {
     account: function () {
       // kiểm tra giá trị
       if (this.account.accountId != "") {
-        // Gán giá trị cho combobox tài khoản tổng hợp
-        // this.selectAccount = {};
-        // this.selectAccount.text = this.account.parentName;
-        // this.selectAccount.value = this.account.parentId;
         // Gán giá trị cho combobox tính chất
         this.select = {};
         this.select.text = this.account.accountCategorykindName;
@@ -556,10 +405,8 @@ export default {
         //Theo dõi chi tiết theo Đối tượng THCP( 0- Chỉ cảnh báo; 1- Bắt buộc nhập)
 
         this.selectCostAggregationObj = {};
-        this.selectCostAggregationObj.text =
-          this.account.detailByCostAggregationObjKindName;
-        this.selectCostAggregationObj.value =
-          this.account.detailByCostAggregationObjKind;
+        this.selectCostAggregationObj.text = this.account.detailByCostAggregationObjKindName;
+        this.selectCostAggregationObj.value = this.account.detailByCostAggregationObjKind;
         if (this.account.detailByCostAggregationObj == 0) {
           this.selectCostAggregationObj.text = null;
           this.selectCostAggregationObj.value = null;
@@ -576,10 +423,8 @@ export default {
         //Theo dõi chi tiết theo Hợp đồng mua (0 - Chỉ cảnh báo; 1- Bắt buộc nhấp)
 
         this.selectPurchaseContract = {};
-        this.selectPurchaseContract.text =
-          this.account.detailByPurchaseContractKindName;
-        this.selectPurchaseContract.value =
-          this.account.detailByPurchaseContractKind;
+        this.selectPurchaseContract.text = this.account.detailByPurchaseContractKindName;
+        this.selectPurchaseContract.value = this.account.detailByPurchaseContractKind;
         if (this.account.detailByPurchaseContract == 0) {
           this.selectPurchaseContract.text = null;
           this.selectPurchaseContract.value = null;
@@ -606,8 +451,7 @@ export default {
         //Theo dõi chi tiết theo Hợp đồng bán (0 - Chỉ cảnh báo; 1- Bắt buộc nhấp)
 
         this.selectContractSale = {};
-        this.selectContractSale.text =
-          this.account.detailByContractSaleKindName;
+        this.selectContractSale.text = this.account.detailByContractSaleKindName;
         this.selectContractSale.value = this.account.detailByContractSaleKind;
         if (this.account.detailByContractSale == 0) {
           this.selectContractSale.text = null;
@@ -625,20 +469,14 @@ export default {
         //Theo dõi chi tiết theo Mã thống kê(0 - Chỉ cảnh báo; 1- Bắt buộc nhấp)
 
         this.selectStatisticalCode = {};
-        this.selectStatisticalCode.text =
-          this.account.detailByStatisticalCodeKindName;
-        this.selectStatisticalCode.value =
-          this.account.detailByStatisticalCodeKind;
+        this.selectStatisticalCode.text = this.account.detailByStatisticalCodeKindName;
+        this.selectStatisticalCode.value = this.account.detailByStatisticalCodeKind;
 
         if (this.account.detailByStatisticalCode == 0) {
           this.selectStatisticalCode.text = null;
           this.selectStatisticalCode.value = null;
         }
       } else {
-        // Gán giá trị cho combobox tài khoản tổng hợp
-        // this.selectAccount = {};
-        // this.selectAccount.text = null;
-        // this.selectAccount.value = null;
         // trường hợp khởi đầu thì gán giá trị true cho isVAlidateCBX
         this.isValidateCBX = true;
         // xóa dữ liệu combobox nhân viên và xóa cảnh báo
@@ -702,17 +540,9 @@ export default {
      */
     select: function (value) {
       if (value.value === undefined && !this.isValidateCBX) {
-        document
-          .querySelector(
-            ".property .v-autocomplete.v-input>.v-input__control>.v-input__slot"
-          )
-          .classList.add("input-warning");
+        document.querySelector(".property .v-autocomplete.v-input>.v-input__control>.v-input__slot").classList.add("input-warning");
       } else {
-        document
-          .querySelector(
-            ".property .v-autocomplete.v-input>.v-input__control>.v-input__slot"
-          )
-          .classList.remove("input-warning");
+        document.querySelector(".property .v-autocomplete.v-input>.v-input__control>.v-input__slot").classList.remove("input-warning");
       }
       // gán giá trị false
       this.isValidateCBX = false;
@@ -783,8 +613,21 @@ export default {
     },
   },
   methods: {
-    changeParentId(){
-      this.$emit('parentId');
+    /**
+     * Hàm chỉ cho nhập số
+     * creaedBy NHHai 21/2/2022
+     */
+    isNumber(evt) {
+      evt = evt ? evt : window.event;
+      var charCode = evt.which ? evt.which : evt.keyCode;
+      if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode !== 46) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
+    },
+    changeParentId() {
+      this.$emit("parentId");
     },
     // hàm gán giá trị cho select
     // cretedBy NHHAi 15/2/2022
@@ -904,6 +747,17 @@ export default {
       me.isShowleft = false;
       // kiểm tra dữ liệu trống
       me.$v.$touch();
+
+      // Trường hợp tên nhân viên trống
+      if (me.account.accountNumber.length < 3) {
+        //focus vào ô mã nhân viên
+        me.$refs.accountNumber.focus();
+        //hiển thị popup
+        this.isInfo = true;
+        me.showPopupParent(true);
+        me.textPopup = this.FormMode.AccountNumber_Min_Length;
+        return;
+      }
       // Trường hợp số tài khoản trống
       if (!me.account.accountNumber) {
         //focus vào ô mã nhân viên
@@ -927,6 +781,7 @@ export default {
         }
       }
 
+
       // Trường hợp tên nhân viên trống
       if (!me.account.accountName) {
         //focus vào ô mã nhân viên
@@ -943,18 +798,10 @@ export default {
         this.isInfo = true;
         me.showPopupParent(true);
         me.textPopup = this.FormMode.Property_Exists;
-        document
-          .querySelector(
-            ".property .v-autocomplete.v-input>.v-input__control>.v-input__slot"
-          )
-          .classList.add("input-warning");
+        document.querySelector(".property .v-autocomplete.v-input>.v-input__control>.v-input__slot").classList.add("input-warning");
         return;
       } else {
-        document
-          .querySelector(
-            ".property .v-autocomplete.v-input>.v-input__control>.v-input__slot"
-          )
-          .classList.remove("input-warning");
+        document.querySelector(".property .v-autocomplete.v-input>.v-input__control>.v-input__slot").classList.remove("input-warning");
       }
       // lấy dữ liệu
       me.$emit("saveAccount", { account: this.account, value: value });

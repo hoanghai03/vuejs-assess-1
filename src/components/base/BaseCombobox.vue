@@ -1,12 +1,5 @@
 <template>
-  <v-combobox
-    v-model="select"
-    :items="value"
-    :dense="true"
-    :disabled="disabled"
-    :filled="filled"
-  >
-  </v-combobox>
+  <v-combobox v-model="select" :items="value" :dense="true" :disabled="disabled" :filled="filled"> </v-combobox>
 </template>
 
 <script>
@@ -17,6 +10,9 @@ export default {
     return {
       select: [],
     };
+  },
+  mounted() {
+      this.select = this.selectVal;
   },
   watch: {
     // gán selectVal cho select nếu selectVal thay đổi

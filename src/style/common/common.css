@@ -329,6 +329,10 @@
     align-items: center;
 }
 
+.display-contents {
+    display: contents;
+}
+
 .d-grid {
     display: grid;
 }
@@ -390,4 +394,8 @@ label {
 
 .w-408 {
     width: 408px;
+}
+
+.w-176 {
+    width: 176px;
 }

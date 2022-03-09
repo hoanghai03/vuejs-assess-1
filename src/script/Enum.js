@@ -22,6 +22,7 @@ const FormMode = Object.freeze({
     Department_Exists: "Tên phòng ban không tồn tại!",
     Property_Exists: "Tên tính chất không tồn tại!",
     EmployeeCode_Not_Empty: "Mã nhân viên không được phép để trống",
+    PaymentNumber_Not_Empty: "Số phiếu chi không được phép để trống",
     AccountNumber_Not_Empty: "Số tài khoản không được phép để trống",
     SupplierCode_Not_Empty: "Mã nhà cung cấp không được phép để trống",
     FullName_Not_Empty: "Tên nhân viên không được phép để trống",
@@ -40,6 +41,7 @@ const FormMode = Object.freeze({
     Empty_Account_Debit: "Tài khoản nợ không được để trống.",
     Empty_Account_Credit: "Tài khoản có không được để trống.",
     Identify_Date: "Ngày cấp không được lớn hơn ngày hiện tại",
+    AccountNumber_Min_Length: "Độ dài số tài khoản phải lớn hơn hoặc bằng 3",
     //text button popup
     Text_Left: "Không",
     Text_Left_Exit: "Hủy",

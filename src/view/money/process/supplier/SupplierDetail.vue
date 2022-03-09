@@ -1,11 +1,5 @@
 <template>
-  <div
-    data-app
-    class="m-dialog"
-    id="dialog"
-    :style="{'display':'block'}"
-    v-if="isShow"
-  >
+  <div data-app class="m-dialog none" id="dialog" :class="{ 'm-dialog-show': isShow }">
     <div class="m-modal"></div>
     <div class="dialog t-0">
       <div class="dialog-header">
@@ -14,26 +8,14 @@
           <div class="radio-group">
             <div class="list-radio">
               <div class="container-radio">
-                <input
-                  id="rdOrganize"
-                  type="radio"
-                  name="Group"
-                  value="0"
-                  v-model="supplier.category"
-                />
+                <input id="rdOrganize" type="radio" name="Group" value="0" v-model="supplier.category" />
                 <div class="checkmark">
                   <div></div>
                 </div>
               </div>
               <label class="label-radio" for="rdOrganize">Tổ chức</label>
               <div class="container-radio">
-                <input
-                  id="rdPerson"
-                  type="radio"
-                  name="Group"
-                  value="1"
-                  v-model="supplier.category"
-                />
+                <input id="rdPerson" type="radio" name="Group" value="1" v-model="supplier.category" />
                 <div class="checkmark">
                   <div></div>
                 </div>
@@ -42,24 +24,13 @@
             </div>
           </div>
           <div class="list-checkbox m-l-100">
-            <input
-              type="checkbox"
-              class="m-icon-checkbox"
-              name=""
-              id="check-customer"
-            />
-            <label class="checkbox-content" for="check-customer"
-              >Là khách hàng</label
-            >
+            <input type="checkbox" class="m-icon-checkbox" name="" id="check-customer" />
+            <label class="checkbox-content" for="check-customer">Là khách hàng</label>
           </div>
         </div>
         <div class="dialog-close">
           <div class="icon-help m-icon m-icon-help" title="Giúp F1"></div>
-          <div
-            class="icon-close m-icon m-icon-close"
-            title="Đóng (ESC)"
-            @click="btnCloseOnClickHeader"
-          ></div>
+          <div class="icon-close m-icon m-icon-close" title="Đóng (ESC)" @click="btnCloseOnClickHeader"></div>
         </div>
       </div>
       <div class="dialog-content">
@@ -69,13 +40,7 @@
               <div class="display-flex">
                 <div class="input-id p-r-12">
                   <div class="text-input">Mã số thuế</div>
-                  <input
-                    id="taxCode"
-                    class="m-input check"
-                    type="text"
-                    maxlength="12"
-                    v-model.trim="supplier.supplierTaxCode"
-                  />
+                  <input id="taxCode" class="m-input check" type="text" maxlength="12" v-model.trim="supplier.supplierTaxCode" />
                 </div>
                 <div class="input-name">
                   <div class="text-input">Mã nhà cung cấp <span>*</span></div>
@@ -112,13 +77,7 @@
               </div>
               <div>
                 <div class="text-input">Địa chỉ</div>
-                <textarea
-                  class="m-textarea"
-                  placeholder="VD: Số 82 Duy Tân,Dịch Vọng Hậu,Cầu Giấy,Hà Nội"
-                  name=""
-                  id=""
-                  v-model.trim="supplier.address"
-                ></textarea>
+                <textarea class="m-textarea" maxlength="255" placeholder="VD: Số 82 Duy Tân,Dịch Vọng Hậu,Cầu Giấy,Hà Nội" name="" id="" v-model.trim="supplier.address"></textarea>
               </div>
             </div>
             <div class="content-left" v-else>
@@ -141,24 +100,14 @@
                 </div>
                 <div class="input-id">
                   <div class="text-input">Mã số thuế</div>
-                  <input
-                    id="taxCode"
-                    class="m-input check"
-                    type="text"
-                    maxlength="12"
-                    v-model.trim="supplier.supplierTaxCode"
-                  />
+                  <input id="taxCode" class="m-input check" type="text" maxlength="12" v-model.trim="supplier.supplierTaxCode" />
                 </div>
               </div>
               <div>
                 <div class="text-input">Tên nhà cung cấp</div>
                 <div class="display-flex">
                   <div class="pr-2 w-1/3">
-                    <base-combobox
-                      :selectVal="selectPrefix"
-                      :value="FormMode.prefix"
-                      @selectValue="selectValuePrefix($event)"
-                    ></base-combobox>
+                    <base-combobox :selectVal="selectPrefix" :value="FormMode.prefix" @selectValue="selectValuePrefix($event)"></base-combobox>
                   </div>
                   <div class="w-256">
                     <div>
@@ -181,73 +130,23 @@
               </div>
               <div>
                 <div class="text-input">Địa chỉ</div>
-                <textarea
-                  class="m-textarea"
-                  placeholder="VD: Số 82 Duy Tân,Dịch Vọng Hậu,Cầu Giấy,Hà Nội"
-                  name=""
-                  id=""
-                  v-model.trim="supplier.address"
-                ></textarea>
+                <textarea class="m-textarea" maxlength="255" placeholder="VD: Số 82 Duy Tân,Dịch Vọng Hậu,Cầu Giấy,Hà Nội" name="" id="" v-model.trim="supplier.address"></textarea>
               </div>
             </div>
             <div class="content-right" v-if="supplier.category == 0">
               <div class="display-flex">
                 <div class="input-id p-r-12">
                   <div class="text-input">Điện thoại</div>
-                  <input
-                    class="m-input check"
-                    type="text"
-                    maxlength="12"
-                    v-model.trim="supplier.phoneNumber"
-                  />
+                  <input class="m-input check" type="text" maxlength="12" v-model.trim="supplier.phoneNumber" />
                 </div>
                 <div class="input-name">
                   <div class="text-input">Website</div>
-                  <input
-                    maxlength="100"
-                    class="m-input check"
-                    type="text"
-                    required
-                    v-model.trim="supplier.website"
-                  />
+                  <input maxlength="100" class="m-input check" type="text" required v-model.trim="supplier.website" />
                 </div>
               </div>
               <div>
                 <div class="text-input">Nhóm nhà cung cấp</div>
                 <div class="ps-relative">
-                  <!--<v-select
-                    multiple
-                    label="supplierGroupCode"
-                    :options="itemsSupplierGroup"
-                    :reduce="(option) => option.supplierGroupId"
-                    v-model="supplier.supplierGroupIds"
-                  >
-                    <template #list-header>
-                      <div class="cbx__header display-flex">
-                        <div class="vs__option w-150">
-                          <b>Mã nhóm KH,NCC</b>
-                        </div>
-                        <div class="vs__option w-200">
-                          <b>Tên nhóm KH,NCC</b>
-                        </div>
-                      </div>
-                    </template>
-                    <template v-slot:option="option">
-                      <div class="cbx__body display-flex">
-                        <div class="vs__option w-150">
-                          <b>{{ option.supplierGroupCode }}</b>
-                        </div>
-                        <div class="vs__option w-200">
-                          <b>{{ option.supplierGroupName }}</b>
-                        </div>
-                      </div>
-                    </template>
-                  </v-select>
-                  <div class="icon-plus-cbx">
-                    <div
-                      class="icon-plus m-icon mi-icon-16 mi-plus--success"
-                    ></div>
-                  </div>-->
                   <AutocompleteCombobox
                     :data="itemsSupplierGroup"
                     :allowNull="true"
@@ -258,9 +157,7 @@
                     :showFields="['supplierGroupCode', 'supplierGroupName']"
                     :selectedValue="'supplierGroupCode'"
                     v-model="supplier.supplierGroupIds"
-                    @onValueChange="
-                      (value) => (supplier.supplierGroupIds = value)
-                    "
+                    @onValueChange="(value) => (supplier.supplierGroupIds = value)"
                     :columnWidths="['10px', '150px']"
                     :width="true"
                     :hasTitleRow="true"
@@ -270,34 +167,6 @@
               <div>
                 <div class="text-input">Nhân viên mua hàng</div>
                 <div class="ps-relative">
-                  <!--<v-select
-                    label="fullName"
-                    :options="itemsEmployee"
-                    :reduce="(option) => option.employeeId"
-                    v-model="supplier.employeeId"
-                  >
-                    <template #list-header>
-                      <div class="cbx__header display-flex">
-                        <div class="vs__option w-150"><b>Mã nhân viên</b></div>
-                        <div class="vs__option w-200"><b>Tên nhân viên</b></div>
-                      </div>
-                    </template>
-                    <template v-slot:option="option">
-                      <div class="cbx__body display-flex">
-                        <div class="vs__option w-150">
-                          <b>{{ option.employeeCode }}</b>
-                        </div>
-                        <div class="vs__option w-200">
-                          <b>{{ option.fullName }}</b>
-                        </div>
-                      </div>
-                    </template>
-                  </v-select>
-                  <div class="icon-plus-cbx">
-                    <div
-                      class="icon-plus m-icon mi-icon-16 mi-plus--success"
-                    ></div>
-                  </div>-->
                   <AutocompleteCombobox
                     :data="itemsEmployee"
                     :allowNull="true"
@@ -318,39 +187,6 @@
               <div>
                 <div class="text-input">Nhóm nhà cung cấp</div>
                 <div class="ps-relative">
-                  <!--<v-select
-                    multiple
-                    label="supplierGroupCode"
-                    :options="itemsSupplierGroup"
-                    :reduce="(option) => option.supplierGroupId"
-                    v-model="supplier.supplierGroupIds"
-                  >
-                    <template #list-header>
-                      <div class="cbx__header display-flex">
-                        <div class="vs__option w-150">
-                          <b>Mã nhóm KH,NCC</b>
-                        </div>
-                        <div class="vs__option w-200">
-                          <b>Tên nhóm KH,NCC</b>
-                        </div>
-                      </div>
-                    </template>
-                    <template v-slot:option="option">
-                      <div class="cbx__body display-flex">
-                        <div class="vs__option w-150">
-                          <b>{{ option.supplierGroupCode }}</b>
-                        </div>
-                        <div class="vs__option w-200">
-                          <b>{{ option.supplierGroupName }}</b>
-                        </div>
-                      </div>
-                    </template>
-                  </v-select>
-                  <div class="icon-plus-cbx">
-                    <div
-                      class="icon-plus m-icon mi-icon-16 mi-plus--success"
-                    ></div>
-                  </div>-->
                   <AutocompleteCombobox
                     :data="itemsSupplierGroup"
                     :allowNull="true"
@@ -361,9 +197,7 @@
                     :showFields="['supplierGroupCode', 'supplierGroupName']"
                     :selectedValue="'supplierGroupCode'"
                     v-model="supplier.supplierGroupIds"
-                    @onValueChange="
-                      (value) => (supplier.supplierGroupIds = value)
-                    "
+                    @onValueChange="(value) => (supplier.supplierGroupIds = value)"
                     :columnWidths="['10px', '150px']"
                     :width="true"
                     :hasTitleRow="true"
@@ -373,34 +207,6 @@
               <div>
                 <div class="text-input">Nhân viên mua hàng</div>
                 <div class="ps-relative">
-                  <!--<v-select
-                    label="fullName"
-                    :options="itemsEmployee"
-                    :reduce="(option) => option.employeeId"
-                    v-model="supplier.employeeId"
-                  >
-                    <template #list-header>
-                      <div class="cbx__header display-flex">
-                        <div class="vs__option w-150"><b>Mã nhân viên</b></div>
-                        <div class="vs__option w-200"><b>Tên nhân viên</b></div>
-                      </div>
-                    </template>
-                    <template v-slot:option="option">
-                      <div class="cbx__body display-flex">
-                        <div class="vs__option w-150">
-                          <b>{{ option.employeeCode }}</b>
-                        </div>
-                        <div class="vs__option w-200">
-                          <b>{{ option.fullName }}</b>
-                        </div>
-                      </div>
-                    </template>
-                  </v-select>
-                  <div class="icon-plus-cbx">
-                    <div
-                      class="icon-plus m-icon mi-icon-16 mi-plus--success"
-                    ></div>
-                  </div>-->
                   <AutocompleteCombobox
                     :data="itemsEmployee"
                     :allowNull="true"
@@ -439,20 +245,11 @@
                 <div class="text-input">Người liên hệ</div>
                 <div class="display-flex">
                   <div class="pr-2 w-1/3">
-                    <base-combobox
-                      :selectVal="selectPrefix"
-                      :value="FormMode.prefix"
-                      @selectValue="selectValuePrefix($event)"
-                    ></base-combobox>
+                    <base-combobox :selectVal="selectPrefix" :value="FormMode.prefix" @selectValue="selectValuePrefix($event)"></base-combobox>
                   </div>
                   <div class="w-256">
                     <div class="pb-2">
-                      <input
-                        type="text"
-                        class="m-input"
-                        placeholder="Họ và tên"
-                        v-model.trim="supplier.contactName"
-                      />
+                      <input type="text" maxlength="100" class="m-input" placeholder="Họ và tên" v-model.trim="supplier.contactName" />
                     </div>
                   </div>
                 </div>
@@ -461,6 +258,7 @@
                     type="text"
                     class="m-input"
                     placeholder="Email"
+                    maxlength="100"
                     ref="email"
                     v-model.trim="supplier.contactEmail"
                     :class="{
@@ -469,12 +267,7 @@
                   />
                 </div>
                 <div class="pb-2 w-188">
-                  <input
-                    type="text"
-                    class="m-input"
-                    placeholder="Số điện thoại"
-                    v-model.trim="supplier.contactPhoneNumber"
-                  />
+                  <input type="text" class="m-input" placeholder="Số điện thoại" v-model.trim="supplier.contactPhoneNumber" />
                 </div>
               </div>
               <div class="w-1/2 p-r-26 w-418" v-else>
@@ -484,6 +277,7 @@
                     type="text"
                     class="m-input"
                     placeholder="Email"
+                    maxlength="100"
                     ref="email"
                     v-model.trim="supplier.contactEmail"
                     :class="{
@@ -492,67 +286,32 @@
                   />
                 </div>
                 <div class="pb-2 w-188">
-                  <input
-                    type="text"
-                    class="m-input"
-                    placeholder="Điện thoại di động"
-                    v-model="supplier.contactPhoneNumber"
-                  />
+                  <input type="text" maxlength="20" class="m-input" placeholder="Điện thoại di động" v-model="supplier.contactPhoneNumber" />
                 </div>
                 <div class="pb-2 w-188">
-                  <input
-                    type="text"
-                    class="m-input"
-                    placeholder="Điện thoại cố định"
-                    v-model="supplier.phoneNumber"
-                  />
+                  <input type="text" maxlength="20" class="m-input" placeholder="Điện thoại cố định" v-model="supplier.phoneNumber" />
                 </div>
                 <div class="text-input">Đại diện theo PL</div>
                 <div class="pb-2">
-                  <input
-                    type="text"
-                    class="m-input"
-                    placeholder="Đại diện theo PL"
-                    v-model.trim="supplier.legalRepresentative"
-                  />
+                  <input type="text" maxlength="100" class="m-input" placeholder="Đại diện theo PL" v-model.trim="supplier.legalRepresentative" />
                 </div>
               </div>
               <div class="w-1/2 w-418" v-if="supplier.category == 0">
                 <div class="text-input">Đại diện theo PL</div>
                 <div class="pb-2">
-                  <input
-                    type="text"
-                    class="m-input"
-                    placeholder="Đại diện theo PL"
-                    v-model.trim="supplier.legalRepresentative"
-                  />
+                  <input type="text" maxlength="100" class="m-input" placeholder="Đại diện theo PL" v-model.trim="supplier.legalRepresentative" />
                 </div>
               </div>
               <div class="w-1/2 w-418" v-else>
                 <div class="text-input">Thông tin CMND/Thẻ căn cước</div>
                 <div class="pb-2 w-188">
-                  <input
-                    type="text"
-                    class="m-input"
-                    placeholder="Số CMND/Thẻ căn cước"
-                    v-model="supplier.identifyNumber"
-                  />
+                  <input type="text" maxlength="30" class="m-input" placeholder="Số CMND/Thẻ căn cước" v-model="supplier.identifyNumber" />
                 </div>
                 <div class="pb-2 w-188">
-                  <date-picker
-                    format="DD/MM/YYYY"
-                    placeholder="Ngày cấp"
-                    v-model="supplier.identifyDate"
-                    @input="changeDate"
-                  ></date-picker>
+                  <date-picker format="DD/MM/YYYY" placeholder="Ngày cấp" v-model="supplier.identifyDate" @input="changeDate"></date-picker>
                 </div>
                 <div class="pb-2">
-                  <input
-                    type="text"
-                    class="m-input"
-                    placeholder="Nơi cấp"
-                    v-model="supplier.place"
-                  />
+                  <input type="text" maxlength="255" class="m-input" placeholder="Nơi cấp" v-model="supplier.place" />
                 </div>
               </div>
             </div>
@@ -563,34 +322,14 @@
       </div>
       <div class="dialog-bottom">
         <div class="dialog-bot-left">
-          <button
-            id="closeDialog"
-            @click="btnCloseOnClick"
-            class="m-second-btn"
-          >
-            Hủy
-          </button>
+          <button id="closeDialog" @click="btnCloseOnClick" class="m-second-btn">Hủy</button>
         </div>
         <div class="dialog-bot-right">
           <div>
-            <button
-              id="saveEntity"
-              class="m-second-btn"
-              title="Cất (Ctrl + S)"
-              @click="btnSaveOnClick(FormMode.Save)"
-            >
-              Cất
-            </button>
+            <button id="saveEntity" class="m-second-btn" title="Cất (Ctrl + S)" @click="btnSaveOnClick(FormMode.Save)">Cất</button>
           </div>
           <div>
-            <button
-              id="saveAndContinue"
-              class="m-btn"
-              title="Cất và Thêm (Ctrl + Shilf + S)"
-              @click="btnSaveOnClick(FormMode.SaveAndAdd)"
-            >
-              Cất và Thêm
-            </button>
+            <button id="saveAndContinue" class="m-btn" title="Cất và Thêm (Ctrl + Shilf + S)" @click="btnSaveOnClick(FormMode.SaveAndAdd)">Cất và Thêm</button>
           </div>
         </div>
       </div>
@@ -656,7 +395,7 @@ export default {
     const me = this;
     document.addEventListener("keydown", (event) => {
       // đóng dialog khi click ESC
-      if (event.key == "Escape" && me.checkCloseDialog) {
+      if (event.key == "Escape" && me.checkCloseDialog && me.isShow) {
         me.btnCloseOnClickHeader();
       }
       me.checkCloseDialog = true;
@@ -666,22 +405,12 @@ export default {
       }
       keysPressed[event.key] = true;
       // Lưu
-      if (
-        keysPressed["Control"] &&
-        !keysPressed["Shift"] &&
-        (event.key == "s" || event.key == "S") &&
-        me.isShow
-      ) {
+      if (keysPressed["Control"] && !keysPressed["Shift"] && (event.key == "s" || event.key == "S") && me.isShow) {
         //TODO
         me.btnSaveOnClick(FormMode.Save);
       }
       // Lưu và thêm mới
-      if (
-        keysPressed["Control"] &&
-        keysPressed["Shift"] &&
-        (event.key == "s" || event.key == "S") &&
-        me.isShow
-      ) {
+      if (keysPressed["Control"] && keysPressed["Shift"] && (event.key == "s" || event.key == "S") && me.isShow) {
         //TODO
         me.btnSaveOnClick(FormMode.SaveAndAdd);
       }
@@ -749,14 +478,10 @@ export default {
       var identifyDate = new Date(me.supplier.identifyDate);
       if (identifyDate.getTime() > today.getTime()) {
         // hiển thị cảnh báo
-        document
-          .querySelector(".mx-input-wrapper input")
-          .classList.add("input-warning");
+        document.querySelector(".mx-input-wrapper input").classList.add("input-warning");
       } else {
         // hiển thị cảnh báo
-        document
-          .querySelector(".mx-input-wrapper input")
-          .classList.remove("input-warning");
+        document.querySelector(".mx-input-wrapper input").classList.remove("input-warning");
       }
     },
     // hàm gán giá trị cho select danh xưng
@@ -875,9 +600,7 @@ export default {
       var identifyDate = new Date(me.supplier.identifyDate);
       if (identifyDate.getTime() > today.getTime()) {
         // hiển thị cảnh báo
-        document
-          .querySelector(".mx-input-wrapper input")
-          .classList.add("input-warning");
+        document.querySelector(".mx-input-wrapper input").classList.add("input-warning");
         //hiển thị popup
         this.isInfo = true;
         //hiển thị popup

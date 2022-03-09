@@ -61,6 +61,8 @@ export default class Account {
     detailByStatisticalCode = false;
     detailByAccount = false;
 
+    status = 1;
+    statusName = "";
     // id của cha
     parentId = null;
     // tên của tài khoản tổng hợp

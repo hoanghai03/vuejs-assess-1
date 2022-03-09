@@ -30,4 +30,5 @@ export default class Payment {
     accountMultiple = "";
 
     branch = "";
+    createdDate = new Date();
 }

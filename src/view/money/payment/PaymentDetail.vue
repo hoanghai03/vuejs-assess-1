@@ -1,20 +1,11 @@
 <template>
-  <div class="dialog-pm" v-if="isShow" >
+  <div class="dialog-pm none" :class="{ 'm-dialog-show': isShow }">
     <div class="dialog-pm-top display-flex">
       <div class="flex-1 display-flex align-center">
         <div class="m-icon mi-24 mi-recent-log"></div>
-        <div class="text-header p-l-12">
-          Phiếu chi {{ payment.paymentNumber }}
-        </div>
+        <div class="text-header p-l-12">Phiếu chi {{ payment.paymentNumber }}</div>
         <div class="m-l-24 w-350 bgc-white">
-          <v-combobox
-            :disabled="disabled"
-            :filled="disabled"
-            v-model="reasonA"
-            :items="FormMode.reason"
-            :dense="true"
-          >
-          </v-combobox>
+          <v-combobox :disabled="disabled" :filled="disabled" v-model="reasonA" :items="FormMode.reason" :dense="true"> </v-combobox>
         </div>
       </div>
       <div class="display-flex align-center">
@@ -22,11 +13,7 @@
         <a class="tour-label p-l-5 m-0">Hướng dẫn</a>
         <div class="m-6-8 mi-24 m-icon mi-setting__detail"></div>
         <div class="m-6-8 mi-24 m-icon m-icon-help" title="Giúp F1"></div>
-        <div
-          class="m-6-8 mi-24 m-icon m-icon-close"
-          title="Đóng (ESC)"
-          @click="btnCloseOnClickHeader"
-        ></div>
+        <div class="m-6-8 mi-24 m-icon m-icon-close" title="Đóng (ESC)" @click="btnCloseOnClickHeader"></div>
       </div>
     </div>
     <div class="body-part">
@@ -37,193 +24,53 @@
               <div class="p-r-12 w-43per">
                 <div class="text-input">Đối tượng</div>
                 <div class="object bgc-white ps-relative">
-                  <!--<v-select
-                    :disabled="disabled"
-                    label="supplierName"
-                    :options="suppliers"
-                    :reduce="(option) => option.supplierId"
-                    v-model="payment.supplierId"
-                    @input="changeSupplier($event)"
-                  >
-                    <template #list-header>
-                      <div class="cbx__header display-flex">
-                        <div class="vs__option m-w-120 no-wrap">
-                          <b>Đối tượng</b>
-                        </div>
-                        <div class="vs__option m-w-250 no-wrap">
-                          <b>Tên đối tượng</b>
-                        </div>
-                        <div class="vs__option m-w-100 no-wrap">
-                          <b>Mã số thuế</b>
-                        </div>
-                        <div class="vs__option m-w-300 no-wrap">
-                          <b>Địa chỉ</b>
-                        </div>
-                        <div class="vs__option m-w-100 no-wrap">
-                          <b>Điện thoại</b>
-                        </div>
-                      </div>
-                    </template>
-                    <template v-slot:option="option">
-                      <div class="cbx__body display-flex">
-                        <div class="vs__option m-w-120 no-wrap">
-                          <b>{{ option.supplierCode }}</b>
-                        </div>
-                        <div class="vs__option m-w-250 no-wrap">
-                          <b>{{ option.supplierName }}</b>
-                        </div>
-                        <div class="vs__option m-w-100 no-wrap">
-                          <b>{{ option.supplierTaxCode }}</b>
-                        </div>
-                        <div class="vs__option m-w-300 no-wrap">
-                          <b>{{ option.address }}</b>
-                        </div>
-                        <div class="vs__option m-w-100 no-wrap">
-                          <b>{{ option.phoneNumber }}</b>
-                        </div>
-                      </div>
-                    </template>
-                  </v-select>-->
                   <AutocompleteCombobox
                     :data="suppliers"
                     ref="cbxSupplier"
                     :allowNull="true"
                     :disable="disabled"
                     :hasAddAction="true"
-                    :columnNames="[
-                      'Đối tượng',
-                      'Tên đối tượng',
-                      'Mã số thuế',
-                      'Địa chỉ',
-                      'điện thoại',
-                    ]"
+                    :columnNames="['Đối tượng', 'Tên đối tượng', 'Mã số thuế', 'Địa chỉ', 'điện thoại']"
                     :valueField="'supplierId'"
-                    :showFields="[
-                      'supplierCode',
-                      'supplierName',
-                      'supplierTaxCode',
-                      'address',
-                      'phoneNumber',
-                    ]"
-                    :selectedValue="'supplierCode'"
+                    :showFields="['supplierCode', 'supplierName', 'supplierTaxCode', 'address', 'phoneNumber']"
+                    :selectedValue="'supplierName'"
                     v-model="payment.supplierId"
-                    :columnWidths="[
-                      '100px',
-                      '100px',
-                      '100px',
-                      '100px',
-                      '100px',
-                    ]"
+                    :columnWidths="['100px', '100px', '100px', '100px', '100px']"
                     :hasTitleRow="true"
-                    @input="changeSupplier($event)"
+                    @onChange="changeSupplier($event)"
                   ></AutocompleteCombobox>
-                  <!--<div class="icon-plus-cbx">
-                    <div
-                      class="icon-plus m-icon mi-icon-16 mi-plus--success"
-                    ></div>
-                  </div>-->
                 </div>
               </div>
               <div class="w-57per">
                 <div class="text-input">Người nhận</div>
-                <input
-                  class="m-input bgc-white"
-                  type="text"
-                  v-model.trim="payment.supplierContactName"
-                  :disabled="disabled"
-                />
+                <input class="m-input bgc-white" maxlength="100" type="text" v-model.trim="payment.supplierContactName" :disabled="disabled" />
               </div>
             </div>
             <div class="p-b-12">
               <div class="text-input">Địa chỉ</div>
-              <input
-                class="m-input bgc-white"
-                type="text"
-                :disabled="disabled"
-                v-model.trim="payment.address"
-              />
+              <input class="m-input bgc-white" maxlength="255" type="text" :disabled="disabled" v-model.trim="payment.address" />
             </div>
             <div class="p-b-12">
               <div class="text-input">Lý do chi</div>
-              <input
-                class="m-input bgc-white"
-                type="text"
-                :disabled="disabled"
-                v-model.trim="payment.description"
-              />
+              <input class="m-input bgc-white" maxlength="255" type="text" :disabled="disabled" v-model.trim="payment.description" />
             </div>
             <div class="p-b-12 display-flex">
               <div class="w-43per p-r-12">
                 <div class="text-input">Nhân viên</div>
                 <div class="employee bgc-white ps-relative">
-                  <!--<v-select
-                    :disabled="disabled"
-                    label="fullName"
-                    :options="employees"
-                    :reduce="(option) => option.employeeId"
-                    v-model="payment.employeeId"
-                  >
-                    <template #list-header>
-                      <div class="cbx__header display-flex">
-                        <div class="vs__option m-w-120 no-wrap">
-                          <b>Mã nhân viên</b>
-                        </div>
-                        <div class="vs__option m-w-250 no-wrap">
-                          <b>Tên nhân viên</b>
-                        </div>
-                        <div class="vs__option m-w-100 no-wrap">
-                          <b>Đơn vị</b>
-                        </div>
-                        <div class="vs__option m-w-100 no-wrap">
-                          <b>ĐT di động</b>
-                        </div>
-                      </div>
-                    </template>
-                    <template v-slot:option="option">
-                      <div class="cbx__body display-flex">
-                        <div class="vs__option m-w-120 no-wrap">
-                          <b>{{ option.employeeCode }}</b>
-                        </div>
-                        <div class="vs__option m-w-250 no-wrap">
-                          <b>{{ option.fullName }}</b>
-                        </div>
-                        <div class="vs__option m-w-100 no-wrap">
-                          <b>{{ option.departmentName }}</b>
-                        </div>
-                        <div class="vs__option m-w-100 no-wrap">
-                          <b>{{ option.phoneNumber }}</b>
-                        </div>
-                      </div>
-                    </template>
-                  </v-select>-->
                   <AutocompleteCombobox
                     :data="employees"
                     :allowNull="true"
                     :disable="disabled"
                     :hasAddAction="true"
-                    :columnNames="[
-                      'mã nhân viên',
-                      'Tên nhên viên',
-                      'Đơn vị',
-                      'Đt di động',
-                    ]"
+                    :columnNames="['mã nhân viên', 'Tên nhên viên', 'Đơn vị', 'Đt di động']"
                     :valueField="'employeeId'"
-                    :showFields="[
-                      'employeeCode',
-                      'fullName',
-                      'departmentName',
-                      'phoneNumber',
-                    ]"
+                    :showFields="['employeeCode', 'fullName', 'departmentName', 'phoneNumber']"
                     :selectedValue="'fullName'"
                     v-model="payment.employeeId"
                     :columnWidths="['100px', '100px', '100px', '100px']"
                     :hasTitleRow="true"
                   ></AutocompleteCombobox>
-                  <!--<div class="icon-plus-cbx">
-                    <div
-                      class="icon-plus m-icon mi-icon-16 mi-plus--success"
-                    ></div>
-                  </div>-->
                 </div>
               </div>
               <div class="w-143">
@@ -261,21 +108,19 @@
             </div>
             <div class="left-seperate p-b-12">
               <div class="text-input">Ngày phiếu chi</div>
-              <date-picker
-                :disabled="disabled"
-                format="DD/MM/YYYY"
-                type="date"
-                placeholder="DD/MM/YYYY"
-                v-model.trim="payment.paymentDate"
-              ></date-picker>
+              <date-picker :disabled="disabled" format="DD/MM/YYYY" type="date" placeholder="DD/MM/YYYY" v-model.trim="payment.paymentDate"></date-picker>
             </div>
             <div class="left-seperate p-b-12">
               <div class="text-input">Số phiếu chi</div>
               <input
                 class="m-input bgc-white"
+                :class="{ 'input-warning': $v.payment.paymentNumber.$error }"
+                :title="messageEmptyPaymentNumber"
                 type="text"
                 :disabled="disabled"
-                v-model.trim="payment.paymentNumber"
+                v-model.trim="$v.payment.paymentNumber.$model"
+                @blur="blurPaymentNumber"
+                required
               />
             </div>
           </div>
@@ -294,18 +139,11 @@
         <div class="display-flex tab-detail-right">
           <div class="label-option p-r-10">Loại tiền</div>
           <div class="w-100">
-            <BaseCombobox
-              :disabled="disabled"
-              :filled="disabled"
-            ></BaseCombobox>
+            <BaseCombobox :disabled="disabled" :filled="disabled"></BaseCombobox>
           </div>
         </div>
       </div>
-      <table
-        class="grid-detail common-table p-b-12 bgc-white"
-        border="0"
-        cellspacing="0"
-      >
+      <table class="grid-detail common-table p-b-12 bgc-white" border="0" cellspacing="0">
         <colgroup>
           <col style="min-width: 20px" />
           <col style="min-width: 32px" />
@@ -320,13 +158,13 @@
           <col style="min-width: 4px" />
         </colgroup>
         <thead>
-          <tr >
+          <tr>
             <th></th>
             <th>#</th>
             <th class="ps-unset">DIỄN GIẢI</th>
             <th class="ps-unset">TK NỢ</th>
-            <th>TK CÓ</th>
-            <th class="text-right">SỐ TIỀN</th>
+            <th class="ps-unset">TK CÓ</th>
+            <th class="ps-unset text-right">SỐ TIỀN</th>
             <th>ĐỐI TƯỢNG</th>
             <th>TÊN ĐỐI TƯỢNG</th>
             <th class="text-function r-40"></th>
@@ -335,52 +173,15 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="(item, index) in paymentDetail"
-            :key="index"
-            @click="focusInputTd(index)"
-            :disabled="disabled"
-          >
+          <tr v-for="(item, index) in paymentDetail" :key="index" @click="focusInputTd(index)" :disabled="disabled">
             <td></td>
             <td :class="{ 'bgc-grey': isShowInput[index] }">{{ index + 1 }}</td>
             <td :class="{ 'bgc-grey': isShowInput[index] }">
-              <input
-                v-if="isShowInput[index]"
-                class="m-input bgc-white"
-                v-model.trim="item.description"
-              />
+              <input v-if="isShowInput[index]" class="m-input bgc-white" maxlength="255" v-model.trim="item.description" />
               <span v-else>{{ item.description }}</span>
             </td>
             <td :class="{ 'bgc-grey': isShowInput[index] }">
               <div v-if="isShowInput[index]" class="bgc-white ps-relative">
-                <!--<v-select
-                  label="accountNumber"
-                  :options="accountDebit"
-                  :reduce="(option) => option.accountId"
-                  v-model.trim="item.debitAccount"
-                  @input="getAccountNumberDebit(index)"
-                >
-                  <template #list-header>
-                    <div class="cbx__header display-flex">
-                      <div class="vs__option m-w-120 no-wrap">
-                        <b>Số tài khoản</b>
-                      </div>
-                      <div class="vs__option m-w-250 no-wrap">
-                        <b>Tên tài khoản</b>
-                      </div>
-                    </div>
-                  </template>
-                  <template v-slot:option="option">
-                    <div class="cbx__body display-flex">
-                      <div class="vs__option m-w-120 no-wrap">
-                        <b>{{ option.accountNumber }}</b>
-                      </div>
-                      <div class="vs__option m-w-250 no-wrap">
-                        <b>{{ option.accountName }}</b>
-                      </div>
-                    </div>
-                  </template>
-                </v-select>-->
                 <AutocompleteCombobox
                   :data="accountDebit"
                   :allowNull="false"
@@ -391,53 +192,18 @@
                   v-model="item.debitAccount"
                   :columnWidths="['100px', '100px']"
                   :hasTitleRow="true"
-                  :validateProp="isValidateDebit[index]"
-                  @input="getAccountNumberDebit(index)"
+                  @onChange="getAccountNumberDebit(index)"
                 ></AutocompleteCombobox>
-                <div
-                  v-if="isValidateDebit[index]"
-                  class="m-icon mi-icon-16 mi-exclamation-cell--error cell-error-icon-cbx"
-                ></div>
+                <div v-if="isValidateDebit[index]" class="m-icon mi-icon-16 mi-exclamation-cell--error cell-error-icon-cbx"></div>
               </div>
 
               <div class="ps-relative" v-else>
                 {{ item.debitAccountNumber }}
-                <div
-                  v-if="isValidateDebit[index]"
-                  class="m-icon mi-icon-16 mi-exclamation-cell--error cell-error-icon"
-                ></div>
+                <div v-if="isValidateDebit[index]" class="m-icon mi-icon-16 mi-exclamation-cell--error cell-error-icon"></div>
               </div>
             </td>
             <td :class="{ 'bgc-grey': isShowInput[index] }">
               <div v-if="isShowInput[index]" class="bgc-white ps-relative">
-                <!--<v-select
-                  label="accountNumber"
-                  :options="accountCredit"
-                  :reduce="(option) => option.accountId"
-                  v-model="item.creditAccount"
-                  @input="getAccountNumberCredit(index)"
-                >
-                  <template #list-header>
-                    <div class="cbx__header display-flex">
-                      <div class="vs__option m-w-120 no-wrap">
-                        <b>Số tài khoản</b>
-                      </div>
-                      <div class="vs__option m-w-250 no-wrap">
-                        <b>Tên tài khoản</b>
-                      </div>
-                    </div>
-                  </template>
-                  <template v-slot:option="option">
-                    <div class="cbx__body display-flex">
-                      <div class="vs__option m-w-120 no-wrap">
-                        <b>{{ option.accountNumber }}</b>
-                      </div>
-                      <div class="vs__option m-w-250 no-wrap">
-                        <b>{{ option.accountName }}</b>
-                      </div>
-                    </div>
-                  </template>
-                </v-select>-->
                 <AutocompleteCombobox
                   :data="accountCredit"
                   :allowNull="false"
@@ -448,31 +214,19 @@
                   v-model="item.creditAccount"
                   :columnWidths="['100px', '100px']"
                   :hasTitleRow="true"
-                  @input="getAccountNumberCredit(index)"
+                  @onChange="getAccountNumberCredit(index)"
                 ></AutocompleteCombobox>
-                <div
-                  v-if="isValidateCredit[index]"
-                  class="m-icon mi-icon-16 mi-exclamation-cell--error cell-error-icon-cbx"
-                ></div>
+                <div v-if="isValidateCredit[index]" class="m-icon mi-icon-16 mi-exclamation-cell--error cell-error-icon-cbx"></div>
               </div>
 
               <div class="ps-relative" v-else>
                 {{ item.creditAccountNumber }}
-                <div
-                  v-if="isValidateCredit[index]"
-                  class="m-icon mi-icon-16 mi-exclamation-cell--error cell-error-icon"
-                ></div>
+                <div v-if="isValidateCredit[index]" class="m-icon mi-icon-16 mi-exclamation-cell--error cell-error-icon"></div>
               </div>
             </td>
             <td :class="{ 'bgc-grey': isShowInput[index] }">
               <div v-if="isShowInput[index]">
-                <input
-                  v-if="isShowInput[index]"
-                  class="m-input bgc-white text-right"
-                  v-model="item.amount"
-                  @keypress="isNumber($event)"
-                  @blur="comcalculateTotalAmountputed"
-                />
+                <input v-if="isShowInput[index]" maxlength="20" class="m-input bgc-white text-right" v-model="item.amount" @keypress="isNumber($event)" @blur="comcalculateTotalAmountputed" />
               </div>
               <div v-else class="text-right">
                 <span>{{ item.amount | formatCurrency }}</span>
@@ -480,77 +234,19 @@
             </td>
             <td :class="{ 'bgc-grey': isShowInput[index] }">
               <div v-if="isShowInput[index]" class="bgc-white">
-                <!--<v-select
-                  label="supplierCode"
-                  :options="suppliers"
-                  :reduce="(option) => option.supplierId"
-                  v-model="item.supplierId"
-                  @input="changeSupplierInDetail(index)"
-                >
-                  <template #list-header>
-                    <div class="cbx__header display-flex">
-                      <div class="vs__option m-w-120 no-wrap">
-                        <b>Đối tượng</b>
-                      </div>
-                      <div class="vs__option m-w-250 no-wrap">
-                        <b>Tên đối tượng</b>
-                      </div>
-                      <div class="vs__option m-w-100 no-wrap">
-                        <b>Mã số thuế</b>
-                      </div>
-                      <div class="vs__option m-w-300 no-wrap">
-                        <b>Địa chỉ</b>
-                      </div>
-                      <div class="vs__option m-w-100 no-wrap">
-                        <b>Điện thoại</b>
-                      </div>
-                    </div>
-                  </template>
-                  <template v-slot:option="option">
-                    <div class="cbx__body display-flex">
-                      <div class="vs__option m-w-120 no-wrap">
-                        <b>{{ option.supplierCode }}</b>
-                      </div>
-                      <div class="vs__option m-w-250 no-wrap">
-                        <b>{{ option.supplierName }}</b>
-                      </div>
-                      <div class="vs__option m-w-100 no-wrap">
-                        <b>{{ option.supplierTaxCode }}</b>
-                      </div>
-                      <div class="vs__option m-w-300 no-wrap">
-                        <b>{{ option.address }}</b>
-                      </div>
-                      <div class="vs__option m-w-100 no-wrap">
-                        <b>{{ option.phoneNumber }}</b>
-                      </div>
-                    </div>
-                  </template>
-                </v-select>-->
                 <AutocompleteCombobox
                   :data="suppliers"
                   :allowNull="true"
                   :hasAddAction="false"
-                  :columnNames="[
-                    'Đối tượng',
-                    'Tên đối tượng',
-                    'Mã số thuế',
-                    'Địa chỉ',
-                    'điện thoại',
-                  ]"
+                  :columnNames="['Đối tượng', 'Tên đối tượng', 'Mã số thuế', 'Địa chỉ', 'điện thoại']"
                   :valueField="'supplierId'"
-                  :showFields="[
-                    'supplierCode',
-                    'supplierName',
-                    'supplierTaxCode',
-                    'address',
-                    'phoneNumber',
-                  ]"
+                  :showFields="['supplierCode', 'supplierName', 'supplierTaxCode', 'address', 'phoneNumber']"
                   :selectedValue="'supplierCode'"
                   v-model="item.supplierId"
                   :columnWidths="['100px', '100px', '100px', '100px', '100px']"
                   :left="true"
                   :hasTitleRow="true"
-                  @input="changeSupplierInDetail(index)"
+                  @onChange="changeSupplierInDetail(index)"
                 ></AutocompleteCombobox>
               </div>
               <span v-else>{{ item.supplierCode }}</span>
@@ -559,10 +255,7 @@
               <span>{{ item.supplierName }}</span>
             </td>
             <td class="r-40" :class="{ 'bgc-grey': isShowInput[index] }">
-              <div
-                class="m-icon mi-icon-16 mi-delete"
-                @click="delAnyRow(index)"
-              ></div>
+              <div class="m-icon mi-icon-16 mi-delete" @click="delAnyRow(index)"></div>
             </td>
             <td class="r-20"></td>
             <td class="r-0"></td>
@@ -585,9 +278,7 @@
         </tr>
       </table>
       <div class="bgc-white display-flex p-l-30 p-b-16 sticky">
-        <button class="m-btn-payment" @click="addColPaymentDetail">
-          Thêm dòng
-        </button>
+        <button class="m-btn-payment" @click="addColPaymentDetail">Thêm dòng</button>
         <button class="m-btn-payment" @click="delAllCol">Xóa hết dòng</button>
       </div>
       <div class="bgc-white display-flex p-l-30 p-b-6 sticky">
@@ -604,17 +295,10 @@
 
     <div class="dialog-pm-bottom display-flex">
       <div class="flex-1">
-        <button class="m-second-btn color-white" @click="btnCloseDialog">
-          Hủy
-        </button>
+        <button class="m-second-btn color-white" @click="btnCloseDialog">Hủy</button>
       </div>
       <div class="display-flex">
-        <button
-          class="m-second-btn color-white"
-          @click="btnSaveOnClick(FormMode.SaveAndDisable)"
-        >
-          Cất
-        </button>
+        <button class="m-second-btn color-white" @click="btnSaveOnClick(FormMode.SaveAndDisable)">Cất</button>
         <button class="btn-radius-left radius-left" @click="btnSaveOnClick">
           {{ textBtn }}
         </button>
@@ -625,12 +309,8 @@
       </div>
     </div>
     <div v-if="isShowVisit" id="delEntity" class="multiple-entity visit">
-      <div class="multiple" @click="btnSaveOnClick(FormMode.SaveAndAdd)">
-        Cất và Thêm
-      </div>
-      <div class="multiple" @click="btnSaveOnClick(FormMode.Save)">
-        Cất và Đóng
-      </div>
+      <div class="multiple" @click="btnSaveOnClick(FormMode.SaveAndAdd)">Cất và Thêm</div>
+      <div class="multiple" @click="btnSaveOnClick(FormMode.Save)">Cất và Đóng</div>
       <div class="multiple">Cất và In</div>
     </div>
     <supplier-popup
@@ -657,7 +337,7 @@ import "vue2-datepicker/index.css";
 // import vSelect from "vue-select";
 // import "vue-select/dist/vue-select.css";
 import Payment from "../../../models/payment.js";
-// import { required } from "vuelidate/lib/validators";
+import { required } from "vuelidate/lib/validators";
 export default {
   name: "PaymentDetail",
   components: {
@@ -667,51 +347,32 @@ export default {
     SupplierPopup,
     AutocompleteCombobox,
   },
-  props: [
-    "isShow",
-    "suppliers",
-    "employees",
-    "payment",
-    "paymentDetail",
-    "checkDelOnClickTr",
-    "accountDebit",
-    "accountCredit",
-    "disabled",
-  ],
+  props: ["isShow", "suppliers", "employees", "payment", "paymentDetail", "checkDelOnClickTr", "accountDebit", "accountCredit", "disabled"],
+
   mounted() {
     // Bắt sự kiện shortcuts
     const keysPressed = {};
     const me = this;
     document.addEventListener("keydown", (event) => {
       // đóng dialog khi click ESC
-      if (event.key == "Escape") {
+      if (event.key == "Escape" && me.checkCloseDialog && me.isShow) {
         me.btnCloseOnClickHeader();
       }
-
+      me.checkCloseDialog = true;
       if (keysPressed["Control"] && (event.key == "s" || event.key == "S")) {
         event.preventDefault(); // hủy sự kiện mặc định
       }
       keysPressed[event.key] = true;
       // Lưu
-      // if (
-      //   keysPressed["Control"] &&
-      //   !keysPressed["Shift"] &&
-      //   (event.key == "s" || event.key == "S") &&
-      //   me.isShow
-      // ) {
-      //   //TODO
-      //   me.btnSaveOnClick(FormMode.Save);
-      // }
-      // // Lưu và thêm mới
-      // if (
-      //   keysPressed["Control"] &&
-      //   keysPressed["Shift"] &&
-      //   (event.key == "s" || event.key == "S") &&
-      //   me.isShow
-      // ) {
-      //   //TODO
-      //   me.btnSaveOnClick(FormMode.SaveAndAdd);
-      // }
+      if (keysPressed["Control"] && !keysPressed["Shift"] && (event.key == "s" || event.key == "S") && me.isShow) {
+        //TODO
+        me.btnSaveOnClick(FormMode.SaveAndDisable);
+      }
+      // Lưu và thêm mới
+      if (keysPressed["Control"] && keysPressed["Shift"] && (event.key == "s" || event.key == "S") && me.isShow) {
+        //TODO
+        me.btnSaveOnClick();
+      }
     });
     // xóa sự kiện keydown
     document.addEventListener("keyup", (event) => {
@@ -720,9 +381,17 @@ export default {
   },
   filters: {
     formatCurrency: (value) => {
+      if(!value) return "0,0";
       return parseFloat(value)
         .toFixed(1)
         .replace(/(\d)(?=(\d{3})+\.)/g, "$1.");
+    },
+  },
+    validations: {
+    payment: {
+      paymentNumber: {
+        required,
+      },
     },
   },
   data() {
@@ -750,6 +419,8 @@ export default {
       oldValue: new Payment(),
       oldValueDetails: null,
       checkValidateCbx: false,
+      messageEmptyPaymentNumber: "",
+      emptyPaymentNumber: "Số phiếu chi không được phép để trống",
     };
   },
   watch: {
@@ -769,23 +440,24 @@ export default {
       this.isValidateDebit = Array(this.paymentDetail.length || 0).fill(false);
       this.isValidateCredit = Array(this.paymentDetail.length || 0).fill(false);
     },
+
   },
   created() {
     this.isShowInput = Array(this.paymentDetail.length || 0).fill(false);
   },
-  // validations: {
-  //   paymentDetail: {
-  //     $each: {
-  //       accountCredit: {
-  //         required,
-  //       },
-  //       accountDebit: {
-  //         required,
-  //       },
-  //     },
-  //   },
-  // },
   methods: {
+    /**
+     * Hàm cảnh báo dữ liệu khi paymentNumber trống
+     * createdBy NHHAi 11/1/2021
+     */
+    blurPaymentNumber() {
+      //
+      this.$v.payment.paymentNumber.$touch();
+      //xét trường hợp nếu lỗi thì add title
+      if (this.$v.payment.paymentNumber.$error) {
+        this.messageEmptyPaymentNumber = this.emptyPaymentNumber;
+      } else this.messageEmptyPaymentNumber = "";
+    },
     /**
      * hiển thịp popup
      * CreatedBy NHHai 15/2/2022
@@ -842,17 +514,9 @@ export default {
       var accountingDate = this.payment.accountingDate;
       var paymentDate = this.payment.paymentDate;
       // xóa cảnh báo
-      if (value && paymentDate && value.getTime() >= paymentDate.getTime())
-        document
-          .querySelector(".mx-input-wrapper input")
-          .classList.remove("input-warning");
+      if (value && paymentDate && value.getTime() >= paymentDate.getTime()) document.querySelector(".mx-input-wrapper input").classList.remove("input-warning");
 
-      if (
-        (!accountingDate && !paymentDate) ||
-        (accountingDate &&
-          paymentDate &&
-          accountingDate.getTime() == paymentDate.getTime())
-      ) {
+      if ((!accountingDate && !paymentDate) || (accountingDate && paymentDate && accountingDate.getTime() == paymentDate.getTime())) {
         // thay đổi giá trị accountingDate và paymentDate giống nhau
         this.$emit("changeDate", value);
       } else this.$emit("changeAccountingDate", value);
@@ -863,6 +527,7 @@ export default {
      * creaedBy NHHai 21/2/2022
      */
     changeSupplier() {
+      this.isShowInput = Array(this.paymentDetail.length || 0).fill(false);
       this.$emit("changeSupplier");
     },
 
@@ -901,11 +566,7 @@ export default {
     isNumber(evt) {
       evt = evt ? evt : window.event;
       var charCode = evt.which ? evt.which : evt.keyCode;
-      if (
-        charCode > 31 &&
-        (charCode < 48 || charCode > 57) &&
-        charCode !== 46
-      ) {
+      if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode !== 46) {
         evt.preventDefault();
       } else {
         return true;
@@ -920,8 +581,7 @@ export default {
       var me = this;
       me.payment.totalAmount = 0;
       me.paymentDetail.forEach((value) => {
-        me.payment.totalAmount =
-          parseInt(me.payment.totalAmount) + parseInt(value.amount);
+        me.payment.totalAmount = parseInt(me.payment.totalAmount) + parseInt(value.amount);
       });
     },
 
@@ -940,8 +600,7 @@ export default {
      * creaedBy NHHai 21/2/2022
      */
     getAccountNumberDebit(index) {
-      if (!this.paymentDetail[index].debitAccount)
-        this.isValidateDebit[index] = true;
+      if (!this.paymentDetail[index].debitAccount) this.isValidateDebit[index] = true;
       else this.isValidateDebit[index] = false;
       this.$emit("getAccountNumberDebitProps", index);
     },
@@ -951,8 +610,7 @@ export default {
      * creaedBy NHHai 21/2/2022
      */
     getAccountNumberCredit(index) {
-      if (!this.paymentDetail[index].creditAccount)
-        this.isValidateCredit[index] = true;
+      if (!this.paymentDetail[index].creditAccount) this.isValidateCredit[index] = true;
       else this.isValidateCredit[index] = false;
       this.$emit("getAccountNumberCreditProps", index);
     },
@@ -973,7 +631,8 @@ export default {
      */
     btnSaveOnClick(number) {
       this.checkValidateCbx = false;
-
+      this.isDelete = "";
+      this.isShowleft = false;
       if (!this.disabled) {
         switch (number) {
           case this.FormMode.Save:
@@ -987,26 +646,34 @@ export default {
           default:
             break;
         }
+
         // ẩn form chọn Cất và Đóng, Cất và Thêm
         this.isShowVisit = false;
         // kiểm tra dữ liệu trống
-        // this.$v.$touch();
+        this.$v.$touch();
         // validate dữ liệu
+
         // kiểm tra dữ liệu ngày hạch toán và ngày phiếu thu
-        if (
-          this.payment.accountingDate.getTime() <
-          this.payment.paymentDate.getTime()
-        ) {
+        if (this.payment.accountingDate.getTime() < this.payment.paymentDate.getTime()) {
           //focus
           // me.$refs.supplierName.focus();
           // hiển thị cảnh báo
-          document
-            .querySelector(".mx-input-wrapper input")
-            .classList.add("input-warning");
+          document.querySelector(".mx-input-wrapper input").classList.add("input-warning");
           //hiển thị popup
           this.isInfo = true;
           this.showPopupParent(true);
           this.textPopup = FormMode.Error_Date;
+          return;
+        }
+
+        // Trường hợp paymentNumber trống
+        if (!this.payment.paymentNumber) {
+          //focus vào ô mã nhân viên
+          // me.$refs.employeeCode.focus();
+          //hiển thị popup
+          this.isInfo = true;
+          this.showPopupParent(true);
+          this.textPopup = this.FormMode.PaymentNumber_Not_Empty;
           return;
         }
         // kiểm tra combobox tài khoản nợ và có
@@ -1033,6 +700,7 @@ export default {
         if (number == this.FormMode.SaveAndDisable) {
           this.$emit("saveData", number);
         } else this.$emit("saveData", this.checkBtn);
+        this.$v.$reset();
       }
     },
 
@@ -1042,11 +710,7 @@ export default {
      */
     btnCloseOnClickHeader() {
       // so sánh 2 object
-      if (
-        JSON.stringify(this.oldValue) !== JSON.stringify(this.payment) ||
-        JSON.stringify(this.oldValueDetails) !==
-          JSON.stringify(this.paymentDetail)
-      ) {
+      if (JSON.stringify(this.oldValue) !== JSON.stringify(this.payment) || JSON.stringify(this.oldValueDetails) !== JSON.stringify(this.paymentDetail)) {
         // TH 2 obj khác nhau
         this.isShowleft = true;
         this.isAsk = true;

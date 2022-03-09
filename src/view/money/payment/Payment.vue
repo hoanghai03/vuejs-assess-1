@@ -14,33 +14,21 @@
               <div class="mi-16 m-icon mi-arrow-up--black"></div>
             </button>
           </div>
-          <button class="btn-radius-left" @click="btnAddPayment">
-            Thêm chi tiền
-          </button>
+          <button class="btn-radius-left" @click="btnAddPayment">Thêm chi tiền</button>
           <button class="btn-radius-right">
             <div class="line"></div>
-            <div
-              class="pos-icon-btn m-icon mi-icon-16 mi-arrow-up--white"
-            ></div>
+            <div class="pos-icon-btn m-icon mi-icon-16 mi-arrow-up--white"></div>
           </button>
         </div>
       </div>
       <div class="inner-overview">
-        <div
-          class="common-overview dued-debit-overview"
-          @mouseover="falseDebit"
-          @mouseleave="trueDebit"
-        >
+        <div class="common-overview dued-debit-overview" @mouseover="falseDebit" @mouseleave="trueDebit">
           <div class="total-money">637.456.243</div>
           <div class="label-overview">Tổng thu đầu năm đến hiện tại</div>
           <div class="m-icon funnel-icon"></div>
           <div class="bottom-cm-overview" :class="{ none: debit }"></div>
         </div>
-        <div
-          class="common-overview total-debit-overview"
-          @mouseover="falseTotalDebit"
-          @mouseleave="trueTotalDebit"
-        >
+        <div class="common-overview total-debit-overview" @mouseover="falseTotalDebit" @mouseleave="trueTotalDebit">
           <div class="total-money">127.467.345</div>
           <div class="label-overview">Tổng chi đầu năm đến hiện tại</div>
           <div class="m-icon funnel-icon"></div>
@@ -83,11 +71,7 @@
           />
           <div class="icon-input m-icon m-icon-input"></div>
         </div>
-        <div
-          id="refresh"
-          class="icon-load m-icon m-icon-load"
-          @click="loadData(FormMode.Page_Number_1)"
-        ></div>
+        <div id="refresh" class="icon-load m-icon m-icon-load" @click="loadData(FormMode.Page_Number_1)"></div>
         <div class="icon-excel m-icon mi-excel__nav" @click="exportData"></div>
         <div class="icon-excel m-icon mi-setting__list"></div>
       </div>
@@ -113,11 +97,7 @@
             <tr>
               <th></th>
               <th>
-                <input
-                  type="checkbox"
-                  class="m-icon-checkbox th-checkbox"
-                  @click="checkAll()"
-                />
+                <input type="checkbox" class="m-icon-checkbox th-checkbox" @click="checkAll" />
               </th>
               <th>NGÀY HẠCH TOÁN</th>
               <th>SỐ CHỨNG TỪ</th>
@@ -125,7 +105,7 @@
               <th class="text-right-col">SỐ TIỀN</th>
               <th>ĐỐI TƯỢNG</th>
               <th>LÝ DO THU/CHI</th>
-              <th>lOẠI CHỨNG TỪ</th>
+              <th>LOẠI CHỨNG TỪ</th>
               <th>HẠCH TOÁN GỘP NHIỀU HÓA ĐƠN</th>
               <th>CHI NHÁNH</th>
               <th class="text-function">CHỨC NĂNG</th>
@@ -134,25 +114,13 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="payment in payments"
-              :key="payment.paymentId"
-              @dblclick="dbOnClickTr(payment.paymentId, false)"
-            >
+            <tr v-for="payment in payments" :key="payment.paymentId" @dblclick="dbOnClickTr(payment.paymentId, false)">
               <td></td>
               <td>
-                <input
-                  type="checkbox"
-                  class="m-icon-checkbox"
-                  :value="payment.paymentId"
-                  v-model="checkedId"
-                  @change="checkboxOnTr"
-                />
+                <input type="checkbox" class="m-icon-checkbox" :value="payment.paymentId" v-model="checkedId" @change="checkboxOnTr" />
               </td>
               <td class="text-center-col">
-                {{
-                  payment.accountingDate | formatDate(payment.accountingDate)
-                }}
+                {{ payment.accountingDate | formatDate(payment.accountingDate) }}
               </td>
               <td class="color-0075c0">{{ payment.paymentNumber }}</td>
               <td>{{ payment.description }}</td>
@@ -165,16 +133,8 @@
               <td>{{ payment.accountMultiple }}</td>
               <td>{{ payment.branch }}</td>
               <td class="text-bold">
-                <button
-                  class="btnEdit"
-                  @click="dbOnClickTr(payment.paymentId, false)"
-                >
-                  Xem
-                </button>
-                <button
-                  class="icon-down-delete m-icon m-icon-down-delete"
-                  @click="showBtnDel(payment.paymentId, $event)"
-                ></button>
+                <button class="btnEdit" @click="dbOnClickTr(payment.paymentId, false)">Xem</button>
+                <button class="icon-down-delete m-icon m-icon-down-delete" @click="showBtnDel(payment.paymentId, $event)"></button>
               </td>
               <td></td>
               <td></td>
@@ -199,11 +159,7 @@
           </tr>
           <div class="below-table" v-if="totalRecord == 0">
             <div class="no-data">
-              <img
-                class="img-no-data"
-                src="https://actappg1.misacdn.net/img/bg_report_nodata.76e50bd8.svg"
-                alt=""
-              />
+              <img class="img-no-data" src="https://actappg1.misacdn.net/img/bg_report_nodata.76e50bd8.svg" alt="" />
               <div>Không có dữ liệu</div>
             </div>
           </div>
@@ -222,69 +178,22 @@
         <div class="multiple" @click="dbOnClickTr(checkID, true)">Nhân bản</div>
         <div class="multiple" @click="showPopupDel(FormMode.Delete)">Xóa</div>
       </div>
-      <div
-        id="delEntity"
-        class="delete-entity"
-        :class="{ show: showD, left: isShowLeftDel }"
-        ref="delEntitysLeft"
-        @click="showPopupDel(FormMode.DeleteAll)"
-      >
-        Xóa
-      </div>
+      <div id="delEntity" class="delete-entity" :class="{ show: showD, left: isShowLeftDel }" ref="delEntitysLeft" @click="showPopupDel(FormMode.DeleteAll)">Xóa</div>
       <div class="paging-bar">
         <div class="paging-text">
           Tổng số <b class="total-record">{{ totalRecord }}</b> bản ghi
         </div>
         <div class="mselect" id="cbxPageSize" @click="showPageSize">
-          <div class="select">
-            {{ paginationRequest.PageSize }} bản ghi trên trang
-          </div>
+          <div class="select">{{ paginationRequest.PageSize }} bản ghi trên trang</div>
           <div class="icon-select show-select" @click="showPageSize"></div>
-          <div
-            class="icon-dropdown m-icon m-icon-dropdown-select show-select"
-            @click="showPageSize"
-          ></div>
+          <div class="icon-dropdown m-icon m-icon-dropdown-select show-select" @click="showPageSize"></div>
 
-          <div
-            class="data-select"
-            id="dataSelect"
-            :class="{ show: isShowPageSize }"
-          >
-            <div
-              class="select-item item-10"
-              value="10"
-              @click="setPageSize(FormMode.Page_Size_10)"
-            >
-              10 bản ghi trên trang
-            </div>
-            <div
-              class="select-item item-20"
-              value="20"
-              @click="setPageSize(FormMode.Page_Size_20)"
-            >
-              20 bản ghi trên trang
-            </div>
-            <div
-              class="select-item item-30"
-              value="30"
-              @click="setPageSize(FormMode.Page_Size_30)"
-            >
-              30 bản ghi trên trang
-            </div>
-            <div
-              class="select-item item-50"
-              value="50"
-              @click="setPageSize(FormMode.Page_Size_50)"
-            >
-              50 bản ghi trên trang
-            </div>
-            <div
-              class="select-item item-100"
-              value="100"
-              @click="setPageSize(FormMode.Page_Size_100)"
-            >
-              100 bản ghi trên trang
-            </div>
+          <div class="data-select" id="dataSelect" :class="{ show: isShowPageSize }">
+            <div class="select-item item-10" value="10" @click="setPageSize(FormMode.Page_Size_10)">10 bản ghi trên trang</div>
+            <div class="select-item item-20" value="20" @click="setPageSize(FormMode.Page_Size_20)">20 bản ghi trên trang</div>
+            <div class="select-item item-30" value="30" @click="setPageSize(FormMode.Page_Size_30)">30 bản ghi trên trang</div>
+            <div class="select-item item-50" value="50" @click="setPageSize(FormMode.Page_Size_50)">50 bản ghi trên trang</div>
+            <div class="select-item item-100" value="100" @click="setPageSize(FormMode.Page_Size_100)">100 bản ghi trên trang</div>
           </div>
         </div>
         <div class="paging">
@@ -384,8 +293,7 @@ export default {
       guid: "00000000-0000-0000-0000-000000000000",
       textFirst: "Số chứng từ <",
       textBody: "> đã tồn tại. Nếu không tìm thấy số chứng từ <",
-      textLast:
-        ">. Vui lòng thực hiện tính năng bảo trì số chứng từ. Xem hướng dẫn tại đây. Bạn có muốn chương trình tự động tăng số chứng từ không?",
+      textLast: ">. Vui lòng thực hiện tính năng bảo trì số chứng từ. Xem hướng dẫn tại đây. Bạn có muốn chương trình tự động tăng số chứng từ không?",
       payments: [],
       suppliers: [],
       employees: [],
@@ -439,34 +347,19 @@ export default {
     const keysPressed = {};
     const me = this;
     document.addEventListener("keydown", (event) => {
-      if (
-        keysPressed["Control"] &&
-        (event.key == "d" ||
-          event.key == "D" ||
-          event.key == "o" ||
-          event.key == "O")
-      ) {
+      if (keysPressed["Control"] && (event.key == "d" || event.key == "D" || event.key == "o" || event.key == "O")) {
         event.preventDefault(); // hủy sự kiện mặc định
       }
       keysPressed[event.key] = true;
 
       // Xóa nhiều bản ghi
-      if (
-        keysPressed["Control"] &&
-        (event.key == "d" || event.key == "D") &&
-        me.checkedId.length != 0 &&
-        !me.isShowDialogDetail
-      ) {
+      if (keysPressed["Control"] && (event.key == "d" || event.key == "D") && me.checkedId.length != 0 && !me.isShowDialogDetail) {
         //TODO
         me.showPopupDel(FormMode.DeleteAll);
       }
 
       // Show dialog
-      if (
-        keysPressed["Control"] &&
-        (event.key == "o" || event.key == "O") &&
-        !me.isShow
-      ) {
+      if (keysPressed["Control"] && (event.key == "o" || event.key == "O") && !me.isShow) {
         //TODO
         me.btnAddPayment();
         event.preventDefault();
@@ -523,6 +416,7 @@ export default {
      * @param {*} value trả về kiểu dữ liệu bất kì
      */
     formatCurrency: (value) => {
+      if (!value) return "0,0";
       return parseFloat(value)
         .toFixed(1)
         .replace(/(\d)(?=(\d{3})+\.)/g, "$1.");
@@ -554,41 +448,38 @@ export default {
     loadData(value) {
       var me = this;
       // gán giá trị 1 cho page number
-      if (value == FormMode.Page_Number_1)
-        me.paginationRequest.PageNumber = FormMode.Page_Number_1;
+      if (value == FormMode.Page_Number_1) me.paginationRequest.PageNumber = FormMode.Page_Number_1;
       me.overlay = true;
 
-      axios
-        .post(`${this.host}filter`, me.paginationRequest)
-        .then((response) => {
-          if (response && response.data.success) {
-            // gán dữ liệu vào employees
-            me.payments = response.data.data.data;
-            // tổng số bản ghi
-            me.totalRecord = response.data.data.totalRecord;
-            me.totalPage = response.data.data.totalPage;
-            //Tính tổng số tiền
-            me.totalAmount = 0;
-            if (me.payments != null) {
-              me.payments.forEach((value) => {
-                me.totalAmount += value.totalAmount;
-              });
-            }
-
-            // ẩn button xóa
-            me.showD = false;
-            // ẩn checkall
-            me.isCheckAll = false;
-            me.checkedId = [];
-            // ẩn loading
-            me.overlay = false;
-            // class ẩn hiện vị trí
-            me.isShowEntityDelRight = false;
-          } else {
-            me.responseWithError(response);
-            me.overlay = false;
+      axios.post(`${this.host}filter`, me.paginationRequest).then((response) => {
+        if (response && response.data.success) {
+          // gán dữ liệu vào employees
+          me.payments = response.data.data.data;
+          // tổng số bản ghi
+          me.totalRecord = response.data.data.totalRecord;
+          me.totalPage = response.data.data.totalPage;
+          //Tính tổng số tiền
+          me.totalAmount = 0;
+          if (me.payments != null) {
+            me.payments.forEach((value) => {
+              me.totalAmount += value.totalAmount;
+            });
           }
-        });
+
+          // ẩn button xóa
+          me.showD = false;
+          // ẩn checkall
+          me.isCheckAll = false;
+          me.checkedId = [];
+          // ẩn loading
+          me.overlay = false;
+          // class ẩn hiện vị trí
+          me.isShowEntityDelRight = false;
+        } else {
+          me.responseWithError(response);
+          me.overlay = false;
+        }
+      });
     },
 
     /**
@@ -674,6 +565,9 @@ export default {
         // sinh lỗi ==================================================================================
         me.responseWithError(newPaymentNumber);
       }
+      // hiển thị popup
+      me.toggleDialog(true);
+      me.overlay = false;
       // lấy dữ liệu trong các combobox
       me.getDataInCombobox();
       // gán dữ liệu cho paymentDetail
@@ -806,9 +700,12 @@ export default {
         me.payment.address = value.address;
         // gán giá trị lý do chi
         me.payment.description = me.description + value.supplierName;
-
+        // gán giá trị supplierObject
+        me.payment.supplierObject = value.supplierName;
         // gán giá trị supplierId cũ
         me.oldSupplierId = value.supplierId;
+      } else {
+        me.responseWithError(response);
       }
     },
     /**
@@ -818,9 +715,7 @@ export default {
      */
     async changeSupplierInDetail(index) {
       var me = this;
-      var response = await me.getSupplierById(
-        me.paymentDetail[index].supplierId
-      );
+      var response = await me.getSupplierById(me.paymentDetail[index].supplierId);
       if (response && response.data.success) {
         var val = response.data.data;
         // gán giá trị cho cột đối tượng và tên đối tượng
@@ -853,9 +748,7 @@ export default {
       var me = this;
       console.log(1);
       if (me.paymentDetail[index].debitAccount) {
-        var response = await me.getAccountById(
-          me.paymentDetail[index].debitAccount
-        );
+        var response = await me.getAccountById(me.paymentDetail[index].debitAccount);
         if (response && response.data.success) {
           var data = response.data.data;
           me.paymentDetail[index].debitAccountNumber = data.accountNumber;
@@ -870,9 +763,7 @@ export default {
     async getAccountNumberCredit(index) {
       var me = this;
       if (me.paymentDetail[index].creditAccount) {
-        var response = await me.getAccountById(
-          me.paymentDetail[index].creditAccount
-        );
+        var response = await me.getAccountById(me.paymentDetail[index].creditAccount);
         if (response && response.data.success) {
           var data = response.data.data;
           me.paymentDetail[index].creditAccountNumber = data.accountNumber;
@@ -920,10 +811,7 @@ export default {
      */
     delOnClickTr(index) {
       if (index != this.paymentDetail.length - 1 && this.checkDelOnClickTr) {
-        if (
-          JSON.stringify(this.paymentDetail[this.paymentDetail.length - 1]) ==
-          JSON.stringify(this.paymentDetail[this.paymentDetail.length - 2])
-        ) {
+        if (JSON.stringify(this.paymentDetail[this.paymentDetail.length - 1]) == JSON.stringify(this.paymentDetail[this.paymentDetail.length - 2])) {
           this.paymentDetail.pop();
           this.checkDelOnClickTr = false;
         }
@@ -1028,10 +916,7 @@ export default {
             me.loadData(FormMode.Page_Number_1);
             // toast messenge
             // hiện toast mesenge khi thêm mới thành công
-            me.toastMessenge(
-              ToastMessenge.Messenge_Success,
-              ToastMessenge.Success
-            );
+            me.toastMessenge(ToastMessenge.Messenge_Success, ToastMessenge.Success);
             // ẩn popup
             me.showPopupParent(false);
           } else {
@@ -1058,44 +943,46 @@ export default {
           me.disabled = false;
         } else me.disabled = true;
 
-        axios
-          .get(me.host + `${me.detailMaster}` + `${value}`)
-          .then((response) => {
-            if (response && response.data.success) {
-              var data = response.data.data;
-              // lấy dữ liệu
-              me.payment = data.entity;
-              me.paymentDetail = data.entityDetails;
-
-              if (bool && newPaymentNumber.data.success) {
-                me.payment.paymentNumber = newPaymentNumber.data?.data;
-                // lấy ngày hiện tại nếu nhân bản
-                me.payment.accountingDate = new Date();
-                me.payment.paymentDate = new Date();
-              } else {
-                // format ngày
-                me.payment.accountingDate = new Date(me.payment.accountingDate);
-                me.payment.paymentDate = new Date(me.payment.paymentDate);
-                // sinh lỗi ==================================================================================
-              }
-              // class ẩn hiện vị trí
-              me.isShowEntityDelRight = false;
-              // lấy dữ liệu trong các combobox
-              me.getDataInCombobox();
-            } else {
-              me.responseWithError(response);
-              me.overlay = false;
+        axios.get(me.host + `${me.detailMaster}` + `${value}`).then((response) => {
+          if (response && response.data.success) {
+            var data = response.data.data;
+            // xét trường hợp data rỗng
+            if (!data.entity) {
+              me.checkDataEmpty();
+              return;
             }
-          });
+            // lấy dữ liệu
+            me.payment = data.entity;
+            me.paymentDetail = data.entityDetails;
+
+            if (bool && newPaymentNumber && newPaymentNumber.data.success) {
+              me.payment.paymentNumber = newPaymentNumber.data?.data;
+              // lấy ngày hiện tại nếu nhân bản
+              me.payment.accountingDate = new Date();
+              me.payment.paymentDate = new Date();
+            } else {
+              // format ngày
+              me.payment.accountingDate = new Date(me.payment.accountingDate);
+              me.payment.paymentDate = new Date(me.payment.paymentDate);
+            }
+            // class ẩn hiện vị trí
+            me.isShowEntityDelRight = false;
+            // hiển thị popup
+            me.toggleDialog(true);
+            me.overlay = false;
+            // lấy dữ liệu trong các combobox
+            me.getDataInCombobox();
+          } else {
+            me.responseWithError(response);
+            me.overlay = false;
+          }
+        });
       }
     },
 
     async getDataInCombobox() {
       var me = this;
-      // hiển thị popup
-      me.toggleDialog(true);
 
-      me.overlay = false;
       // lấy dữ liệu nhân viên và nhà cung cấp
       var responseEmployees = await me.getListEmployee();
       var responseSuppliers = await me.getListSupplier();
@@ -1104,14 +991,12 @@ export default {
       if (responseEmployees.data.success) {
         me.employees = responseEmployees.data?.data;
       } else {
-        // sinh lỗi ==================================================================================
         me.responseWithError(responseEmployees);
       }
 
       if (responseSuppliers.data.success) {
         me.suppliers = responseSuppliers.data?.data;
       } else {
-        // sinh lỗi ==================================================================================
         me.responseWithError(responseSuppliers);
       }
 
@@ -1123,14 +1008,12 @@ export default {
       if (accountDebit.data.success) {
         me.accountDebit = accountDebit.data?.data;
       } else {
-        // sinh lỗi ==================================================================================
         me.responseWithError(accountDebit);
       }
 
       if (accountCredit.data.success) {
         me.accountCredit = accountCredit.data?.data;
       } else {
-        // sinh lỗi ==================================================================================
         me.responseWithError(accountCredit);
       }
     },
@@ -1151,14 +1034,13 @@ export default {
         // lấy mã code
         var response = await this.loadPaymentWithId(this.id);
         // xét trường hợp data rỗng
-        // if (!response.data.data) {
-        //   this.checkDataEmpty();
-        //   return;
-        // }
+        if (!response.data.data) {
+          this.checkDataEmpty();
+          return;
+        }
         var paymentNumber = response.data.data.paymentNumber;
         // gán text popup
-        this.textPopup =
-          this.deleteEmplFirst + `${paymentNumber}` + this.deleteEmplLast;
+        this.textPopup = this.deleteEmplFirst + `${paymentNumber}` + this.deleteEmplLast;
       } else {
         // TH xóa tất cả
         this.isDelAll = true;
@@ -1225,7 +1107,20 @@ export default {
         this.isAgree = false;
       }
     },
-
+    /**
+     * Hàm kiểm tra dữ liệu trống
+     * createdBy NHHAi 14/2/2022
+     */
+    checkDataEmpty() {
+      this.textPopup = FormMode.No_Data;
+      this.isInfo = true;
+      this.showButtonLeft(false);
+      this.showPopupParent(true);
+      // ẩn dữ liệu
+      this.overlay = false;
+      // load lại dữ liệu
+      this.loadData();
+    },
     /**
      * Hàm phản hồi lỗi
      * createdBy NHHAI 15/2/2022
@@ -1233,6 +1128,7 @@ export default {
      */
     responseWithError(response) {
       var me = this;
+      me.overlay = false;
       if (response) {
         switch (response.data.code) {
           case 400:
@@ -1243,25 +1139,22 @@ export default {
               // me.isAgree = true;
               me.isDelete = null;
               me.isIncrease = true;
-              me.textPopup =
-                this.textFirst +
-                me.payment.paymentNumber +
-                this.textBody +
-                me.payment.paymentNumber +
-                this.textLast;
+              me.textPopup = this.textFirst + me.payment.paymentNumber + this.textBody + me.payment.paymentNumber + this.textLast;
               me.showPopupParent(true);
             } else {
               me.showButtonLeft(false);
               me.isAgree = true;
               me.isDelete = null;
-              me.textPopup =
-                response.data.validateInfo[0].fieldName +
-                response.data.validateInfo[0].errorMessage;
+              me.textPopup = response.data.validateInfo[0].fieldName + response.data.validateInfo[0].errorMessage;
               me.showPopupParent(true);
               break;
             }
             break;
           case 500:
+            me.showButtonLeft(false);
+            me.isDelete = null;
+            me.textPopup = response.data.errorMessage;
+            me.showPopupParent(true);
             break;
           default:
             break;
