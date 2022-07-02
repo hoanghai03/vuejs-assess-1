@@ -26,11 +26,11 @@
       </div>
       <div class="footer-left-process">
         <div class="dictionary-item">
-          <router-link class="dictionary-content" to="/supplier">
+          <router-link class="dictionary-content" to="/app/supplier">
             <div class="m-icon mi-24 mi-process-customer"></div>
             <div class="dictionary-text">Nhà cung cấp</div>
           </router-link>
-          <router-link class="dictionary-content" to="/account">
+          <router-link class="dictionary-content" to="/app/account">
             <div class="m-icon mi-24 mi-calculate"></div>
             <div class="dictionary-text">Hệ thống tài khoản</div>
           </router-link>

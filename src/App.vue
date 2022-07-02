@@ -1,23 +1,17 @@
 <template>
   <div data-app id="app">
-    <TheNavbar/>
-    <TheHeader/>
-    <TheContent/>
-</div>
+    <main-layout></main-layout>
+  </div>
 
 </template>
 
 <script>
-import TheNavbar from './components/layout/TheNavbar.vue'
-import TheHeader from './components/layout/TheHeader.vue'
-import TheContent from './components/layout/TheContent.vue'
+import mainLayout from './components/layout/mainLayout.vue'
 export default {
   name: 'App',
 
   components: {
-        TheNavbar,
-    TheHeader,
-    TheContent
+        mainLayout
   },
 
 };

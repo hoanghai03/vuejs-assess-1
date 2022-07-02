@@ -55,7 +55,11 @@
     </div>
   </div>
 </template>
-
+<script>
+export default {
+  name: "TheHeader"
+}
+</script>
 <style scoped>
 .mi-arrow-up--gray {
     margin-left: -10px;
@@ -124,7 +128,7 @@
   margin-right: 15px;
   padding-right: 10px;
 }
-@import url("../../style/layout/header.css");
-@import url("../../style/common/common.css");
-@import url("../../style/component/icon.css");
+@import url("../../../style/layout/header.css");
+@import url("../../../style/common/common.css");
+@import url("../../../style/component/icon.css");
 </style>

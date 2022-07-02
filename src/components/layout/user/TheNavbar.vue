@@ -5,21 +5,21 @@
             <div class="nav-header-logo"></div>
         </div>
         <div class="navigation-content">
-            <router-link class="navigation-item" to="/employee">
+            <router-link class="navigation-item" to="/app/employee">
                 <div></div>
                 <div class="nav-item-icon">
                     <div class="within-nav-icon m-icon m-icon-item-1"></div>
                 </div>
                 <div class="nav-item-text">Nhân viên</div>
             </router-link>
-            <router-link class="navigation-item" to="/money/process">
+            <router-link class="navigation-item" to="/app/money/process">
                 <div></div>
                 <div class="nav-item-icon">
                     <div class="within-nav-icon m-icon m-icon-item-2"></div>
                 </div>
                 <div class="nav-item-text">Tiền mặt</div>
             </router-link>
-            <router-link class="navigation-item" to="/student">
+            <router-link class="navigation-item" to="/app/student">
                 <div></div>
                 <div class="nav-item-icon">
                     <div class="within-nav-icon m-icon m-icon-item-3"></div>
@@ -119,5 +119,5 @@ export default {
 }
 </script>
 <style scoped>
-    @import url('../../style/layout/navigation.css');
+    @import url('../../../style/layout/navigation.css');
 </style>
