@@ -98,6 +98,7 @@ export default {
       //Enum
       FormMode,
       ToastMessenge,
+      auth : {headers: { 'Content-Type': 'application/json', 'Authorization': `bearer ${this.$store.getters.stateToken}` }}
     };
   },
   methods: {
@@ -149,10 +150,10 @@ export default {
       var api = "";
       // xét trường hợp nếu như muốn xóa nhiều bản ghi
       if (this.isDelAll) {
-        api = axios.delete(this.host + `all`, { data: this.checkedId });
+        api = axios.delete(this.host + `all`, { data: this.checkedId },this.auth);
       }
       // Trường hợp xóa 1 bản ghi
-      else api = axios.delete(this.host + `${this.employeeId}`);
+      else api = axios.delete(this.host + `${this.employeeId}`,this.auth);
       api.then(function (response) {
         if (response.data.success) {
           // nếu thành công thì sẽ ẩn popup và load lại data

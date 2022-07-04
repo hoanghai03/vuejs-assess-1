@@ -2,6 +2,7 @@
   <div class="header">
     <div class="header-left align-center">
       <div class="icon-toggle m-icon m-icon-toggle"></div>
+      <button v-if="isLogin" @click="clickLogout()" class="m-btn">Đăng xuất</button>
       <select name="" id="" class="w-176">
         <option value="">CÔNG TY CỔ PHẦN MISA</option>
         <option value="">
@@ -52,12 +53,34 @@
       <div class="icon-img m-icon "></div>
       <div class="text-name">Nguyễn Hoàng Hải</div>
       <div class="icon-down m-icon m-icon-down"></div>
-    </div>
+      
+</div>
   </div>
 </template>
 <script>
+
 export default {
-  name: "TheHeader"
+  name: "TheHeader",
+  data() {
+    return {
+      decode : {}
+    }
+  },
+  computed: {
+    isLogin: function(){
+      return this.$store.getters.isAuthenticated;
+    }
+  },
+  methods: {
+    async clickLogout(){
+      // decode token
+      let decode = this.$jwt.decode(this.$store.getters.stateToken);
+      //lấy userId từ token
+      await this.$store.dispatch('logout',decode.UserId);
+      //router
+      this.$router.go('login')
+    }
+  }
 }
 </script>
 <style scoped>

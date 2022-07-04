@@ -245,6 +245,8 @@ export default {
   },
   data() {
     return {
+              //in post request
+      auth : {headers: { 'Content-Type': 'application/json', 'Authorization': `bearer ${this.$store.getters.stateToken}` }},
       host: `${process.env.VUE_APP_BASE_URL}/Suppliers/`,
       hostEmployee: `${process.env.VUE_APP_BASE_URL}/Employees/`,
       deleteEmplFirst: `Bạn có thực sự muốn xóa nhà cung cấp <`,
@@ -350,7 +352,7 @@ export default {
       }
       me.overlay = true;
 
-      axios.post(`${this.host}filter`, me.paginationRequest).then((response) => {
+      axios.post(`${this.host}filter`, me.paginationRequest,this.auth).then((response) => {
         if (response && response.data.success) {
           // gán dữ liệu vào employees
           me.suppliers = response.data.data.data;
@@ -556,7 +558,7 @@ export default {
      * createdBy NHHAi 14/2/2022
      */
     loadSupplierWithId(value) {
-      return axios.get(this.host + `${value}`);
+      return axios.get(this.host + `${value}`,this.auth);
     },
 
     /**
@@ -600,7 +602,7 @@ export default {
      * createdBy NHHAi 13/2/2022
      */
     loadNewSupplierCode() {
-      return axios.get(this.host + this.NewSupplierCode);
+      return axios.get(this.host + this.NewSupplierCode,this.auth);
     },
     /**
      * Hàm hiển thị dialog khi click vào nút thêm
@@ -763,7 +765,7 @@ export default {
      * createdBy NHHAi 16/2/2022
      */
     getListSupplierGroups() {
-      return axios.get(this.SupplierGroups);
+      return axios.get(this.SupplierGroups,this.auth);
     },
 
     /**
@@ -771,7 +773,7 @@ export default {
      * createdBy NHHAi 16/2/2022
      */
     getListEmployees() {
-      return axios.get(this.hostEmployee);
+      return axios.get(this.hostEmployee,this.auth);
     },
 
     /**
@@ -798,10 +800,10 @@ export default {
       if (!me.supplierProps.supplierId) {
         delete me.supplierProps["supplierId"];
         //gọi api thực hiện cất dữ liệu
-        api = axios.post(me.host, me.supplierProps);
+        api = axios.post(me.host, me.supplierProps,this.auth);
       } else {
         //gọi api thực hiện cất dữ liệu
-        api = axios.put(me.host + `${me.supplierProps.supplierId}`, me.supplierProps);
+        api = axios.put(me.host + `${me.supplierProps.supplierId}`, me.supplierProps,this.auth);
       }
       api.then((response) => {
         if (response && response.data.success && response.data.data) {

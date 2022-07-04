@@ -54,6 +54,10 @@ const FormMode = Object.freeze({
     Time: 3000,
     // lỗi chưa kết nối với server
     Status_500: "Lỗi kết nối đến server",
+    //admin
+    Admin: 1,
+    //user
+    User: 2,
     // danh xưng
     prefix: [{
             text: "Ông",
@@ -163,6 +167,7 @@ const FormMode = Object.freeze({
             value: 7
         },
     ]
+
 
 });
 
