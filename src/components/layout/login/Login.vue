@@ -10,6 +10,7 @@
         <br>
         <br>
         <br>
+        <router-link to="register">Đăng ký</router-link>
         <button class="m-btn pos-btn" @click="loginForm">Đăng nhập</button>
         <div v-if="checkLogin && !$store.getters.isAuthenticated" :style="{ 'color':  'red' }">Tài khoản hoặc mật khẩu không đúng</div>
       </div>
@@ -67,5 +68,13 @@ export default {
 .pos-btn {
     right: 40px;
     position: absolute;
+}
+a:hover {
+  cursor: pointer;
+  color: brown;
+}
+a {
+  line-height: 32px;
+  margin-left: 250px;
 }
 </style>

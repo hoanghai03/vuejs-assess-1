@@ -23,8 +23,6 @@ Vue.use(VueToast);
 Vue.use(Vuelidate)
 Vue.config.productionTip = false
 
-
-// axios.defaults.headers.common = { 'Authorization': `bearer ${store.getters.stateToken}` }
 new Vue({
     render: h => h(App),
     vuetify,

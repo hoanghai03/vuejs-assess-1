@@ -10,6 +10,7 @@ import EmployeeList from '../view/employee/EmployeeList.vue'
 import StudentList from '../view/student/StudentList.vue'
 import Money from '../view/money/Money.vue'
 import Login from '../components/layout/login/Login.vue'
+import Register from '../components/layout/Register/Register.vue'
 import Process from '../view/money/process/Process.vue'
 import Payment from '../view/money/payment/Payment.vue'
 import Supplier from '../view/money/process/supplier/Supplier.vue'
@@ -80,6 +81,11 @@ const routers = [
     {
         path: '/login',
         component: Login,
+        meta: { guest: true }
+    },
+    {
+        path: '/register',
+        component: Register,
         meta: { guest: true }
     }
 
